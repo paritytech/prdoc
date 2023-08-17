@@ -1,17 +1,18 @@
-[package]
-authors = ["Chevdor <chevdor@gmail.com>"]
-name = "prdoc"
-version = "0.0.0"
+[workspace.package]
+version = "0.0.1"
+authors = ["chevdor <chevdor@gmail.com>", "Wilfried Kopp <wilfried@parity.io>"]
 edition = "2021"
-description = "prdoc is a cli"
-homepage = "https://github.com/Chevdor/prdoc"
-keywords = ["Chevdor"]
-license = "MIT"
-readme = "README.md"
-repository = "https://github.com/Chevdor/prdoc"
 
-[dependencies]
-assert_cmd = "2.0"
-env_logger = "0.10"
-log = "0.4"
-clap = { version = "4", features = ["derive", "env", "unicode", "cargo"] }
+[workspace]
+resolver = "2"
+members = [
+	"cli",
+	"prdoclib",
+]
+
+[profile.production]
+inherits = "release"
+lto = true
+panic = "abort"
+opt-level = "z"
+codegen-units = 1
