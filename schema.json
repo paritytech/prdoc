@@ -1,0 +1,196 @@
+// 20230817152351
+// https://raw.githubusercontent.com/paritytech/release-engineering/18a24b11ba00d422422dfe6191df92a4a38f0134/schemas/pr_doc/pr_doc.json?token=GHSAT0AAAAAACFOQ4LPNPM7RZAMFHIVLVVMZG6FV3A
+
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Parity PR Documentation Schema",
+    "description": "JSON Schema definition for Polkadot/Substrate PR documentation",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "Optional title override for the PR"
+      },
+      "doc": {
+        "type": "array",
+        "description": "Description of the PR\nProvide a description for each audience.",
+        "items": {
+          "$ref": "#/$defs/doc"
+        },
+        "minItems": 1
+      },
+      "crates": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/crate"
+        }
+      },
+      "migrations": {
+        "type": "object",
+        "properties": {
+          "db": {
+            "type": "array",
+            "nullable": false,
+            "description": "List of the Database Migrations or []",
+            "items": {
+              "$ref": "#/$defs/migration_db"
+            },
+            "minItems": 0,
+            "required": [
+              "name",
+              "description"
+            ]
+          },
+          "runtime": {
+            "type": "array",
+            "nullable": false,
+            "description": "List of the Runtime Migrations or []",
+            "minItems": 0,
+            "items": {
+              "$ref": "#/$defs/migration_runtime"
+            },
+            "required": [
+              "db",
+              "runtime"
+            ]
+          }
+        }
+      },
+      "host_functions": {
+        "type": "array",
+        "minItems": 0,
+        "items": {
+          "$ref": "#/$defs/host_function"
+        }
+      }
+    },
+    "required": [
+      "doc",
+      "crates",
+      "migrations",
+      "host_functions"
+    ],
+    "$defs": {
+      "audience": {
+        "type": "string",
+        "enum": [
+          "Core Dev",
+          "Validator",
+          "Parachain Dev",
+          "Node Operator",
+          "Exchange"
+        ]
+      },
+      "crate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "semver": {
+            "$ref": "#/$defs/semver"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "semver": {
+        "type": "string",
+        "enum": [
+          "major",
+          "minor",
+          "patch",
+          "no change"
+        ]
+      },
+      "migration_db": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "description"
+        ]
+      },
+      "migration_runtime": {
+        "type": "object",
+        "properties": {
+          "pallet": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "pallet",
+          "description"
+        ]
+      },
+      "doc": {
+        "type": "object",
+        "description": "You have the the option to provide different description of your PR for different audiences.",
+        "additionalProperties": false,
+        "properties": {
+          "audience": {
+            "description": "The selected audience",
+            "$ref": "#/$defs/audience"
+          },
+          "title": {
+            "type": "string",
+            "description": "Optional title override for the PR and for the current audience"
+          },
+          "description": {
+            "description": "Description of the change",
+            "type": "string"
+          },
+          "notes": {
+            "description": "Optional relevant note",
+            "$ref": "#/$defs/array_of_strings"
+          }
+        }
+      },
+      "array_of_strings": {
+        "description": "An array of strings that can be empty",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "host_function": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "List of host functions and their properties",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "enabled",
+          "description"
+        ]
+      }
+    }
+  }

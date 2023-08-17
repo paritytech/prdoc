@@ -1,5 +1,7 @@
 //! todo
 mod opts;
+mod common;
+use prdoclib::*;
 
 use std::env;
 
@@ -18,10 +20,38 @@ fn main() -> color_eyre::Result<()> {
 	// debug!("opts: {opts:#?}");
 
 	match opts.subcmd {
-		Some(SubCommand::Scan(scan_opts)) => {
-			debug!("scan_opts: {scan_opts:#?}");
+
+		Some(SubCommand::Generate(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			todo!();
 			Ok(())
 		}
+
+		Some(SubCommand::Check(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			todo!();
+			Ok(())
+		}
+
+		Some(SubCommand::Scan(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			todo!();
+			Ok(())
+		}
+
+		Some(SubCommand::Load(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			todo!();
+			Ok(())
+		}
+
+		Some(SubCommand::Schema) => {
+			debug!("schema");
+			let schema = get_schema(true);
+			println!("{schema}");
+			Ok(())
+		}
+
 
 		None => {
 			if opts.version {

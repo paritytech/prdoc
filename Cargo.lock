@@ -429,6 +429,7 @@ dependencies = [
  "color-eyre",
  "env_logger",
  "log",
+ "prdoclib",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -437,6 +438,9 @@ dependencies = [
 [[package]]
 name = "prdoclib"
 version = "0.0.0"
+dependencies = [
+ "regex",
+]
 
 [[package]]
 name = "predicates"
