@@ -1,6 +1,6 @@
 //! todo
-mod opts;
 mod common;
+mod opts;
 use prdoclib::*;
 
 use std::env;
@@ -20,7 +20,6 @@ fn main() -> color_eyre::Result<()> {
 	// debug!("opts: {opts:#?}");
 
 	match opts.subcmd {
-
 		Some(SubCommand::Generate(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
 			todo!();
@@ -29,13 +28,37 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			todo!();
+			if let Some(file) = cmd_opts.file {
+				debug!("Checking file {}", file.display());
+
+				let result = Schema::check(file);
+				if result {
+					std::process::exit(exitcode::OK);
+				} else {
+					std::process::exit(exitcode::DATAERR);
+				}
+			}
+
+			if let Some(dir) = cmd_opts.directory {
+				debug!("Checking directory {}", dir.display());
+
+			}
+
+			if let Some(number) = cmd_opts.number {
+				debug!("Checking PR #{}", number);
+
+
+			}
+
 			Ok(())
 		}
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			todo!();
+			let res = DocFile::find(&cmd_opts.directory, !cmd_opts.all);
+			res.for_each(|hit| {
+				println!("hit = {:?}", hit);
+			});
 			Ok(())
 		}
 
@@ -45,13 +68,12 @@ fn main() -> color_eyre::Result<()> {
 			Ok(())
 		}
 
-		Some(SubCommand::Schema) => {
-			debug!("schema");
-			let schema = get_schema(true);
+		Some(SubCommand::Schema(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			let schema = Schema::get(true);
 			println!("{schema}");
 			Ok(())
 		}
-
 
 		None => {
 			if opts.version {

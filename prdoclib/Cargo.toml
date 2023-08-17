@@ -14,3 +14,6 @@ repository = "https://github.com/Chevdor/prdoclib"
 
 [dependencies]
 regex = "1.9.3"
+valico = { version = "4.0.0", git ="https://github.com/s-panferov/valico", branch = "master", features = ["js"] }
+serde_yaml = { version = "0.9", optional = false }
+serde_json = { version = "1.0", optional = false }

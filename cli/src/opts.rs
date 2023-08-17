@@ -2,7 +2,7 @@
 //! supported by the cli.
 
 use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 
 use crate::common::PRNumber;
 
@@ -13,13 +13,13 @@ pub struct Opts {
 	#[clap(short, long, global = true, display_order = 99)]
 	pub json: bool,
 
-	/// Less output
-	#[clap(short, long, global = true, display_order = 99)]
-	pub quiet: bool,
+	// /// Less output
+	// #[clap(short, long, global = true, display_order = 99)]
+	// pub quiet: bool,
 
-	/// Do not write color information to the output. This is recommended for scripts.
-	#[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]
-	pub no_color: bool,
+	// /// Do not write color information to the output. This is recommended for scripts.
+	// #[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]
+	// pub no_color: bool,
 
 	#[allow(missing_docs)]
 	#[clap(subcommand)]
@@ -51,8 +51,7 @@ pub enum SubCommand {
 
 	#[allow(missing_docs)]
 	#[clap(version = crate_version!(), author = crate_authors!())]
-	Schema,
-
+	Schema(SchemaOpts),
 }
 /// todo
 #[derive(Parser, Debug)]
@@ -67,33 +66,40 @@ pub struct GenOpts {
 	pub out: Option<PathBuf>,
 }
 
-
 /// Check one or some prdoc files
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
-    /// directory path
-	#[clap()]
+	/// directory path
+	#[clap(exclusive = true)]
 	pub file: Option<PathBuf>,
 
-	#[clap()]
+	#[clap(short, long, exclusive = true)]
 	pub directory: Option<PathBuf>,
 
-	#[clap()]
+	#[clap(short, long, exclusive = true)]
 	pub number: Option<PRNumber>,
 }
 
 /// Scan a directory for prdoc files
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
-    /// directory path
+	/// directory path
 	#[clap(index = 1, default_value = ".")]
-	pub directory: Option<PathBuf>,
+	pub directory: PathBuf,
+
+	#[clap(short, long)]
+	pub all: bool
 }
 
 /// Load one or more prdoc
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
-    /// directory path
+	/// directory path
 	#[clap(index = 1, default_value = ".")]
 	pub directory: Option<PathBuf>,
+}
+
+/// Retrieve the JSON schema that is used internally
+#[derive(Parser, Debug)]
+pub struct SchemaOpts {
 }
