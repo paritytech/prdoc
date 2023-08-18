@@ -87,6 +87,7 @@ pub struct ScanOpts {
 	#[clap(index = 1, default_value = ".")]
 	pub directory: PathBuf,
 
+	/// Also return invalid files
 	#[clap(short, long)]
 	pub all: bool
 }

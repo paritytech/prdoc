@@ -57,7 +57,7 @@ fn main() -> color_eyre::Result<()> {
 			debug!("cmd_opts: {cmd_opts:#?}");
 			let res = DocFile::find(&cmd_opts.directory, !cmd_opts.all);
 			res.for_each(|hit| {
-				println!("hit = {:?}", hit);
+				println!("{}", hit.display());
 			});
 			Ok(())
 		}
