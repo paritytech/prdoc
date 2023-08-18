@@ -1,0 +1,14 @@
+# Schema: Parity PR Documentation Schema (prdoc)
+
+doc:
+  - audience: Core Dev
+    description: todo
+
+migrations:
+  db: []
+
+  runtime: []
+
+crates: []
+
+host_functions: []

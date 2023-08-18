@@ -2,9 +2,8 @@
 //! supported by the cli.
 
 use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
-use std::path::{Path, PathBuf};
-
-use crate::common::PRNumber;
+use prdoclib::PRNumber;
+use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
 #[clap(color=ColorChoice::Auto, disable_version_flag = true, arg_required_else_help = true )]
@@ -20,7 +19,6 @@ pub struct Opts {
 	// /// Do not write color information to the output. This is recommended for scripts.
 	// #[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]
 	// pub no_color: bool,
-
 	#[allow(missing_docs)]
 	#[clap(subcommand)]
 	pub subcmd: Option<SubCommand>,
@@ -56,14 +54,21 @@ pub enum SubCommand {
 /// todo
 #[derive(Parser, Debug)]
 pub struct GenOpts {
+	/// Change number
 	#[clap(index = 1)]
 	pub number: PRNumber,
 
-	#[clap()]
-	pub title: String,
+	/// Change title
+	#[clap(short, long)]
+	pub title: Option<String>,
 
-	#[clap()]
-	pub out: Option<PathBuf>,
+	/// Output to stdout only
+	#[clap(short, long)]
+	pub stdout: bool,
+
+	/// Output directory
+	#[clap(short, long, default_value = ".", conflicts_with = "stdout")]
+	pub output_dir: PathBuf,
 }
 
 /// Check one or some prdoc files
@@ -89,7 +94,7 @@ pub struct ScanOpts {
 
 	/// Also return invalid files
 	#[clap(short, long)]
-	pub all: bool
+	pub all: bool,
 }
 
 /// Load one or more prdoc
@@ -102,5 +107,4 @@ pub struct LoadOpts {
 
 /// Retrieve the JSON schema that is used internally
 #[derive(Parser, Debug)]
-pub struct SchemaOpts {
-}
+pub struct SchemaOpts {}

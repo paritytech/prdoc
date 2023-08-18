@@ -1,9 +1,9 @@
 //! todo
-mod common;
 mod opts;
+use color_eyre::eyre::Context;
 use prdoclib::*;
 
-use std::env;
+use std::{env, path::Path};
 
 use clap::{crate_name, crate_version, Parser};
 use env_logger::Env;
@@ -22,8 +22,31 @@ fn main() -> color_eyre::Result<()> {
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			todo!();
-			Ok(())
+
+			// generate doc
+			let template = DocFile::generate();
+
+			// print to stdout or save to file
+			if cmd_opts.stdout {
+				debug!("Printing to stdout only");
+				println!("{}", &template);
+				Ok(())
+			} else {
+				// cleanup title
+				let title = if let Some(title) = cmd_opts.title {
+					let cleaned_up_title = title.replace(" ", "_");
+					Some(cleaned_up_title)
+				} else {
+					None
+				};
+
+				// generate filename based on number and title
+				let filename = DocFileName::new(cmd_opts.number, title.as_ref().map(String::as_ref));
+				let output_file = Path::new(&cmd_opts.output_dir).join(filename);
+				debug!("template = {:?}", &template);
+				debug!("output_file = {:?}", &output_file);
+				std::fs::write(output_file, template).with_context(|| "Unable to write template to {output_file:?}")
+			}
 		}
 
 		Some(SubCommand::Check(cmd_opts)) => {
@@ -41,13 +64,10 @@ fn main() -> color_eyre::Result<()> {
 
 			if let Some(dir) = cmd_opts.directory {
 				debug!("Checking directory {}", dir.display());
-
 			}
 
 			if let Some(number) = cmd_opts.number {
 				debug!("Checking PR #{}", number);
-
-
 			}
 
 			Ok(())

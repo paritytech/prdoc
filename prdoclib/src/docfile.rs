@@ -1,23 +1,34 @@
 use std::{
 	fmt::Display,
 	path::{Path, PathBuf},
-	slice::Iter,
 	str::FromStr,
 };
 
 use regex::Regex;
+use serde_yaml::Value;
 
-use crate::Schema;
+use crate::{PRNumber, Schema};
 
 #[derive(Debug, PartialEq)]
 pub struct DocFileName(String);
 
 #[derive(Debug)]
 pub struct DocFile {
-	file: PathBuf,
+	pub file: PathBuf,
+	pub content: Value,
 }
 
 impl DocFileName {
+	pub fn new(n: PRNumber, title: Option<&str>) -> Self {
+		if let Some(title) = title {
+			// todo: more cleanup would be good to ensure we have a valid OsString
+			let cleaned_up_title = title;
+			Self(format!("pr_{n}_{cleaned_up_title}.prdoc"))
+		} else {
+			Self(format!("pr_{n}.prdoc"))
+		}
+	}
+
 	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
 		let re = Regex::new(r"^pr_\d+.*.prdoc$").unwrap();
 		let file_only = filename.as_ref().components().last();
@@ -47,9 +58,9 @@ impl AsRef<Path> for DocFileName {
 	}
 }
 
-impl From<u32> for DocFileName {
-	fn from(n: u32) -> Self {
-		Self(format!("pr_{n:03}.prdoc"))
+impl From<PRNumber> for DocFileName {
+	fn from(n: PRNumber) -> Self {
+		Self::new(n, None)
 	}
 }
 
@@ -60,15 +71,27 @@ impl Into<PathBuf> for DocFileName {
 }
 
 impl From<PathBuf> for DocFile {
-	fn from(filename: PathBuf) -> Self {
-		Self { file: PathBuf::from(filename) }
+	fn from(file: PathBuf) -> Self {
+		let content = Self::load(&file).unwrap();
+		Self { file, content }
 	}
 }
 
 impl DocFile {
-	pub fn new(n: u32) -> Self {
+	pub fn new(n: PRNumber) -> Self {
 		let filename = DocFileName::from(n);
-		Self { file: PathBuf::from(filename.as_ref()) }
+		let file = PathBuf::from(filename.as_ref());
+		let content = Self::load(&file).unwrap();
+		Self { file, content }
+	}
+
+	pub fn load(file: &PathBuf) -> crate::error::Result<Value> {
+		Schema::load(file)
+	}
+
+	pub fn generate() -> String {
+		let template = include_str!("../../template.prdoc");
+		String::from(template)
 	}
 
 	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
