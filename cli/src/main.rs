@@ -1,15 +1,18 @@
 //! todo
 mod opts;
-use color_eyre::eyre::Context;
-use prdoclib::*;
-
-use std::{env, path::Path};
 
 use clap::{crate_name, crate_version, Parser};
+use color_eyre::eyre::Context;
 use env_logger::Env;
 use log::*;
 use opts::*;
 use serde_json::json;
+use std::{
+	env,
+	path::{Path, PathBuf},
+};
+
+use prdoclib::{docfile::*, docfilename::DocFileName, schema::Schema};
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
@@ -33,15 +36,11 @@ fn main() -> color_eyre::Result<()> {
 				Ok(())
 			} else {
 				// cleanup title
-				let title = if let Some(title) = cmd_opts.title {
-					let cleaned_up_title = title.replace(' ', "_");
-					Some(cleaned_up_title)
-				} else {
-					None
-				};
+				// let title: Option<Title> =
+				// if let Some(title) = cmd_opts.title { Some(title.cleanup().into()) } else { None };
 
 				// generate filename based on number and title
-				let filename = DocFileName::new(cmd_opts.number, title.as_ref().map(String::as_ref));
+				let filename: PathBuf = DocFileName::new(cmd_opts.number, cmd_opts.title).into();
 				let output_file = Path::new(&cmd_opts.output_dir).join(filename);
 				debug!("template = {:?}", &template);
 				debug!("output_file = {:?}", &output_file);
@@ -51,10 +50,15 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			if let Some(file) = cmd_opts.file {
-				debug!("Checking file {}", file.display());
+			let dir = cmd_opts.directory;
+			debug!("Checking directory {}", dir.display());
 
-				let result = Schema::check(file);
+			if let Some(file) = cmd_opts.file {
+				let full_path = if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
+
+				debug!("Checking file {}", full_path.display());
+
+				let result = Schema::check(full_path);
 				if result {
 					std::process::exit(exitcode::OK);
 				} else {
@@ -62,13 +66,26 @@ fn main() -> color_eyre::Result<()> {
 				}
 			}
 
-			if let Some(dir) = cmd_opts.directory {
-				debug!("Checking directory {}", dir.display());
-				todo!();
-			}
-
 			if let Some(number) = cmd_opts.number {
 				debug!("Checking PR #{}", number);
+
+				let filename: PathBuf = DocFileName::from(number).into();
+				let full_path = Path::new(&dir).join(filename);
+
+				// todo: check if there is a matching file with another title
+				debug!("Checking file {}", full_path.display());
+
+				// todo: DEDUP that
+				let result = Schema::check(full_path);
+				if result {
+					std::process::exit(exitcode::OK);
+				} else {
+					std::process::exit(exitcode::DATAERR);
+				}
+			}
+
+			if cmd_opts.number.is_none() && cmd_opts.file.is_none() {
+				debug!("Checking all files in folder {}", dir.display());
 				todo!();
 			}
 

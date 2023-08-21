@@ -1,73 +1,12 @@
-use std::{
-	fmt::Display,
-	path::{Path, PathBuf},
-	str::FromStr,
-};
-
-use regex::Regex;
 use serde_yaml::Value;
+use std::path::PathBuf;
 
-use crate::{PRNumber, Schema};
-
-#[derive(Debug, PartialEq)]
-pub struct DocFileName(String);
+use crate::{common::PRNumber, docfilename::DocFileName, schema::Schema};
 
 #[derive(Debug)]
 pub struct DocFile {
 	pub file: PathBuf,
 	pub content: Value,
-}
-
-impl DocFileName {
-	pub fn new(n: PRNumber, title: Option<&str>) -> Self {
-		if let Some(title) = title {
-			// todo: more cleanup would be good to ensure we have a valid OsString
-			let cleaned_up_title = title;
-			Self(format!("pr_{n}_{cleaned_up_title}.prdoc"))
-		} else {
-			Self(format!("pr_{n}.prdoc"))
-		}
-	}
-
-	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
-		let re = Regex::new(r"^pr_\d+.*.prdoc$").unwrap();
-		let file_only = filename.as_ref().components().last();
-		if let Some(file) = file_only {
-			match file {
-				std::path::Component::Prefix(_)
-				| std::path::Component::RootDir
-				| std::path::Component::CurDir
-				| std::path::Component::ParentDir => false,
-				std::path::Component::Normal(f) => re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
-			}
-		} else {
-			false
-		}
-	}
-}
-
-impl Display for DocFileName {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		f.write_str(&self.0)
-	}
-}
-
-impl AsRef<Path> for DocFileName {
-	fn as_ref(&self) -> &Path {
-		Path::new(&self.0)
-	}
-}
-
-impl From<PRNumber> for DocFileName {
-	fn from(n: PRNumber) -> Self {
-		Self::new(n, None)
-	}
-}
-
-impl From<DocFileName> for PathBuf {
-	fn from(val: DocFileName) -> Self {
-		PathBuf::from_str(&val.0).unwrap()
-	}
 }
 
 impl From<PathBuf> for DocFile {
@@ -80,7 +19,7 @@ impl From<PathBuf> for DocFile {
 impl DocFile {
 	pub fn new(n: PRNumber) -> Self {
 		let filename = DocFileName::from(n);
-		let file = PathBuf::from(filename.as_ref());
+		let file = PathBuf::from(filename);
 		let content = Self::load(&file).unwrap();
 		Self { file, content }
 	}
@@ -130,7 +69,7 @@ mod test_doc_file_name {
 
 	#[test]
 	fn test_mix() {
-		assert_eq!(DocFileName(String::from("pr_123.prdoc")), DocFileName::from(123));
+		assert_eq!(String::from("pr_123.prdoc"), DocFileName::from(123).to_string());
 	}
 
 	#[test]

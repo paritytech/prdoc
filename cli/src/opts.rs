@@ -2,7 +2,7 @@
 //! supported by the cli.
 
 use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
-use prdoclib::PRNumber;
+use prdoclib::{common::PRNumber, title::Title};
 use std::path::PathBuf;
 
 #[derive(Parser, Debug)]
@@ -60,7 +60,7 @@ pub struct GenOpts {
 
 	/// Change title
 	#[clap(short, long)]
-	pub title: Option<String>,
+	pub title: Option<Title>,
 
 	///Save to file
 	#[clap(short, long)]
@@ -71,17 +71,19 @@ pub struct GenOpts {
 	pub output_dir: PathBuf,
 }
 
-/// Check one or some prdoc files
+/// Check one or some prdoc files.
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
 	/// directory path
-	#[clap(exclusive = true)]
+	#[clap(short, long, default_value = ".")]
+	pub directory: PathBuf,
+
+	/// file path
+	#[clap(short, long, conflicts_with = "number")]
 	pub file: Option<PathBuf>,
 
-	#[clap(short, long, exclusive = true)]
-	pub directory: Option<PathBuf>,
-
-	#[clap(short, long, exclusive = true)]
+	/// number
+	#[clap(short, long)]
 	pub number: Option<PRNumber>,
 }
 
