@@ -54,7 +54,7 @@ impl Display for DocFileName {
 
 impl AsRef<Path> for DocFileName {
 	fn as_ref(&self) -> &Path {
-		&Path::new(&self.0)
+		Path::new(&self.0)
 	}
 }
 
@@ -64,9 +64,9 @@ impl From<PRNumber> for DocFileName {
 	}
 }
 
-impl Into<PathBuf> for DocFileName {
-	fn into(self) -> PathBuf {
-		PathBuf::from_str(&self.0).unwrap()
+impl From<DocFileName> for PathBuf {
+	fn from(val: DocFileName) -> Self {
+		PathBuf::from_str(&val.0).unwrap()
 	}
 }
 
@@ -96,7 +96,7 @@ impl DocFile {
 
 	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
 		//todo: remove unwrap
-		let files_iter = std::fs::read_dir(dir)
+		std::fs::read_dir(dir)
 			.unwrap()
 			.filter_map(|res| res.ok())
 			// Map the directory entries to paths
@@ -120,9 +120,7 @@ impl DocFile {
 				} else {
 					None
 				}
-			});
-
-		files_iter
+			})
 	}
 }
 

@@ -62,12 +62,12 @@ pub struct GenOpts {
 	#[clap(short, long)]
 	pub title: Option<String>,
 
-	/// Output to stdout only
+	///Save to file
 	#[clap(short, long)]
-	pub stdout: bool,
+	pub save: bool,
 
 	/// Output directory
-	#[clap(short, long, default_value = ".", conflicts_with = "stdout")]
+	#[clap(short, long, default_value = ".")]
 	pub output_dir: PathBuf,
 }
 

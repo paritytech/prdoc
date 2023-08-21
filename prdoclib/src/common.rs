@@ -1,4 +1,3 @@
-
 pub type PRNumber = u16;
 
 // impl Display for PRNumber {

@@ -1,8 +1,8 @@
-pub mod schema;
-pub mod docfile;
 pub mod common;
+pub mod docfile;
 pub mod error;
+pub mod schema;
 
-pub use schema::*;
-pub use docfile::*;
 pub use common::*;
+pub use docfile::*;
+pub use schema::*;

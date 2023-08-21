@@ -27,14 +27,14 @@ fn main() -> color_eyre::Result<()> {
 			let template = DocFile::generate();
 
 			// print to stdout or save to file
-			if cmd_opts.stdout {
-				debug!("Printing to stdout only");
+			if !cmd_opts.save {
+				debug!("Printing to stdout only, use --save to save to a file");
 				println!("{}", &template);
 				Ok(())
 			} else {
 				// cleanup title
 				let title = if let Some(title) = cmd_opts.title {
-					let cleaned_up_title = title.replace(" ", "_");
+					let cleaned_up_title = title.replace(' ', "_");
 					Some(cleaned_up_title)
 				} else {
 					None
@@ -64,10 +64,12 @@ fn main() -> color_eyre::Result<()> {
 
 			if let Some(dir) = cmd_opts.directory {
 				debug!("Checking directory {}", dir.display());
+				todo!();
 			}
 
 			if let Some(number) = cmd_opts.number {
 				debug!("Checking PR #{}", number);
+				todo!();
 			}
 
 			Ok(())
