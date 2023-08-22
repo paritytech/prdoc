@@ -100,7 +100,11 @@ fn main() -> color_eyre::Result<()> {
 				let res = DocFile::find(&dir, false);
 				let mut global_result = true;
 
+				let mut count = 0;
+
 				res.for_each(|file| {
+					count += 1;
+
 					// todo: DEDUP that
 					let result = Schema::check(&file);
 					if result {
@@ -112,9 +116,16 @@ fn main() -> color_eyre::Result<()> {
 					}
 				});
 
+				if count == 0 {
+					eprintln!("No valid file found in {}", dir.display());
+					std::process::exit(exitcode::DATAERR);
+				}
+
 				if global_result {
+					println!("All OK in {}", dir.display());
 					std::process::exit(exitcode::OK);
 				} else {
+					eprintln!("Some errors in {}", dir.display());
 					std::process::exit(exitcode::DATAERR);
 				}
 			}
