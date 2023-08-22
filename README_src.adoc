@@ -1,0 +1,16 @@
+:toc: right
+:prj: prdoc
+:cli: pass:q[`prdoc`]
+:repo: https://github.com/chevdor/prdoc
+
+= PRDoc
+
+image::https://github.com/chevdor/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master[link="https://github.com/chevdor/prdoc/actions/workflows/quick-check.yml"]
+
+include::doc/index.adoc[]
+
+== License
+
+----
+include::LICENSE[]
+----

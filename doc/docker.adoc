@@ -1,0 +1,38 @@
+
+== Docker
+
+If you prefer not having to install Rust & Cargo and have Docker installed, you may prefer to run a dockerized version of {cli}. The next chapters explain how to proceed.
+
+=== Run
+
+Docker commands can end up quite lenghty so you may like to set an alias:
+
+[subs="attributes+"]
+----
+    alias {prj}='docker run --rm -it {prj}'
+----
+
+After setting this alias, you may use {cli} by simply invoking the {cli} command:
+
+[subs="attributes+"]
+----
+    {prj} --version
+----
+
+NOTE: If you prefer a shorter a command, you may set an alias for `rl` instead of {cli}.
+
+This is out of the scope of this documentation but note that you cannot just invoke {cli} check and expect it to work on your local `specs.yaml`. For that to work, you need to mount your `specs.yaml` into the container. That looks like this:
+
+[subs="attributes+"]
+----
+    docker run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml {cli} list
+----
+
+=== Build
+
+You can pull the docker image from `chevdor`/{cli} or build you own:
+
+[subs="attributes+"]
+----
+    docker build -t {prj} .
+----
