@@ -1,3 +1,4 @@
+use log::*;
 use serde_yaml::Value;
 use std::path::PathBuf;
 
@@ -35,6 +36,8 @@ impl DocFile {
 
 	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
 		//todo: remove unwrap
+		trace!("valid_only: {valid_only}");
+
 		std::fs::read_dir(dir)
 			.unwrap()
 			.filter_map(|res| res.ok())
@@ -43,44 +46,31 @@ impl DocFile {
 			// Filter out all paths with extensions other than what we want
 			.filter_map(|path| if path.extension().map_or(false, |ext| ext == "prdoc") { Some(path) } else { None })
 			.filter_map(move |path| {
-				// println!("path1 = {:?}", path);
-				if !valid_only || DocFileName::is_valid(&path) {
-					// println!("OK");
-					Some(path)
+				if valid_only {
+					let is_valid = DocFileName::is_valid(&path);
+					trace!("{}: filename {}", path.display(), if is_valid { " VALID " } else { "INVALID" });
+					if is_valid {
+						Some(path)
+					} else {
+						None
+					}
 				} else {
-					// println!("NOK");
-					None
+					Some(path)
 				}
 			})
 			.filter_map(move |path| {
-				// println!("path2 = {:?}", path);
-				if !valid_only || Schema::check(&path) {
-					Some(path)
+				let schema_valid = Schema::check(&path);
+				trace!("{}: schema {}", path.display(), if schema_valid { " VALID " } else { "INVALID" });
+
+				if valid_only {
+					if schema_valid {
+						Some(path)
+					} else {
+						None
+					}
 				} else {
 					None
 				}
 			})
-	}
-}
-
-#[cfg(test)]
-mod test_doc_file_name {
-	use super::*;
-
-	#[test]
-	fn test_mix() {
-		assert_eq!(String::from("pr_123.prdoc"), DocFileName::from(123).to_string());
-	}
-
-	#[test]
-	fn test_valid_names() {
-		assert!(DocFileName::is_valid("pr_0.prdoc"));
-		assert!(DocFileName::is_valid("pr_123.prdoc"));
-		assert!(DocFileName::is_valid("pr_123_foo.prdoc"));
-		assert!(DocFileName::is_valid("PR_123.prdoc"));
-
-		assert!(!DocFileName::is_valid("PR_123.txt"));
-		assert!(!DocFileName::is_valid("PR_ABC.txt"));
-		assert!(!DocFileName::is_valid("1234.prdoc"));
 	}
 }

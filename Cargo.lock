@@ -683,6 +683,7 @@ dependencies = [
 name = "prdoclib"
 version = "0.0.0"
 dependencies = [
+ "log",
  "regex",
  "serde_json",
  "serde_yaml",

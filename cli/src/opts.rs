@@ -36,7 +36,7 @@ pub enum SubCommand {
 	Generate(GenOpts),
 
 	#[allow(missing_docs)]
-	#[clap(version = crate_version!(), author = crate_authors!())]
+	#[clap(alias = "validate", version = crate_version!(), author = crate_authors!())]
 	Check(CheckOpts),
 
 	#[allow(missing_docs)]

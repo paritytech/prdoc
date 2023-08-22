@@ -20,11 +20,11 @@ impl Schema {
 		}
 	}
 
-	pub fn check<P: AsRef<Path>>(file: P) -> bool {
+	pub fn check<P: AsRef<Path>>(file: &P) -> bool {
 		Self::load(file).is_ok()
 	}
 
-	pub fn load<P: AsRef<Path>>(file: P) -> crate::error::Result<Value> {
+	pub fn load<P: AsRef<Path>>(file: &P) -> crate::error::Result<Value> {
 		let schema_str = Self::get(true);
 		let json_schema: serde_json::Value = serde_json::from_str(&schema_str).unwrap();
 
@@ -43,8 +43,9 @@ impl Schema {
 		let validation_result_strict = validation.is_strictly_valid();
 
 		if !(validation_result && validation_result_strict) {
-			println!("errors: {:#?}", validation.errors);
-			println!("missing: {:#?}", validation.missing);
+			// todo: add a way to see those
+			// println!("errors: {:#?}", validation.errors);
+			// println!("missing: {:#?}", validation.missing);
 			return Err(PRdocLibError::ValidationErrors(validation));
 		}
 

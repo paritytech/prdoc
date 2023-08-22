@@ -2,7 +2,7 @@
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};
-use color_eyre::eyre::Context;
+use color_eyre::eyre::{bail, Context};
 use env_logger::Env;
 use log::*;
 use opts::*;
@@ -35,10 +35,6 @@ fn main() -> color_eyre::Result<()> {
 				println!("{}", &template);
 				Ok(())
 			} else {
-				// cleanup title
-				// let title: Option<Title> =
-				// if let Some(title) = cmd_opts.title { Some(title.cleanup().into()) } else { None };
-
 				// generate filename based on number and title
 				let filename: PathBuf = DocFileName::new(cmd_opts.number, cmd_opts.title).into();
 				let output_file = Path::new(&cmd_opts.output_dir).join(filename);
@@ -54,14 +50,17 @@ fn main() -> color_eyre::Result<()> {
 			debug!("Checking directory {}", dir.display());
 
 			if let Some(file) = cmd_opts.file {
-				let full_path = if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
+				let file = if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
 
-				debug!("Checking file {}", full_path.display());
+				debug!("Checking file {}", file.display());
 
-				let result = Schema::check(full_path);
+				// todo: DEDUP that
+				let result = Schema::check(&file);
 				if result {
+					println!("OK  {}", file.display());
 					std::process::exit(exitcode::OK);
 				} else {
+					eprintln!("ERR {}", file.display());
 					std::process::exit(exitcode::DATAERR);
 				}
 			}
@@ -69,24 +68,55 @@ fn main() -> color_eyre::Result<()> {
 			if let Some(number) = cmd_opts.number {
 				debug!("Checking PR #{}", number);
 
-				let filename: PathBuf = DocFileName::from(number).into();
-				let full_path = Path::new(&dir).join(filename);
+				let search = DocFileName::find(number, None, &dir);
 
-				// todo: check if there is a matching file with another title
-				debug!("Checking file {}", full_path.display());
+				let file_maybe = match search {
+					Ok(f) => f,
+					Err(e) => {
+						eprintln!("e = {:?}", e);
+						std::process::exit(exitcode::DATAERR)
+					}
+				};
 
-				// todo: DEDUP that
-				let result = Schema::check(full_path);
-				if result {
-					std::process::exit(exitcode::OK);
+				if let Some(file) = file_maybe {
+					debug!("Checking file {}", file.display());
+
+					// todo: DEDUP that
+					let result = Schema::check(&file);
+					if result {
+						println!("OK  {}", file.display());
+						std::process::exit(exitcode::OK);
+					} else {
+						eprintln!("ERR {}", file.display());
+						std::process::exit(exitcode::DATAERR);
+					}
 				} else {
-					std::process::exit(exitcode::DATAERR);
+					bail!("No file found");
 				}
 			}
 
 			if cmd_opts.number.is_none() && cmd_opts.file.is_none() {
 				debug!("Checking all files in folder {}", dir.display());
-				todo!();
+				let res = DocFile::find(&dir, false);
+				let mut global_result = true;
+
+				res.for_each(|file| {
+					// todo: DEDUP that
+					let result = Schema::check(&file);
+					if result {
+						global_result &= true;
+						println!("OK  {}", file.display());
+					} else {
+						global_result &= false;
+						eprintln!("ERR {}", file.display());
+					}
+				});
+
+				if global_result {
+					std::process::exit(exitcode::OK);
+				} else {
+					std::process::exit(exitcode::DATAERR);
+				}
 			}
 
 			Ok(())
