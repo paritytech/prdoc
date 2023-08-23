@@ -1,4 +1,5 @@
 use regex::Regex;
+use serde::Serialize;
 use std::{
 	ffi::OsString,
 	fmt::Display,
@@ -12,7 +13,7 @@ use crate::{
 	title::Title,
 };
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Serialize)]
 pub struct DocFileName {
 	pub number: PRNumber,
 	pub title: Option<Title>,
@@ -32,7 +33,7 @@ impl DocFileName {
 	}
 
 	fn get_regex() -> Regex {
-		Regex::new(r"^pr_(?<number>\d+).*\.prdoc$").unwrap()
+		Regex::new(r"^pr_(?<number>\d+)(?<title>.*)\.prdoc$").unwrap()
 	}
 
 	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
@@ -119,6 +120,37 @@ impl From<DocFileName> for PathBuf {
 	}
 }
 
+impl TryFrom<&PathBuf> for DocFileName {
+	type Error = String;
+
+	fn try_from(p: &PathBuf) -> Result<Self, Self::Error> {
+		let re: Regex = Self::get_regex();
+
+		//todo: remove unwrap/expect in here
+		let file = p.file_name().expect("Invalid file");
+		let filename = file.to_str().expect("Invalid file");
+
+		let number = re.captures(filename).and_then(|cap| {
+			cap.name("number").map(|n| {
+				let s = n.as_str();
+				let my_num: PRNumber = s.parse().unwrap();
+				my_num
+			})
+		});
+
+		let title: Option<Title> = re
+			.captures(filename)
+			.and_then(|cap| cap.name("title").map(|s| if s.is_empty() { None } else { Some(Title::from(s.as_str())) }))
+			.unwrap();
+
+		if let Some(number) = number {
+			Ok(DocFileName::new(number, title))
+		} else {
+			Err(format!("Invalid filename: {}", filename))
+		}
+	}
+}
+
 #[cfg(test)]
 mod test_doc_file_name {
 	use super::*;
@@ -143,8 +175,15 @@ mod test_doc_file_name {
 	#[test]
 	fn test_find() {
 		assert_eq!(
-			Some(PathBuf::from("../tests/data/pr_1234_some_test_minimal.prdoc")),
-			DocFileName::find(1234, None, &PathBuf::from("../tests/data")).unwrap()
+			Some(PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc")),
+			DocFileName::find(1234, None, &PathBuf::from("../tests/data/some")).unwrap()
 		);
+	}
+
+	#[test]
+	fn test_from_pathbuf() {
+		let dfn = DocFileName::try_from(&PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc")).unwrap();
+		assert_eq!(1234, dfn.number);
+		assert_eq!(Some(Title::from("_some_test_minimal")), dfn.title);
 	}
 }

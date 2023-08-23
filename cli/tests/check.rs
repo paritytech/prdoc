@@ -14,28 +14,29 @@ mod cli_tests {
 		#[test]
 		fn it_check_with_number_when_valid() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["check", "-d", "../tests/data", "-n", "1234"]).assert();
+			let assert = cmd.args(["check", "-d", "../tests/data/some", "-n", "1234"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_check_with_number_when_invalid() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["check", "-d", "../tests/data", "-n", "1"]).assert();
+			let assert = cmd.args(["check", "-d", "../tests/data/some", "-n", "1"]).assert();
 			assert.failure().code(exitcode::DATAERR);
 		}
 
 		#[test]
 		fn it_check_with_file_when_valid() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["check", "-f", "../tests/data/pr_1234_some_test_minimal.prdoc"]).assert();
+			let assert = cmd.args(["check", "-f", "../tests/data/some/pr_1234_some_test_minimal.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_check_with_file_and_dir_when_valid() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["check", "-d", "../tests/data", "-f", "pr_1234_some_test_minimal.prdoc"]).assert();
+			let assert =
+				cmd.args(["check", "-d", "../tests/data/some", "-f", "pr_1234_some_test_minimal.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 	}

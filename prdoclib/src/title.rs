@@ -1,9 +1,11 @@
 use std::{ffi::OsString, fmt::Display};
 
+use serde::Serialize;
+
 /// This struct is used to store the title of a change
 /// and provide functions to convert into an OsString that
 /// can be used as filename.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct Title(pub String);
 
 impl Title {

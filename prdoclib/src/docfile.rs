@@ -69,7 +69,7 @@ impl DocFile {
 						None
 					}
 				} else {
-					None
+					Some(path)
 				}
 			})
 	}

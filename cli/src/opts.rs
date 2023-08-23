@@ -103,8 +103,16 @@ pub struct ScanOpts {
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
 	/// directory path
-	#[clap(index = 1, default_value = ".")]
-	pub directory: Option<PathBuf>,
+	#[clap(short, long, default_value = ".")]
+	pub directory: PathBuf,
+
+	/// file path
+	#[clap(short, long, conflicts_with = "number")]
+	pub file: Option<PathBuf>,
+
+	/// number
+	#[clap(short, long)]
+	pub number: Option<PRNumber>,
 }
 
 /// Retrieve the JSON schema that is used internally

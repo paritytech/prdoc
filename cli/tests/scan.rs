@@ -7,7 +7,7 @@ mod cli_tests {
 		#[test]
 		fn it_provides_a_scan() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["scan", "../tests/data"]).assert();
+			let assert = cmd.args(["scan", "../tests/data/some"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 	}
