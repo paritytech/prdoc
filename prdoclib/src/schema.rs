@@ -5,7 +5,7 @@ use valico::json_schema;
 
 use crate::error::PRdocLibError;
 
-pub const JSON_SCHEMA: &str = include_str!("../../schema.json");
+pub const JSON_SCHEMA: &str = include_str!("../schema.json");
 pub const EXTENSION: &str = "prdoc";
 pub struct Schema {}
 

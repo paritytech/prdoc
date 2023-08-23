@@ -30,7 +30,7 @@ impl DocFile {
 	}
 
 	pub fn generate() -> String {
-		let template = include_str!("../../template.prdoc");
+		let template = include_str!("../template.prdoc");
 		String::from(template)
 	}
 
