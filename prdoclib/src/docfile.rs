@@ -35,7 +35,6 @@ impl DocFile {
 	}
 
 	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
-		//todo: remove unwrap
 		trace!("valid_only: {valid_only}");
 
 		std::fs::read_dir(dir)

@@ -51,7 +51,8 @@ pub enum SubCommand {
 	#[clap(version = crate_version!(), author = crate_authors!())]
 	Schema(SchemaOpts),
 }
-/// todo
+/// Generate a new file. It will be printed to stdout by default unless you provide
+/// the `--save` flag.
 #[derive(Parser, Debug)]
 pub struct GenOpts {
 	/// Change number
@@ -62,7 +63,7 @@ pub struct GenOpts {
 	#[clap(short, long)]
 	pub title: Option<Title>,
 
-	///Save to file
+	/// Save the generated document to file with the proper naming
 	#[clap(short, long)]
 	pub save: bool,
 
@@ -71,14 +72,14 @@ pub struct GenOpts {
 	pub output_dir: PathBuf,
 }
 
-/// Check one or some prdoc files.
+/// Check one or MORE `prdoc` files for validity.
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
-	/// directory path
+	/// Base directory for the files
 	#[clap(short, long, default_value = ".")]
 	pub directory: PathBuf,
 
-	/// file path
+	/// Directly specify the file to be checked. It can be relative to the base directory.
 	#[clap(short, long, conflicts_with = "number")]
 	pub file: Option<PathBuf>,
 

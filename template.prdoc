@@ -2,7 +2,7 @@
 
 doc:
   - audience: Core Dev
-    description: todo
+    description: ...
 
 migrations:
   db: []
