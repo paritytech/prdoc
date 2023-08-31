@@ -22,3 +22,4 @@ serde_yaml = { version = "0.9", optional = false }
 serde_json = { version = "1.0", optional = false }
 thiserror = "1.0"
 log = "0.4"
+exitcode = "1.1"

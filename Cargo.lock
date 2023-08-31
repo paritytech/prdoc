@@ -683,6 +683,7 @@ dependencies = [
 name = "prdoclib"
 version = "0.0.1"
 dependencies = [
+ "exitcode",
  "log",
  "regex",
  "serde",
