@@ -2,6 +2,7 @@
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};
+use color_eyre::eyre::bail;
 use env_logger::Env;
 use log::*;
 use opts::*;
@@ -39,8 +40,14 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Load(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			let _res = LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json);
-			Ok(())
+			let result =
+				LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json).unwrap();
+
+			if result.is_some_and(|r| !r) {
+				bail!("There were errors found while processing files in {}", cmd_opts.directory.display());
+			} else {
+				std::process::exit(exitcode::OK);
+			}
 		}
 
 		Some(SubCommand::Schema(cmd_opts)) => {
