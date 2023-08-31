@@ -116,8 +116,7 @@ pub struct LoadOpts {
 
 	/// Get the list of PR numbers from a file
 	#[clap(short, long, conflicts_with_all = ["file", "number"])]
-	pub list:  Option<PathBuf>,
-
+	pub list: Option<PathBuf>,
 }
 
 /// Retrieve the JSON schema that is used internally

@@ -28,37 +28,32 @@ impl CheckCmd {
 
 		if let Some(number) = number {
 			debug!("Checking PR #{}", number);
-			let search = DocFileName::find(number, None, &dir);
+			let search = DocFileName::find(number, None, dir);
 
-			let file_maybe = match search {
+			let file = match search {
 				Ok(f) => f,
 				Err(e) => {
 					eprintln!("e = {:?}", e);
 					std::process::exit(exitcode::DATAERR)
-				}
+				},
 			};
 
-			if let Some(file) = file_maybe {
-				debug!("Checking file {}", file.display());
+			debug!("Checking file {}", file.display());
 
-				// todo: DEDUP that
-				let result = Schema::check(&file);
-				if result {
-					println!("OK  {}", file.display());
-					std::process::exit(exitcode::OK);
-				} else {
-					eprintln!("ERR {}", file.display());
-					std::process::exit(exitcode::DATAERR);
-				}
+			// todo: DEDUP that
+			let result = Schema::check(&file);
+			if result {
+				println!("OK  {}", file.display());
+				std::process::exit(exitcode::OK);
 			} else {
-				eprintln!("No file found");
-				std::process::exit(exitcode::DATAERR)
+				eprintln!("ERR {}", file.display());
+				std::process::exit(exitcode::DATAERR);
 			}
 		}
 
 		if number.is_none() && file.is_none() {
 			debug!("Checking all files in folder {}", dir.display());
-			let res = DocFile::find(&dir, false);
+			let res = DocFile::find(dir, false);
 			let mut global_result = true;
 
 			let mut count = 0;

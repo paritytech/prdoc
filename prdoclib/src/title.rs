@@ -5,7 +5,7 @@ use serde::Serialize;
 /// This struct is used to store the title of a change
 /// and provide functions to convert into an OsString that
 /// can be used as filename.
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Hash)]
 pub struct Title(pub String);
 
 impl Title {
@@ -56,6 +56,9 @@ mod test_super {
 
 	#[test]
 	fn test_from_os_string() {
-		assert_eq!("Original title".to_string(), Title::from(OsString::from("Original_title")).to_string());
+		assert_eq!(
+			"Original title".to_string(),
+			Title::from(OsString::from("Original_title")).to_string()
+		);
 	}
 }

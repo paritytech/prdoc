@@ -1,93 +1,109 @@
-use std::path::{Path, PathBuf};
-use log::{debug, info};
 use crate::{
-	common::PRNumber, docfile::DocFile, docfile_wrapper::DocFileWrapper, docfilename::DocFileName, schema::Schema,
+	common::PRNumber,
+	docfile::DocFile,
+	docfile_wrapper::DocFileWrapper,
+	docfilename::DocFileName,
+	error::{self, Result},
+	schema::Schema,
 };
+use std::{path::{Path, PathBuf}, collections::HashSet};
 
 pub struct LoadCmd;
 
 //TODO: remove std::process::exit and return proper errors
 
 impl LoadCmd {
-	pub fn run(dir: &PathBuf, file: Option<PathBuf>, number: Option<Vec<PRNumber>>, list: Option<PathBuf>, json: bool) {
-		debug!("Checking directory {}", dir.display());
+	/// Load PRDoc from one or more numbers
+	pub(crate) fn load_numbers(
+		numbers: Vec<PRNumber>,
+		dir: &PathBuf,
+	) -> error::Result<HashSet<DocFileWrapper>> {
+		let res = numbers
+			.iter()
+			.filter_map(|&number| {
+				log::debug!("Loading PR #{}", number);
 
-		if let Some(file) = file {
-			let file = if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
-			let filename_maybe = DocFileName::try_from(&file);
+				let file_maybe = DocFileName::find(number, None, dir);
 
-			if let Ok(filename) = filename_maybe {
-				debug!("Checking file {}", file.display());
+				match file_maybe {
+					Ok(file) => {
+						let filename = DocFileName::try_from(&file)
+							.expect("If we found a file, it should be valid");
 
-				// todo: DEDUP that
-				let yaml = Schema::load(&file);
-				if let Ok(value) = yaml {
-					let wrapper = DocFileWrapper::new(filename, value);
-					if json {
-						println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-					} else {
-						println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-					}
-					std::process::exit(exitcode::OK);
-				} else {
-					eprintln!("Error: {}", file.display());
-					std::process::exit(exitcode::DATAERR);
-				}
-			} else {
-				eprintln!("Error: {}", file.display());
-				std::process::exit(exitcode::DATAERR);
-			}
-		}
-
-		// todo: handle the "number" case
-		if let Some(numbers) = number.clone() {
-			for number in numbers {
-				debug!("Checking PR #{}", number);
-				let search = DocFileName::find(number, None, &dir);
-
-				let file_maybe = match search {
-					Ok(f) => f,
-					Err(e) => {
-						eprintln!("e = {:?}", e);
-						std::process::exit(exitcode::DATAERR)
-					}
-				};
-
-				if let Some(file) = file_maybe {
-					let filename_maybe = DocFileName::try_from(&file);
-
-					debug!("Checking file {}", file.display());
-					if let Ok(filename) = filename_maybe {
-						// todo: DEDUP that
 						let yaml = Schema::load(&file);
-						if let Ok(value) = yaml {
-							let wrapper = DocFileWrapper::new(filename, value);
 
-							if json {
-								println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-							} else {
-								println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-							}
-							std::process::exit(exitcode::OK);
+						if let Ok(value) = yaml {
+							Some(DocFileWrapper::new(filename, value))
 						} else {
-							eprintln!("Error: {}", file.display());
-							std::process::exit(exitcode::DATAERR);
+							None
 						}
-					} else {
-						eprintln!("No file found");
-						std::process::exit(exitcode::DATAERR);
-					}
-				} else {
-					eprintln!("Error with PR {:?}", number);
-					std::process::exit(exitcode::DATAERR);
+					},
+					Err(e) => {
+						log::warn!("{e:?}");
+						None
+					},
 				}
+			})
+			.collect();
+
+		// println!("res = {:?}", res);
+
+		Ok(res)
+	}
+
+	/// Load one file and returns a wrapper
+	pub(crate) fn load_file(file: &PathBuf) -> Result<DocFileWrapper> {
+		let filename = DocFileName::try_from(file)?;
+		let value = Schema::load(&file)?;
+		let wrapper = DocFileWrapper::new(filename, value);
+		Ok(wrapper)
+	}
+
+	pub fn run(
+		dir: &PathBuf,
+		file: Option<PathBuf>,
+		numbers: Option<Vec<PRNumber>>,
+		list: Option<PathBuf>,
+		json: bool,
+	) -> Result<()> {
+		log::debug!("Loading from directory {}", dir.display());
+
+		// FILE
+		if let Some(f) = file.clone() {
+			let file_abs = if f.is_relative() { Path::new(&dir).join(&f) } else { f.clone() };
+			let wrapper = Self::load_file(&file_abs)?;
+
+			if json {
+				println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
+			} else {
+				println!("{}", serde_yaml::to_string(&wrapper).unwrap());
 			}
+			return Ok(());
 		}
 
+		// NUMBER(s)
+		if let Some(numbers) = numbers.clone() {
+			log::debug!("Loading numbers {:?}", numbers);
+			let wrapper = Self::load_numbers(numbers, dir).unwrap(); // todo
+			if json {
+				println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
+			} else {
+				println!("{}", serde_yaml::to_string(&wrapper).unwrap());
+			}
+			return Ok(());
+		}
+
+		// LIST
+		if let Some(_list) = list {
+			todo!();
+			return Ok(());
+		}
+
+		// ALL FROM FOLDER
 		// todo: handle the dir case
-		if number.is_none() && file.is_none() {
-			debug!("Loading all files in folder {}", dir.display());
-			let res = DocFile::find(&dir, false);
+		if numbers.is_none() && file.is_none() {
+			log::debug!("Loading all files in folder {}", dir.display());
+			let res = DocFile::find(dir, false);
 			let mut global_result = true;
 
 			let mut count = 0;
@@ -104,7 +120,7 @@ impl LoadCmd {
 						let wrapper = DocFileWrapper::new(filename, value);
 
 						global_result &= true;
-						info!("OK  {}", file.display());
+						log::info!("OK  {}", file.display());
 						files.push(wrapper);
 					} else {
 						global_result &= false;
@@ -149,6 +165,8 @@ impl LoadCmd {
 			} else {
 				std::process::exit(exitcode::DATAERR);
 			}
+		} else {
+			unreachable!();
 		}
 	}
 }

@@ -1,11 +1,16 @@
-use std::path::{PathBuf, Path};
-use log::debug;
 use crate::{common::PRNumber, docfile::DocFile, docfilename::DocFileName, title::Title};
+use log::debug;
+use std::path::{Path, PathBuf};
 
 pub struct GenerateCmd;
 
 impl GenerateCmd {
-	pub fn run(save: bool, number: PRNumber, title: Option<Title>, output_dir: &PathBuf) -> std::io::Result<()> {
+	pub fn run(
+		save: bool,
+		number: PRNumber,
+		title: Option<Title>,
+		output_dir: &PathBuf,
+	) -> std::io::Result<()> {
 		// generate doc
 		let template = DocFile::generate();
 

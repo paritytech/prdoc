@@ -46,7 +46,7 @@ impl Schema {
 			// todo: add a way to see those
 			// println!("errors: {:#?}", validation.errors);
 			// println!("missing: {:#?}", validation.missing);
-			return Err(PRdocLibError::ValidationErrors(validation));
+			return Err(PRdocLibError::ValidationErrors(validation))
 		}
 
 		Ok(doc_as_yaml)

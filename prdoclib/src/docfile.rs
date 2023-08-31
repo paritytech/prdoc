@@ -44,11 +44,21 @@ impl DocFile {
 			// Map the directory entries to paths
 			.map(|dir_entry| dir_entry.path())
 			// Filter out all paths with extensions other than what we want
-			.filter_map(|path| if path.extension().map_or(false, |ext| ext == "prdoc") { Some(path) } else { None })
+			.filter_map(|path| {
+				if path.extension().map_or(false, |ext| ext == "prdoc") {
+					Some(path)
+				} else {
+					None
+				}
+			})
 			.filter_map(move |path| {
 				if valid_only {
 					let is_valid = DocFileName::is_valid(&path);
-					trace!("{}: filename {}", path.display(), if is_valid { " VALID " } else { "INVALID" });
+					trace!(
+						"{}: filename {}",
+						path.display(),
+						if is_valid { " VALID " } else { "INVALID" }
+					);
 					if is_valid {
 						Some(path)
 					} else {
@@ -60,7 +70,11 @@ impl DocFile {
 			})
 			.filter_map(move |path| {
 				let schema_valid = Schema::check(&path);
-				trace!("{}: schema {}", path.display(), if schema_valid { " VALID " } else { "INVALID" });
+				trace!(
+					"{}: schema {}",
+					path.display(),
+					if schema_valid { " VALID " } else { "INVALID" }
+				);
 
 				if valid_only {
 					if schema_valid {

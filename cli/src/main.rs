@@ -5,10 +5,10 @@ use clap::{crate_name, crate_version, Parser};
 use env_logger::Env;
 use log::*;
 use opts::*;
-use std::env;
 use prdoclib::commands::{
 	check::CheckCmd, generate::GenerateCmd, load::LoadCmd, schema::SchemaCmd, version::VersionCmd,
 };
+use std::env;
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
@@ -39,9 +39,8 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Load(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json);
-			unreachable!();
-			// Ok(())
+			let _res = LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json);
+			Ok(())
 		}
 
 		Some(SubCommand::Schema(cmd_opts)) => {

@@ -9,11 +9,11 @@ use std::{
 
 use crate::{
 	common::PRNumber,
-	error::{self},
+	error::{self, PRdocLibError},
 	title::Title,
 };
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Hash)]
 pub struct DocFileName {
 	pub number: PRNumber,
 	pub title: Option<Title>,
@@ -41,11 +41,12 @@ impl DocFileName {
 		let file_only = filename.as_ref().components().last();
 		if let Some(file) = file_only {
 			match file {
-				std::path::Component::Prefix(_)
-				| std::path::Component::RootDir
-				| std::path::Component::CurDir
-				| std::path::Component::ParentDir => false,
-				std::path::Component::Normal(f) => re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
+				std::path::Component::Prefix(_) |
+				std::path::Component::RootDir |
+				std::path::Component::CurDir |
+				std::path::Component::ParentDir => false,
+				std::path::Component::Normal(f) =>
+					re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
 			}
 		} else {
 			false
@@ -53,7 +54,11 @@ impl DocFileName {
 	}
 
 	/// Search for a PR Doc in a given folder and matching the args
-	pub fn find(number: PRNumber, title: Option<String>, directory: &PathBuf) -> error::Result<Option<PathBuf>> {
+	pub fn find(
+		number: PRNumber,
+		title: Option<String>,
+		directory: &PathBuf,
+	) -> error::Result<PathBuf> {
 		if title.is_some() {
 			todo!("Searching by Number + title is not implemented yet, needed ?");
 		}
@@ -66,7 +71,7 @@ impl DocFileName {
 				// First we exclude anything that is not a file
 				let metadata = std::fs::metadata(candidate.path()).unwrap();
 				if !metadata.is_file() {
-					return None;
+					return None
 				}
 
 				// Fetch the file name
@@ -90,14 +95,14 @@ impl DocFileName {
 				} else {
 					None
 				}
-			}
+			},
 			Err(_e) => None,
 		});
 
 		if let Some(hit) = hit_maybe {
-			Ok(Some(hit))
+			Ok(hit)
 		} else {
-			Ok(None)
+			Err(PRdocLibError::NumberNotFound(number))
 		}
 	}
 }
@@ -121,7 +126,7 @@ impl From<DocFileName> for PathBuf {
 }
 
 impl TryFrom<&PathBuf> for DocFileName {
-	type Error = String;
+	type Error = PRdocLibError;
 
 	fn try_from(p: &PathBuf) -> Result<Self, Self::Error> {
 		let re: Regex = Self::get_regex();
@@ -140,13 +145,21 @@ impl TryFrom<&PathBuf> for DocFileName {
 
 		let title: Option<Title> = re
 			.captures(filename)
-			.and_then(|cap| cap.name("title").map(|s| if s.is_empty() { None } else { Some(Title::from(s.as_str())) }))
+			.and_then(|cap| {
+				cap.name("title").map(|s| {
+					if s.is_empty() {
+						None
+					} else {
+						Some(Title::from(s.as_str()))
+					}
+				})
+			})
 			.unwrap();
 
 		if let Some(number) = number {
 			Ok(DocFileName::new(number, title))
 		} else {
-			Err(format!("Invalid filename: {}", filename))
+			Err(PRdocLibError::InvalidFilename(filename.to_string()))
 		}
 	}
 }
@@ -182,7 +195,10 @@ mod test_doc_file_name {
 
 	#[test]
 	fn test_from_pathbuf() {
-		let dfn = DocFileName::try_from(&PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc")).unwrap();
+		let dfn = DocFileName::try_from(&PathBuf::from(
+			"../tests/data/some/pr_1234_some_test_minimal.prdoc",
+		))
+		.unwrap();
 		assert_eq!(1234, dfn.number);
 		assert_eq!(Some(Title::from("_some_test_minimal")), dfn.title);
 	}

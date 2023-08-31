@@ -1,6 +1,8 @@
 use thiserror::Error;
 use valico::json_schema::ValidationState;
 
+use crate::common::PRNumber;
+
 /// Result type alias
 pub type Result<T> = std::result::Result<T, PRdocLibError>;
 
@@ -12,6 +14,12 @@ pub enum PRdocLibError {
 
 	#[error("ValidationErrors {0:?}")]
 	ValidationErrors(ValidationState),
+
+	#[error("PRDoc not found for number {0}")]
+	NumberNotFound(PRNumber),
+
+	#[error("The filename is not valid: {0}")]
+	InvalidFilename(String),
 
 	/// Unknown error
 	#[error("Unknown error")]
