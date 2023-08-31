@@ -8,20 +8,11 @@ use crate::docfilename::DocFileName;
 /// - pr number
 /// - title
 
-#[derive(Debug, Serialize, Hash)]
+#[derive(Debug, Serialize, Hash, PartialEq, Eq)]
 pub struct DocFileWrapper {
 	pub filename: DocFileName,
 	pub content: Value,
 }
-
-impl PartialEq for DocFileWrapper {
-	fn eq(&self, other: &Self) -> bool {
-		self.filename == other.filename
-	}
-}
-
-impl Eq for DocFileWrapper {}
-
 
 impl DocFileWrapper {
 	pub fn new(filename: DocFileName, content: Value) -> Self {

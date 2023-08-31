@@ -13,7 +13,7 @@ use crate::{
 	title::Title,
 };
 
-#[derive(Debug, PartialEq, Serialize, Hash)]
+#[derive(Debug, PartialEq, Serialize, Hash, Eq)]
 pub struct DocFileName {
 	pub number: PRNumber,
 	pub title: Option<Title>,
@@ -188,7 +188,7 @@ mod test_doc_file_name {
 	#[test]
 	fn test_find() {
 		assert_eq!(
-			Some(PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc")),
+			PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc"),
 			DocFileName::find(1234, None, &PathBuf::from("../tests/data/some")).unwrap()
 		);
 	}

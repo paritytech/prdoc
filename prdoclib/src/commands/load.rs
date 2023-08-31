@@ -6,7 +6,10 @@ use crate::{
 	error::{self, Result},
 	schema::Schema,
 };
-use std::{path::{Path, PathBuf}, collections::HashSet};
+use std::{
+	collections::HashSet,
+	path::{Path, PathBuf},
+};
 
 pub struct LoadCmd;
 
@@ -59,6 +62,16 @@ impl LoadCmd {
 		Ok(wrapper)
 	}
 
+	pub(crate) fn load_list(file: &PathBuf, dir: &PathBuf) -> Result<HashSet<DocFileWrapper>> {
+		let numbers: Vec<PRNumber> = std::fs::read_to_string(file)
+			.unwrap()
+			.lines()
+			.map(|line| line.parse::<PRNumber>().expect("A list file should only contain numbers"))
+			.collect();
+		let wrapper = Self::load_numbers(numbers, dir).unwrap();
+		Ok(wrapper)
+	}
+
 	pub fn run(
 		dir: &PathBuf,
 		file: Option<PathBuf>,
@@ -78,7 +91,7 @@ impl LoadCmd {
 			} else {
 				println!("{}", serde_yaml::to_string(&wrapper).unwrap());
 			}
-			return Ok(());
+			return Ok(())
 		}
 
 		// NUMBER(s)
@@ -90,13 +103,21 @@ impl LoadCmd {
 			} else {
 				println!("{}", serde_yaml::to_string(&wrapper).unwrap());
 			}
-			return Ok(());
+			return Ok(())
 		}
 
 		// LIST
-		if let Some(_list) = list {
-			todo!();
-			return Ok(());
+		if let Some(list) = list {
+			log::debug!("Loading list from {:?}", list);
+			let wrapper = Self::load_list(&list, dir).unwrap(); // todo
+
+			// todo: extract the printing at the end
+			if json {
+				println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
+			} else {
+				println!("{}", serde_yaml::to_string(&wrapper).unwrap());
+			}
+			return Ok(())
 		}
 
 		// ALL FROM FOLDER

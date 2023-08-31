@@ -110,7 +110,9 @@ pub struct LoadOpts {
 	#[clap(short, long, conflicts_with = "number")]
 	pub file: Option<PathBuf>,
 
-	/// One or more PR numbers
+	/// One or more PR numbers.
+	/// Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the
+	/// `--list` option instead.
 	#[clap(short, long)]
 	pub number: Option<Vec<PRNumber>>,
 
