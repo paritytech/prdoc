@@ -1,3 +1,4 @@
+use super::utils::get_numbers_from_file;
 use crate::{common::PRNumber, doc_filename::DocFileName, docfile::DocFile, error, schema::Schema};
 use log::debug;
 use std::{
@@ -17,6 +18,51 @@ impl CheckCmd {
 
 	pub(crate) fn check_file(file: &PathBuf) -> bool {
 		Schema::check_file(&file)
+	}
+
+	pub(crate) fn check_numbers(
+		numbers: Vec<PRNumber>,
+		dir: &PathBuf,
+	) -> error::Result<HashSet<(PRNumber, bool)>> {
+		let res = numbers
+			.iter()
+			.map(|&number| {
+				log::debug!("Checking PR #{}", number);
+
+				let file_maybe = DocFileName::find(number, None, dir);
+
+				match file_maybe {
+					Ok(file) => {
+						let yaml = Schema::load(&file);
+
+						if let Ok(_value) = yaml {
+							(number, true)
+						} else {
+							(number, false)
+						}
+					},
+					Err(e) => {
+						log::warn!("{e:?}");
+						(number, false)
+					},
+				}
+			})
+			.collect();
+
+		Ok(res)
+	}
+
+	pub(crate) fn check_list(
+		file: &PathBuf,
+		dir: &PathBuf,
+	) -> error::Result<HashSet<(PRNumber, bool)>> {
+		let extract_numbers = get_numbers_from_file(file)?;
+
+		let numbers: Vec<PRNumber> =
+			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();
+
+		let res = Self::check_numbers(numbers, dir).unwrap();
+		Ok(res)
 	}
 
 	pub fn run(
@@ -63,9 +109,11 @@ impl CheckCmd {
 					.collect()
 			},
 
-			(None, None, Some(list)) => {
-				todo!()
-			},
+			(None, None, Some(list)) => Self::check_list(&list, dir)
+				.unwrap()
+				.iter()
+				.map(|(num, status)| (Some(*num), *status))
+				.collect(),
 
 			(None, None, None) => {
 				debug!("Checking all files in folder {}", dir.display());

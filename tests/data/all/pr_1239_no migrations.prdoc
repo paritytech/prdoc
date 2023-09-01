@@ -1,0 +1,24 @@
+doc:
+  - audience: Core Dev
+    description: some text
+
+  - audience: Validator
+    description: >
+      some other text
+      I am a single line
+      description in the end
+
+migrations:
+  db: []
+  runtime: []
+
+crates:
+  - name: sp-foobar-a
+    semver: major
+  - name: sp-foobar-b
+    semver: patch
+  - name: sp-foobar-c
+    # so we can explicitly say no change when the auto detect forces us to state the change.
+    semver: no change
+
+host_functions: []

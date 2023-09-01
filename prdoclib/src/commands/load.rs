@@ -11,9 +11,9 @@ use std::{
 	path::{Path, PathBuf},
 };
 
-pub struct LoadCmd;
+use super::utils::get_numbers_from_file;
 
-//TODO: remove std::process::exit and return proper errors
+pub struct LoadCmd;
 
 impl LoadCmd {
 	/// Load PRDoc from one or more numbers
@@ -68,19 +68,12 @@ impl LoadCmd {
 		file: &PathBuf,
 		dir: &PathBuf,
 	) -> Result<(bool, HashSet<DocFileWrapper>)> {
-		let mut global_result = true;
+		let extract_numbers = get_numbers_from_file(file)?;
+		let numbers: Vec<PRNumber> =
+			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();
 
-		let numbers: Vec<PRNumber> = std::fs::read_to_string(file)
-			.unwrap()
-			.lines()
-			.map(|line| {
-				let num = line.parse::<PRNumber>();
-				if num.is_err() {
-					global_result &= false;
-				}
-				num.expect("A list file should only contain numbers")
-			})
-			.collect();
+		let mut global_result = extract_numbers.iter().map(|(_, status, _)| status).all(|&x| x);
+
 		let (r, wrapper) = Self::load_numbers(numbers, dir).unwrap();
 		global_result &= r;
 		Ok((global_result, wrapper))
@@ -164,93 +157,5 @@ impl LoadCmd {
 		}
 
 		Ok(global_result)
-		// // FILE
-		// if let Some(f) = file.clone() {
-		// 	let file_abs = if f.is_relative() { Path::new(&dir).join(&f) } else { f.clone() };
-		// 	let wrapper = Self::load_file(&file_abs)?;
-
-		// 	if json {
-		// 		println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-		// 	} else {
-		// 		println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-		// 	}
-		// 	return Ok(());
-		// }
-
-		// NUMBER(s)
-		// if let Some(numbers) = numbers.clone() {
-		// 	log::debug!("Loading numbers {:?}", numbers);
-		// 	let wrapper = Self::load_numbers(numbers, dir).unwrap(); // todo
-		// 	if json {
-		// 		println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-		// 	} else {
-		// 		println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-		// 	}
-		// 	return Ok(());
-		// }
-
-		// LIST
-		// if let Some(list) = list {
-		// 	log::debug!("Loading list from {:?}", list);
-		// 	let wrapper: HashSet<DocFileWrapper> = Self::load_list(&list, dir).unwrap(); // todo
-
-		// 	// todo: extract the printing at the end
-		// 	if json {
-		// 		println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-		// 	} else {
-		// 		println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-		// 	}
-		// 	return Ok(());
-		// }
-
-		// ALL FROM FOLDER
-		// todo: handle the dir case
-		// if numbers.is_none() && file.is_none() {
-		// 	log::debug!("Loading all files in folder {}", dir.display());
-		// 	// todo: removw unwrap
-		// 	let (mut global_result, wrapper) = Self::load_from_folder(dir).unwrap();
-
-		// 	if json {
-		// 		println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-		// 	} else {
-		// 		println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-		// 	}
-
-		// 	// if files.is_empty() {
-		// 	// 	eprintln!("No valid file found in {}", dir.display());
-		// 	// 	std::process::exit(exitcode::DATAERR);
-		// 	// }
-
-		// 	let output_str = if json {
-		// 		serde_json::to_string_pretty(&wrapper).unwrap_or_else(|_| {
-		// 			global_result &= false;
-		// 			String::new()
-		// 		})
-		// 	} else {
-		// 		serde_yaml::to_string(&wrapper).unwrap_or_else(|_| {
-		// 			global_result &= false;
-		// 			String::new()
-		// 		})
-		// 	};
-
-		// 	println!("{output_str}");
-
-		// 	if !global_result {
-		// 		eprintln!("__________");
-		// 		eprintln!("Some errors in {}", dir.display());
-		// 	}
-
-		// 	Ok(())
-
-		// // println!("global_result = {:?}", global_result);
-		// // End process with appropriate status
-		// if global_result {
-		// 	std::process::exit(exitcode::OK);
-		// } else {
-		// 	std::process::exit(exitcode::DATAERR);
-		// }
-		// } else {
-		// 	unreachable!();
-		// }
 	}
 }
