@@ -88,7 +88,6 @@ impl LoadCmd {
 				let filename_maybe = DocFileName::try_from(&file);
 
 				if let Ok(filename) = filename_maybe {
-					// todo: DEDUP that
 					let yaml = Schema::load(&file);
 					if let Ok(value) = yaml {
 						let wrapper = DocFileWrapper::new(filename, value);

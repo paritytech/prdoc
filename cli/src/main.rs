@@ -1,4 +1,4 @@
-//! todo
+//! Entry point of the cli
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};

@@ -1,0 +1,11 @@
+Scan a directory for prdoc files
+
+Usage: prdoc scan [OPTIONS] [DIRECTORY]
+
+Arguments:
+  [DIRECTORY]  directory path [default: .]
+
+Options:
+  -a, --all   Also return invalid files
+  -j, --json  Output as json
+  -h, --help  Print help

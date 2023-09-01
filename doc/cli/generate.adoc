@@ -1,0 +1,13 @@
+Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
+
+Usage: prdoc generate [OPTIONS] <NUMBER>
+
+Arguments:
+  <NUMBER>  Change number
+
+Options:
+  -t, --title <TITLE>            Change title
+  -s, --save                     Save the generated document to file with the proper naming
+  -o, --output-dir <OUTPUT_DIR>  Output directory [default: .]
+  -j, --json                     Output as json
+  -h, --help                     Print help

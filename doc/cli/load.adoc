@@ -1,0 +1,11 @@
+Load one or more prdoc
+
+Usage: prdoc load [OPTIONS]
+
+Options:
+  -d, --directory <DIRECTORY>  directory path [default: .]
+  -f, --file <FILE>            file path
+  -n, --number <NUMBER>        One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
+  -l, --list <LIST>            Get the list of PR numbers from a file
+  -j, --json                   Output as json
+  -h, --help                   Print help

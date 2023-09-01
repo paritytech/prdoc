@@ -131,7 +131,7 @@ impl TryFrom<&PathBuf> for DocFileName {
 	fn try_from(p: &PathBuf) -> Result<Self, Self::Error> {
 		let re: Regex = Self::get_regex();
 
-		//todo: remove unwrap/expect in here
+		//todo: remove unwrap in here
 		let file = p.file_name().expect("Invalid file");
 		let filename = file.to_str().expect("Invalid file");
 

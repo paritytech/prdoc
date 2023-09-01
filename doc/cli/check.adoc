@@ -1,0 +1,11 @@
+Check one or MORE `prdoc` files for validity
+
+Usage: prdoc check [OPTIONS]
+
+Options:
+  -d, --directory <DIRECTORY>  Base directory for the files [default: .]
+  -f, --file <FILE>            Directly specify the file to be checked. It can be relative to the base directory
+  -n, --number <NUMBER>        number
+  -l, --list <LIST>            Get the list of PR numbers from a file
+  -j, --json                   Output as json
+  -h, --help                   Print help
