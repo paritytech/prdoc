@@ -1,8 +1,8 @@
 use crate::{
 	common::PRNumber,
+	doc_filename::DocFileName,
 	docfile::DocFile,
 	docfile_wrapper::DocFileWrapper,
-	docfilename::DocFileName,
 	error::{self, Result},
 	schema::Schema,
 };

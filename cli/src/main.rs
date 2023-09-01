@@ -28,8 +28,27 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			CheckCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number);
-			Ok(())
+			let results = CheckCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list);
+
+			if !opts.json {
+				for (number, result) in &results {
+					let n = match number {
+						Some(n) => n.to_string(),
+						None => "?".to_string(),
+					};
+					println!("PR #{n: <4} -> {}", if *result { "OK " } else { "ERR" });
+				}
+			} else {
+				let json = serde_json::to_string_pretty(&results).expect("We can serialize the result");
+				println!("{json}");
+			}
+
+			let all_good = results.iter().map(|(_number, res)| res).all(|&res| res);
+			if all_good {
+				std::process::exit(exitcode::OK)
+			} else {
+				std::process::exit(exitcode::DATAERR)
+			}
 		}
 
 		Some(SubCommand::Scan(cmd_opts)) => {

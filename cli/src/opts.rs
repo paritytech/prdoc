@@ -85,7 +85,11 @@ pub struct CheckOpts {
 
 	/// number
 	#[clap(short, long)]
-	pub number: Option<PRNumber>,
+	pub number: Option<Vec<PRNumber>>,
+
+	/// Get the list of PR numbers from a file
+	#[clap(short, long, conflicts_with_all = ["file", "number"])]
+	pub list: Option<PathBuf>,
 }
 
 /// Scan a directory for prdoc files

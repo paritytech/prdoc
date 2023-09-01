@@ -2,7 +2,7 @@ use log::*;
 use serde_yaml::Value;
 use std::path::PathBuf;
 
-use crate::{common::PRNumber, docfilename::DocFileName, schema::Schema};
+use crate::{common::PRNumber, doc_filename::DocFileName, schema::Schema};
 
 #[derive(Debug)]
 pub struct DocFile {
@@ -68,7 +68,7 @@ impl DocFile {
 				}
 			})
 			.filter_map(move |path| {
-				let schema_valid = Schema::check(&path);
+				let schema_valid = Schema::check_file(&path);
 				trace!(
 					"{}: schema {}",
 					path.display(),

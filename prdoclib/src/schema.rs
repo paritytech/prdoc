@@ -20,10 +20,11 @@ impl Schema {
 		}
 	}
 
-	pub fn check<P: AsRef<Path>>(file: &P) -> bool {
+	pub fn check_file<P: AsRef<Path>>(file: &P) -> bool {
 		Self::load(file).is_ok()
 	}
 
+	/// Load the content of a file. The name does not matter here.
 	pub fn load<P: AsRef<Path>>(file: &P) -> crate::error::Result<Value> {
 		let schema_str = Self::get(true);
 		let json_schema: serde_json::Value = serde_json::from_str(&schema_str).unwrap();

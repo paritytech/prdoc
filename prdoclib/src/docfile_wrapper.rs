@@ -1,7 +1,7 @@
 use serde::Serialize;
 use serde_yaml::Value;
 
-use crate::docfilename::DocFileName;
+use crate::doc_filename::DocFileName;
 
 /// This wrapper is used to extend a docfile with "external" data
 /// such as information we can find in the filename itself, that is:

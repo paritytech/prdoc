@@ -1,4 +1,4 @@
-use crate::{common::PRNumber, docfile::DocFile, docfilename::DocFileName, title::Title};
+use crate::{common::PRNumber, doc_filename::DocFileName, docfile::DocFile, title::Title};
 use log::debug;
 use std::path::{Path, PathBuf};
 
