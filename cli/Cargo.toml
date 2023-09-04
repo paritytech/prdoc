@@ -7,8 +7,8 @@ edition.workspace = true
 homepage.workspace = true
 keywords.workspace = true
 repository.workspace = true
+license.workspace = true
 
-license = "MIT"
 readme = "README.md"
 
 [dependencies]
