@@ -2,12 +2,11 @@
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};
-use color_eyre::eyre::bail;
 use env_logger::Env;
 use log::*;
 use opts::*;
 use prdoclib::commands::{
-	check::CheckCmd, generate::GenerateCmd, load::LoadCmd, schema::SchemaCmd, version::VersionCmd,
+	check::CheckCmd, generate::GenerateCmd, load::LoadCmd, scan::ScanCmd, schema::SchemaCmd, version::VersionCmd,
 };
 use std::env;
 
@@ -53,7 +52,7 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			SchemaCmd::run();
+			ScanCmd::run(&cmd_opts.directory, cmd_opts.all);
 			Ok(())
 		}
 
@@ -63,7 +62,13 @@ fn main() -> color_eyre::Result<()> {
 				LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json).unwrap();
 
 			if result.is_some_and(|r| !r) {
-				bail!("There were errors found while processing files in {}", cmd_opts.directory.display());
+				eprintln!(
+					"⚠️ There are errors with files in {}",
+					std::fs::canonicalize(cmd_opts.directory)
+						.map(|p| p.display().to_string())
+						.unwrap_or("?".to_string())
+				);
+				std::process::exit(exitcode::DATAERR)
 			} else {
 				std::process::exit(exitcode::OK);
 			}

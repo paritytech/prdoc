@@ -5,7 +5,7 @@ Usage: prdoc [OPTIONS] [COMMAND]
 Commands:
   generate  Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
   check     Check one or MORE `prdoc` files for validity
-  scan      Scan a directory for prdoc files
+  scan      Scan a directory for prdoc files based on their name
   load      Load one or more prdoc
   schema    Retrieve the JSON schema that is used internally
   help      Print this message or the help of the given subcommand(s)

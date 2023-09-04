@@ -1,4 +1,6 @@
 
+include::schema.adoc[]
+
 include::cli/index.adoc[]
 
 include::docker.adoc[]

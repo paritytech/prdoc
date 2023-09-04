@@ -17,4 +17,8 @@ WORKDIR /usr/local/bin
 COPY --from=builder /app/target/$PROFILE/prdoc /usr/local/bin
 
 USER parity
+WORKDIR /doc
+
+VOLUME [ "/doc" ]
+
 ENTRYPOINT [ "prdoc" ]

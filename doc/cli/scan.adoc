@@ -1,4 +1,4 @@
-Scan a directory for prdoc files
+Scan a directory for prdoc files based on their name
 
 Usage: prdoc scan [OPTIONS] [DIRECTORY]
 

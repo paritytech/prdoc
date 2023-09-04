@@ -15,17 +15,38 @@ The schema can be found here: [schema\_user.json](schema_user.json).
 
     cargo install prdoc
 
+Alternatively, you may use a the container image:
+
+        ENGINE=podman
+        DOC_PATH="$PWD/tests/data/some"
+        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc --help
+        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc scan --all
+        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc check
+        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc load
+
+The container image is working by default in `/doc` so it makes it simpler if you mount your doc there as shown
+above.
+
 ## Features
 
--   provide the `prdoc` user schema
+-   provide the `prdoc` user schema - generate new documents - scan for `prdoc` in a folder - check `prdoc` files -
+    load/aggregate `prdoc` files
 
--   generate new documents
+## Schemas
 
--   scan for `prdoc` in a folder
+### PR Doc
 
--   check `prdoc` files
+The documentation for PRs comes as a file with the extension `.prdoc`.
+This is essentially a `yaml` file and the extension helps using the right JSON schema to validate the file.
 
--   load/aggregate `prdoc` files
+In VScode, open your user settings and ensure you have the following section:
+
+    "yaml.schemas":  {
+        "/path/of/schema/pr_doc.json": "*.prdoc"
+    },
+
+Should initially have created the file with another extension such as `.txt`, make sure to change the format to
+`YAML` and the right schema should then be picked up.
 
 ## Usage
 
@@ -36,7 +57,7 @@ The schema can be found here: [schema\_user.json](schema_user.json).
     Commands:
       generate  Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
       check     Check one or MORE `prdoc` files for validity
-      scan      Scan a directory for prdoc files
+      scan      Scan a directory for prdoc files based on their name
       load      Load one or more prdoc
       schema    Retrieve the JSON schema that is used internally
       help      Print this message or the help of the given subcommand(s)
@@ -74,7 +95,7 @@ The schema can be found here: [schema\_user.json](schema_user.json).
 
 ### Scan
 
-    Scan a directory for prdoc files
+    Scan a directory for prdoc files based on their name
 
     Usage: prdoc scan [OPTIONS] [DIRECTORY]
 
@@ -116,43 +137,36 @@ The schema can be found here: [schema\_user.json](schema_user.json).
 
 ## Docker
 
-If you prefer not having to install Rust & Cargo and have Docker installed, you may prefer to run a dockerized version of `prdoc`. The next chapters explain how to proceed.
+If you prefer not having to install Rust & Cargo and have Docker installed, you may prefer to run a containerized
+version of `prdoc`. The next chapters explain how to proceed.
 
 ### Run
 
-Docker commands can end up quite lenghty so you may like to set an alias:
+Docker commands can end up quite lengthy so you may like to set an alias:
 
-        alias prdoc='docker run --rm -it prdoc'
+\[subs="attributes+"\] ----
+alias prdoc='docker run --rm -it prdoc'
 
-After setting this alias, you may use `prdoc` by simply invoking the `prdoc` command:
+    After setting this alias, you may use {cli} by simply invoking the {cli} command:
 
-        prdoc --version
+    [subs="attributes+"] ----
+        {prj} --version
 
 If you prefer a shorter a command, you may set an alias for `rl` instead of `prdoc`.
 
-This is out of the scope of this documentation but note that you cannot just invoke `prdoc` check and expect it to work on your local `specs.yaml`. For that to work, you need to mount your `specs.yaml` into the container. That looks like this:
+This is out of the scope of this documentation but note that you cannot just invoke `prdoc` check and expect it to work on
+your local `specs.yaml`. For that to work, you need to mount your `specs.yaml` into the container. That looks like this:
 
-        docker run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml <literal>prdoc</literal> list
+\[subs="attributes+"\] ----
+docker run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml `prdoc` list
 
-### Build
+    === Build
 
-You can pull the docker image from `chevdor`/`prdoc` or build you own:
+    You can pull the docker image from `chevdor`/{cli} or build you own:
 
-        docker build -t prdoc .
+    [subs="attributes+"] ----
+        docker build -t {prj} .
 
 ## License
 
-    Copyright 2021-2023 - Wilfried Kopp aka. Chevdor <chevdor@gmail.com>
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-    documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
-    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
-    persons to whom the Software is furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
-    Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-    WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-    OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+---- include::LICENSE\[\] ----

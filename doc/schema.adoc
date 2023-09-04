@@ -1,0 +1,17 @@
+== Schemas
+
+=== PR Doc
+
+The documentation for PRs comes as a file with the extension `.prdoc`.
+This is essentially a `yaml` file and the extension helps using the right JSON schema to validate the file.
+
+In VScode, open your user settings and ensure you have the following section:
+
+----
+"yaml.schemas":  {
+    "/path/of/schema/pr_doc.json": "*.prdoc"
+},
+----
+
+NOTE: Should initially have created the file with another extension such as `.txt`, make sure to change the format to
+`YAML` and the right schema should then be picked up.

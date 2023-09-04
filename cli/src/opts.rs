@@ -93,7 +93,7 @@ pub struct CheckOpts {
 	pub list: Option<PathBuf>,
 }
 
-/// Scan a directory for prdoc files
+/// Scan a directory for prdoc files based on their name
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
 	/// directory path

@@ -138,7 +138,7 @@ impl CheckCmd {
 				});
 
 				if count == 0 {
-					eprintln!("No valid file found in {}", dir.display());
+					eprintln!("⚠️ No valid file found in {}", dir.display());
 					std::process::exit(exitcode::DATAERR);
 				}
 
@@ -147,7 +147,12 @@ impl CheckCmd {
 					std::process::exit(exitcode::OK);
 				} else {
 					eprintln!("__________");
-					eprintln!("Some errors in {}", dir.display());
+					eprintln!(
+						"⚠️ There are errors with files in {}",
+						std::fs::canonicalize(dir)
+							.map(|p| p.display().to_string())
+							.unwrap_or("?".to_string())
+					);
 					// todo: show the issues
 					std::process::exit(exitcode::DATAERR);
 				}
