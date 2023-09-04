@@ -1,3 +1,5 @@
+//! Custom errors
+
 use thiserror::Error;
 use valico::json_schema::ValidationState;
 

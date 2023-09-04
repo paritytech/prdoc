@@ -4,8 +4,10 @@
 <img src="https://github.com/chevdor/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master" alt="badge" />
 </figure>
 
-`prdoc` is a tool helping with `/prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
-code change documentation.
+`prdoc` is a tool helping with `.prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
+code change documentation. While platform like Github allow a simple description for a Pull Request (PR), this is
+limited to a title, description and some labels. The description itself is often used to describe the change but not
+document it.
 
 ## Install
 
@@ -13,7 +15,7 @@ code change documentation.
 
 ## Features
 
--   provide the `prdoc` schema
+-   provide the `prdoc` user schema
 
 -   generate new documents
 
@@ -25,7 +27,7 @@ code change documentation.
 
 ## Usage
 
-    Define the list of all sub-commands
+    Definition of the cli flags and subcommands
 
     Usage: prdoc [OPTIONS] [COMMAND]
 
@@ -138,7 +140,7 @@ You can pull the docker image from `chevdor`/`prdoc` or build you own:
 
 ## License
 
-    Copyright 2021-2022 - Wilfried Kopp aka. Chevdor <chevdor@gmail.com>
+    Copyright 2021-2023 - Wilfried Kopp aka. Chevdor <chevdor@gmail.com>
 
     Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
     documentation files (the "Software"), to deal in the Software without restriction, including without limitation the

@@ -1,4 +1,4 @@
-Define the list of all sub-commands
+Definition of the cli flags and subcommands
 
 Usage: prdoc [OPTIONS] [COMMAND]
 

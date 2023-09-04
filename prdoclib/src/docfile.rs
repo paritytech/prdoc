@@ -1,3 +1,5 @@
+//! The content of a `prdoc` file
+
 use log::*;
 use serde_yaml::Value;
 use std::path::PathBuf;

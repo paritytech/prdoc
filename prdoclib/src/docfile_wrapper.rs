@@ -1,3 +1,5 @@
+//! A wrapper to serialize both content and filename
+
 use serde::Serialize;
 use serde_yaml::Value;
 

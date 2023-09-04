@@ -1,7 +1,4 @@
-pub type PRNumber = u16;
+//! Types, aliases and utils
 
-// impl Display for PRNumber {
-// 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-// 		f.write_fmt(format!("#{self}"))
-// 	}
-// }
+/// Type alias for the PR number
+pub type PRNumber = u16;

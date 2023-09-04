@@ -6,6 +6,7 @@ use std::{
 	path::{Path, PathBuf},
 };
 
+/// Implementation of the main [check](/prdoc::opts::CheckOpts) command of the cli.
 pub struct CheckCmd;
 
 //TODO: remove std::process::exit and return proper errors

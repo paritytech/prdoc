@@ -5,6 +5,7 @@ use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
 use prdoclib::{common::PRNumber, title::Title};
 use std::path::PathBuf;
 
+/// Definition of the cli flags and subcommands
 #[derive(Parser, Debug)]
 #[clap(color=ColorChoice::Auto, disable_version_flag = true, arg_required_else_help = true )]
 pub struct Opts {

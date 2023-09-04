@@ -1,3 +1,5 @@
+//! Definition of the standardized file names.
+
 use regex::Regex;
 use serde::Serialize;
 use std::{
@@ -13,6 +15,8 @@ use crate::{
 	title::Title,
 };
 
+/// A `prdoc` is made of its content: a [DocFile](/prdoclib::docfile::DocFile) but also requires a valid filename. This struct describe the filename
+/// pattern and provide helpers to build and check valid `prdoc` filenames.
 #[derive(Debug, PartialEq, Serialize, Hash, Eq)]
 pub struct DocFileName {
 	pub number: PRNumber,
@@ -41,12 +45,13 @@ impl DocFileName {
 		let file_only = filename.as_ref().components().last();
 		if let Some(file) = file_only {
 			match file {
-				std::path::Component::Prefix(_) |
-				std::path::Component::RootDir |
-				std::path::Component::CurDir |
-				std::path::Component::ParentDir => false,
-				std::path::Component::Normal(f) =>
-					re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
+				std::path::Component::Prefix(_)
+				| std::path::Component::RootDir
+				| std::path::Component::CurDir
+				| std::path::Component::ParentDir => false,
+				std::path::Component::Normal(f) => {
+					re.is_match(&PathBuf::from(f).display().to_string().to_lowercase())
+				},
 			}
 		} else {
 			false
@@ -71,7 +76,7 @@ impl DocFileName {
 				// First we exclude anything that is not a file
 				let metadata = std::fs::metadata(candidate.path()).unwrap();
 				if !metadata.is_file() {
-					return None
+					return None;
 				}
 
 				// Fetch the file name

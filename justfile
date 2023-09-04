@@ -3,7 +3,7 @@ export TAG:=`toml get Cargo.toml "workspace.package.version" | jq -r .`
 
 # List available commands
 _default:
-  just --choose --chooser "fzf +s -x --tac --cycle"
+	just --choose --chooser "fzf +s -x --tac --cycle"
 
 help:
 	just --list
@@ -37,16 +37,31 @@ check: clippy fmt
 
 # Generate the readme as .md
 md:
-  #!/usr/bin/env bash
-  asciidoctor -b docbook -a leveloffset=+1 -o - README_src.adoc | pandoc   --markdown-headings=atx --wrap=preserve -t markdown_strict -f docbook - > README.md
+	#!/usr/bin/env bash
+	asciidoctor -b docbook -a leveloffset=+1 -o - README_src.adoc | pandoc   --markdown-headings=atx --wrap=preserve -t markdown_strict -f docbook - > README.md
 
 tag:
-    #!/bin/sh
-    echo "Tagging version v$TAG"
-    git tag "v$TAG" -f
-    git tag | sort -Vr | head
+	#!/usr/bin/env bash
+	echo "Tagging version v$TAG"
+	git tag "v$TAG" -f
+	git tag | sort -Vr | head
 
 tag-push:
-	#!/bin/sh
+	#!/usr/bin/env bash
 	echo "Pushing version v$TAG"
 	git push origin "v$TAG"
+
+# Build container using podman by default
+build-container:
+	#!/usr/bin/env bash
+	ENGINE=${ENGINE:-podman}
+	$ENGINE build -t prdoc -t paritytech/prdoc -t docker.io/paritytech/prdoc .
+	$ENGINE run --rm -it prdoc --version
+
+# Build the Rust doc
+rustdoc:
+	./scripts/build-doc.sh
+
+# Watch and hot-reload the rustdoc
+rustdoc_watch:
+	cargo watch -s './scripts/build-doc.sh && browser-sync start --ss target/doc -s target/doc --directory --no-open'

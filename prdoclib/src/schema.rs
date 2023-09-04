@@ -1,12 +1,23 @@
+//! Schema used by [prdoc](/prdoc) for its validation
+//!
+//! [prdoc](/prdoc) does not really care about the schema itself and the data is not used or loaded. The schema is
+//! stored in the repository and embedded into the cli for convenience. The various commands do check that files
+//! comply with the schema but nothing more. That also means that the schema can be adjusted at any time without impact
+//! on the code.
+
 use regex::Regex;
 use serde_yaml::Value;
 use std::{fs::File, path::Path};
 use valico::json_schema;
-
 use crate::error::PRdocLibError;
 
-pub const JSON_SCHEMA: &str = include_str!("../schema.json");
+/// Default schema for the validation of data provided by developers
+pub const JSON_SCHEMA: &str = include_str!("./schema_user.json");
+
+/// Default file extension
 pub const EXTENSION: &str = "prdoc";
+
+/// The schema embedded in [prdoc](/prdoc).
 pub struct Schema {}
 
 impl Schema {
@@ -34,7 +45,6 @@ impl Schema {
 
 		let doc_as_json: serde_json::Value =
 			serde_yaml::from_value(serde_yaml::to_value(&doc_as_yaml).unwrap()).unwrap();
-		// let doc_as_json = serde_json::to_string(&yaml).unwrap();
 
 		let mut scope = json_schema::Scope::new();
 		let schema = scope.compile_and_return(json_schema, false).unwrap();

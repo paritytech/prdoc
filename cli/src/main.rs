@@ -1,4 +1,4 @@
-//! Entry point of the cli
+//! Entry point of the cli. The cli itself does not contain much, it is mostly a shell around the [prdoclib].
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};
