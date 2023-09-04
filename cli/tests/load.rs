@@ -21,7 +21,7 @@ mod cli_tests {
 		#[test]
 		fn it_loads_some_by_number() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1234", "-n", "1235"]).assert();
+			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1234", "-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
@@ -36,7 +36,7 @@ mod cli_tests {
 		fn it_loads_some_by_folder() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.arg("load").args(["-d", "../tests/data/some"]).assert();
-			assert.failure().code(1);
+			assert.failure().code(65);
 		}
 
 		#[test]
@@ -56,7 +56,7 @@ mod cli_tests {
 				.arg("load")
 				.args(["-d", "../tests/data/some", "--list", "../tests/data/lists/simple/some_good.txt"])
 				.assert();
-			assert.failure().code(1);
+			assert.failure().code(65);
 		}
 	}
 }
