@@ -1,11 +1,11 @@
 :toc: right
 :prj: prdoc
 :cli: pass:q[`prdoc`]
-:repo: https://github.com/chevdor/prdoc
+:repo: https://github.com/paritytech/prdoc
 
 = PRDoc
 
-image::https://github.com/chevdor/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master[link="https://github.com/chevdor/prdoc/actions/workflows/quick-check.yml"]
+image::https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master[link="https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml"]
 
 
 `prdoc` is a tool helping with `.prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
@@ -42,4 +42,6 @@ include::doc/index.adoc[]
 
 == License
 
----- include::LICENSE[] ----
+----
+include::LICENSE[]
+----

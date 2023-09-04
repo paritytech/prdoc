@@ -9,7 +9,7 @@ In VScode, open your user settings and ensure you have the following section:
 
 ----
 "yaml.schemas":  {
-    "/path/of/schema/pr_doc.json": "*.prdoc"
+    "/path/of/schema/schema_user.json": "*.prdoc"
 },
 ----
 

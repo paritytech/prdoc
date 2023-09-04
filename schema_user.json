@@ -1,5 +1,5 @@
 // 20230817152351
-// https://raw.githubusercontent.com/paritytech/release-engineering/18a24b11ba00d422422dfe6191df92a4a38f0134/schemas/pr_doc/pr_doc.json?token=GHSAT0AAAAAACFOQ4LPNPM7RZAMFHIVLVVMZG6FV3A
+// https://raw.githubusercontent.com/paritytech/prdoc/master/schema_user.json
 
 {
     "$schema": "http://json-schema.org/draft-07/schema#",

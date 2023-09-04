@@ -2,10 +2,10 @@
 version = "0.0.3"
 authors = ["chevdor <chevdor@gmail.com>", "Wilfried Kopp <wilfried@parity.io>"]
 edition = "2021"
-homepage = "https://github.com/Chevdor/prdoc"
+homepage = "https://github.com/paritytech/prdoc"
 keywords = ["cli", "documentation", "parity"]
 license = "MIT"
-repository = "https://github.com/Chevdor/prdoc"
+repository = "https://github.com/paritytech/prdoc"
 
 [workspace]
 resolver = "2"
