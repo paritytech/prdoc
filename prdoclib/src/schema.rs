@@ -1,15 +1,15 @@
 //! Schema used by [prdoc](/prdoc) for its validation
 //!
-//! [prdoc](/prdoc) does not really care about the schema itself and the data is not used or loaded. The schema is
-//! stored in the repository and embedded into the cli for convenience. The various commands do check that files
-//! comply with the schema but nothing more. That also means that the schema can be adjusted at any time without impact
-//! on the code.
+//! [prdoc](/prdoc) does not really care about the schema itself and the data is not used or loaded.
+//! The schema is stored in the repository and embedded into the cli for convenience. The various
+//! commands do check that files comply with the schema but nothing more. That also means that the
+//! schema can be adjusted at any time without impact on the code.
 
+use crate::error::PRdocLibError;
 use regex::Regex;
 use serde_yaml::Value;
 use std::{fs::File, path::Path};
 use valico::json_schema;
-use crate::error::PRdocLibError;
 
 /// Default schema for the validation of data provided by developers
 pub const JSON_SCHEMA: &str = include_str!("./schema_user.json");
