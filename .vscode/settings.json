@@ -7,5 +7,12 @@
         "prdoc",
         "prdoclib",
         "valico"
-    ]
+    ],
+    "yaml.schemas": {
+        "/Users/Shared/projects/dotgovprop/govprop-schema.json": "*.govprop",
+        "/Users/Shared/projects/prdoc/schema_user.json": [
+            "*.prdoc",
+            "file:///Users/Shared/projects/prdoc/tests/data/all/pr_1226.prdoc"
+        ]
+    }
 }

@@ -1,0 +1,20 @@
+# Schema: Parity PR Documentation Schema (prdoc)
+
+title: Foobar
+
+doc:
+  - audience: Builder
+    description: |
+      - added: some new features
+      - changed: something changed
+      - removed: something that is no longer valid
+
+migrations:
+  db: []
+
+  runtime: []
+
+crates:
+   - name: something
+
+host_functions: []

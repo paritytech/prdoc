@@ -1,4 +1,7 @@
 # Schema: Parity PR Documentation Schema (prdoc)
+# See doc at https://github.com/paritytech/prdoc
+
+title: ...
 
 doc:
   - audience: Core Dev

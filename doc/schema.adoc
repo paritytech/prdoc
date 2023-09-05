@@ -13,5 +13,13 @@ In VScode, open your user settings and ensure you have the following section:
 },
 ----
 
+You also need:
+
+----
+"files.associations": {
+    "*.prdoc": "yaml",
+},
+----
+
 NOTE: Should initially have created the file with another extension such as `.txt`, make sure to change the format to
 `YAML` and the right schema should then be picked up.

@@ -1,3 +1,4 @@
+title: foo
 doc:
   - audience: Core Dev
     description: some important text
@@ -16,7 +17,7 @@ doc:
         and this is the last
       - Also don't forget to foo your bar
 
-  - audience: Exchange
+  - audience: Builder
     title: Optional title override for the `Exchange` audience
     description: Change the `foo` of `bar`
 
