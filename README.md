@@ -29,8 +29,15 @@ above.
 
 ## Features
 
--   provide the `prdoc` user schema - generate new documents - scan for `prdoc` in a folder - check `prdoc` files -
-    load/aggregate `prdoc` files
+-   provide the `prdoc` user schema
+
+-   generate new documents
+
+-   scan for `prdoc` in a folder
+
+-   check `prdoc` files
+
+-   load/aggregate `prdoc` files
 
 ## Schemas
 
@@ -45,12 +52,20 @@ In VScode, open your user settings and ensure you have the following section:
         "/path/of/schema/schema_user.json": "*.prdoc"
     },
 
+You also need:
+
+    "files.associations": {
+        "*.prdoc": "yaml",
+    },
+
 Should initially have created the file with another extension such as `.txt`, make sure to change the format to
 `YAML` and the right schema should then be picked up.
 
 ## Usage
 
-    Definition of the cli flags and subcommands
+    prdoc is a cli utility to generate, check and load prdoc files.
+
+    More at https://github.com/paritytech/prdoc
 
     Usage: prdoc [OPTIONS] [COMMAND]
 
@@ -63,9 +78,14 @@ Should initially have created the file with another extension such as `.txt`, ma
       help      Print this message or the help of the given subcommand(s)
 
     Options:
-      -v, --version  Show the version
-      -j, --json     Output as json
-      -h, --help     Print help
+      -v, --version
+              Show the version
+
+      -j, --json
+              Output as json
+
+      -h, --help
+              Print help (see a summary with '-h')
 
 ### Schema
 

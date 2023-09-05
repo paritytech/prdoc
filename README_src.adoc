@@ -35,8 +35,11 @@ above.
 
 == Features
 
-- provide the `prdoc` user schema - generate new documents - scan for `prdoc` in a folder - check `prdoc` files -
-load/aggregate `prdoc` files
+- provide the `prdoc` user schema
+- generate new documents
+- scan for `prdoc` in a folder
+- check `prdoc` files
+- load/aggregate `prdoc` files
 
 include::doc/index.adoc[]
 
