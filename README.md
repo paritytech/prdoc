@@ -65,7 +65,7 @@ Should initially have created the file with another extension such as `.txt`, ma
 
     prdoc is a cli utility to generate, check and load prdoc files.
 
-    More at https://github.com/paritytech/prdoc
+    More at <https://github.com/paritytech/prdoc>
 
     Usage: prdoc [OPTIONS] [COMMAND]
 
