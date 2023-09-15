@@ -1,4 +1,6 @@
-use crate::{common::PRNumber, doc_filename::DocFileName, docfile::DocFile, title::Title};
+use crate::{
+	common::PRNumber, doc_filename::DocFileName, docfile::DocFile, schema::PRDOC_DIR, title::Title,
+};
 use log::debug;
 use std::path::{Path, PathBuf};
 
@@ -9,7 +11,7 @@ impl GenerateCmd {
 		save: bool,
 		number: PRNumber,
 		title: Option<Title>,
-		output_dir: &PathBuf,
+		output_dir: Option<PathBuf>,
 	) -> std::io::Result<()> {
 		// generate doc
 		let template = DocFile::generate();
@@ -22,7 +24,26 @@ impl GenerateCmd {
 		} else {
 			// generate filename based on number and title
 			let filename: PathBuf = DocFileName::new(number, title).into();
-			let output_file = Path::new(&output_dir).join(filename);
+
+			let out_dir = if let Some(dir) = output_dir {
+				dir
+			} else {
+				match project_root::get_project_root() {
+					Ok(dir) => dir.join(PRDOC_DIR),
+					Err(e) => {
+						eprint!(
+							"Project root not found, falling back to the current folder: {e:?}"
+						);
+						PathBuf::from(".")
+					},
+				}
+			};
+			log::debug!("Storing prdoc in {out_dir:?}");
+			std::fs::create_dir_all(&out_dir).unwrap_or_else(|why| {
+				println!("! {:?}", why.kind());
+			});
+
+			let output_file = Path::new(&out_dir).join(filename);
 			debug!("template = {:?}", &template);
 			debug!("output_file = {:?}", &output_file);
 			std::fs::write(output_file, template)

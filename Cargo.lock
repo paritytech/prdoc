@@ -680,6 +680,7 @@ version = "0.0.5"
 dependencies = [
  "exitcode",
  "log",
+ "project-root",
  "regex",
  "serde",
  "serde_json",
@@ -724,6 +725,12 @@ checksum = "18fb31db3f9bddb2ea821cde30a9f70117e3f119938b5ee630b7403aa6e2ead9"
 dependencies = [
  "unicode-ident",
 ]
+
+[[package]]
+name = "project-root"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8bccbff07d5ed689c4087d20d7307a52ab6141edeedf487c3876a55b86cf63df"
 
 [[package]]
 name = "psl"

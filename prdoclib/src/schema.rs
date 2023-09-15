@@ -17,6 +17,9 @@ pub const JSON_SCHEMA: &str = include_str!("./schema_user.json");
 /// Default file extension
 pub const EXTENSION: &str = "prdoc";
 
+/// Default location where prdoc are stored
+pub const PRDOC_DIR: &str = "prdoc";
+
 /// The schema embedded in [prdoc](/prdoc).
 pub struct Schema {}
 

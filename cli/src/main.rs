@@ -21,8 +21,13 @@ fn main() -> color_eyre::Result<()> {
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			let _ = GenerateCmd::run(cmd_opts.save, cmd_opts.number, cmd_opts.title, &cmd_opts.output_dir);
-			Ok(())
+			match GenerateCmd::run(cmd_opts.save, cmd_opts.number, cmd_opts.title, cmd_opts.output_dir) {
+				Ok(_) => Ok(()),
+				Err(e) => {
+					eprint!("{e:?}");
+					std::process::exit(exitcode::IOERR);
+				}
+			}
 		}
 
 		Some(SubCommand::Check(cmd_opts)) => {

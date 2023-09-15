@@ -70,9 +70,10 @@ pub struct GenOpts {
 	#[clap(short, long)]
 	pub save: bool,
 
-	/// Output directory
-	#[clap(short, long, default_value = ".")]
-	pub output_dir: PathBuf,
+	/// Optional output directory. It not passed, the default `PRDOC_DIR` will be used
+	/// under the root of the current project.
+	#[clap(short, long)]
+	pub output_dir: Option<PathBuf>,
 }
 
 /// Check one or MORE `prdoc` files for validity.
