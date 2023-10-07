@@ -1,7 +1,5 @@
 # Schema: Parity PR Documentation Schema (prdoc)
 
-# Anchoring is NOT supported yet.
-
 title: Foobar
 
 doc:
