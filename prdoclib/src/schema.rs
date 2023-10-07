@@ -44,7 +44,8 @@ impl Schema {
 		let json_schema: serde_json::Value = serde_json::from_str(&schema_str).unwrap();
 
 		let reader = File::open(file).unwrap();
-		let doc_as_yaml: serde_yaml::Value = serde_yaml::from_reader(reader).unwrap();
+		let mut doc_as_yaml: serde_yaml::Value = serde_yaml::from_reader(reader).unwrap();
+		doc_as_yaml.apply_merge().unwrap();
 
 		let doc_as_json: serde_json::Value =
 			serde_yaml::from_value(serde_yaml::to_value(&doc_as_yaml).unwrap()).unwrap();
