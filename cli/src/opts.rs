@@ -66,9 +66,10 @@ pub struct GenOpts {
 	#[clap(short, long)]
 	pub title: Option<Title>,
 
-	/// Save the generated document to file with the proper naming
+	/// Do not save the generated document to file with the proper naming, show the content
+	/// instead
 	#[clap(short, long)]
-	pub save: bool,
+	pub dry_run: bool,
 
 	/// Optional output directory. It not passed, the default `PRDOC_DIR` will be used
 	/// under the root of the current project.
