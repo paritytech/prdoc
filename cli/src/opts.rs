@@ -79,7 +79,7 @@ pub struct GenOpts {
 /// Check one or MORE `prdoc` files for validity.
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
-	/// Base directory for the files
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
 	#[clap(short, long)]
 	pub directory: Option<PathBuf>,
 
@@ -99,7 +99,7 @@ pub struct CheckOpts {
 /// Scan a directory for prdoc files based on their name
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
-	/// directory path
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
 	#[clap(index = 1)]
 	pub directory: Option<PathBuf>,
 
@@ -111,7 +111,7 @@ pub struct ScanOpts {
 /// Load one or more prdoc
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
-	/// directory path
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
 	#[clap(short, long)]
 	pub directory: Option<PathBuf>,
 
