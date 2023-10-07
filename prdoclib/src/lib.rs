@@ -8,5 +8,6 @@ pub mod docfile_wrapper;
 pub mod title;
 
 pub mod schema;
+pub mod utils;
 
 pub mod error;

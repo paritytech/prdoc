@@ -1,5 +1,7 @@
-use super::utils::get_numbers_from_file;
-use crate::{common::PRNumber, doc_filename::DocFileName, docfile::DocFile, error, schema::Schema};
+use crate::{
+	common::PRNumber, doc_filename::DocFileName, docfile::DocFile, error, schema::Schema,
+	utils::get_numbers_from_file,
+};
 use log::debug;
 use std::{
 	collections::HashSet,

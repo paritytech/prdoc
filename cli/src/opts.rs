@@ -79,9 +79,9 @@ pub struct GenOpts {
 /// Check one or MORE `prdoc` files for validity.
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
-	/// Base directory for the files
-	#[clap(short, long, default_value = ".")]
-	pub directory: PathBuf,
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
+	#[clap(short, long)]
+	pub directory: Option<PathBuf>,
 
 	/// Directly specify the file to be checked. It can be relative to the base directory.
 	#[clap(short, long, conflicts_with = "number")]
@@ -99,9 +99,9 @@ pub struct CheckOpts {
 /// Scan a directory for prdoc files based on their name
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
-	/// directory path
-	#[clap(index = 1, default_value = ".")]
-	pub directory: PathBuf,
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
+	#[clap(index = 1)]
+	pub directory: Option<PathBuf>,
 
 	/// Also return invalid files
 	#[clap(short, long)]
@@ -111,9 +111,9 @@ pub struct ScanOpts {
 /// Load one or more prdoc
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
-	/// directory path
-	#[clap(short, long, default_value = ".")]
-	pub directory: PathBuf,
+	/// Base directory for the files. Default to folder `PRDOC_DIR` under the root of your project.
+	#[clap(short, long)]
+	pub directory: Option<PathBuf>,
 
 	/// file path
 	#[clap(short, long, conflicts_with = "number")]

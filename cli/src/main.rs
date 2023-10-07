@@ -32,7 +32,12 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			let results = CheckCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list);
+			let dir = match cmd_opts.directory {
+				Some(d) => d,
+				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
+			};
+			debug!("PRDoc folder: {dir:?}");
+			let results = CheckCmd::run(&dir, cmd_opts.file, cmd_opts.number, cmd_opts.list);
 
 			if !opts.json {
 				for (number, result) in &results {
@@ -57,21 +62,29 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			ScanCmd::run(&cmd_opts.directory, cmd_opts.all);
+			let dir = match cmd_opts.directory {
+				Some(d) => d,
+				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
+			};
+			debug!("PRDoc folder: {dir:?}");
+			ScanCmd::run(&dir, cmd_opts.all);
 			Ok(())
 		}
 
 		Some(SubCommand::Load(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			let result =
-				LoadCmd::run(&cmd_opts.directory, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json).unwrap();
+			let dir = match cmd_opts.directory {
+				Some(d) => d,
+				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
+			};
+			debug!("PRDoc folder: {dir:?}");
+
+			let result = LoadCmd::run(&dir, cmd_opts.file, cmd_opts.number, cmd_opts.list, opts.json).unwrap();
 
 			if result.is_some_and(|r| !r) {
 				eprintln!(
 					"⚠️ There are errors with files in {}",
-					std::fs::canonicalize(cmd_opts.directory)
-						.map(|p| p.display().to_string())
-						.unwrap_or("?".to_string())
+					std::fs::canonicalize(dir).map(|p| p.display().to_string()).unwrap_or("?".to_string())
 				);
 				std::process::exit(exitcode::DATAERR)
 			} else {

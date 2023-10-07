@@ -5,13 +5,12 @@ use crate::{
 	docfile_wrapper::DocFileWrapper,
 	error::{self, Result},
 	schema::Schema,
+	utils::get_numbers_from_file,
 };
 use std::{
 	collections::HashSet,
 	path::{Path, PathBuf},
 };
-
-use super::utils::get_numbers_from_file;
 
 pub struct LoadCmd;
 
