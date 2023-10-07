@@ -7,21 +7,21 @@ mod cli_tests {
 		#[test]
 		fn it_loads_one_file() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.arg("load").args(["--file", "../tests/data/all/pr_1237.prdoc"]).assert();
+			let assert = cmd.arg("load").args(["--file", "pr_1237.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_one_by_number() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1237"]).assert();
+			let assert = cmd.arg("load").args(["-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_some_by_number() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1234", "-n", "1237"]).assert();
+			let assert = cmd.arg("load").args(["-n", "1234", "-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 

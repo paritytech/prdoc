@@ -5,10 +5,10 @@ mod cli_tests {
 		use assert_cmd::Command;
 
 		#[test]
-		fn it_check_fails_without_args() {
+		fn it_check_passes_without_args() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.arg("check").assert();
-			assert.failure().code(exitcode::DATAERR);
+			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
@@ -28,7 +28,7 @@ mod cli_tests {
 		#[test]
 		fn it_check_with_file_when_valid() {
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["check", "-f", "../tests/data/some/pr_1234_some_test_minimal.prdoc"]).assert();
+			let assert = cmd.args(["check", "-f", "../some/pr_1234_some_test_minimal.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
