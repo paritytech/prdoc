@@ -3,7 +3,6 @@ mod cli_tests {
 	#[cfg(test)]
 	mod check {
 		use std::env;
-
 		use assert_cmd::Command;
 
 		#[test]
@@ -30,6 +29,8 @@ mod cli_tests {
 
 		#[test]
 		fn it_check_with_file_when_valid() {
+			env::set_var("PRDOC_DIR", "tests/data/all");
+
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.args(["check", "-f", "../some/pr_1234_some_test_minimal.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
