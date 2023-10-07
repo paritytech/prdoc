@@ -80,8 +80,8 @@ pub struct GenOpts {
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
 	/// Base directory for the files
-	#[clap(short, long, default_value = ".")]
-	pub directory: PathBuf,
+	#[clap(short, long)]
+	pub directory: Option<PathBuf>,
 
 	/// Directly specify the file to be checked. It can be relative to the base directory.
 	#[clap(short, long, conflicts_with = "number")]
@@ -100,8 +100,8 @@ pub struct CheckOpts {
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
 	/// directory path
-	#[clap(index = 1, default_value = ".")]
-	pub directory: PathBuf,
+	#[clap(index = 1)]
+	pub directory: Option<PathBuf>,
 
 	/// Also return invalid files
 	#[clap(short, long)]
@@ -112,8 +112,8 @@ pub struct ScanOpts {
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
 	/// directory path
-	#[clap(short, long, default_value = ".")]
-	pub directory: PathBuf,
+	#[clap(short, long)]
+	pub directory: Option<PathBuf>,
 
 	/// file path
 	#[clap(short, long, conflicts_with = "number")]
