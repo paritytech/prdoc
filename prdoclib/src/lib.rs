@@ -10,3 +10,5 @@ pub mod title;
 pub mod schema;
 
 pub mod error;
+pub mod utils;
+pub mod config;

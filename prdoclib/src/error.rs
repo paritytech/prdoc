@@ -1,5 +1,7 @@
 //! Custom errors
 
+use std::{ffi::OsString, path::PathBuf};
+
 use thiserror::Error;
 use valico::json_schema::ValidationState;
 
@@ -21,7 +23,10 @@ pub enum PRdocLibError {
 	NumberNotFound(PRNumber),
 
 	#[error("The filename is not valid: {0}")]
-	InvalidFilename(String),
+	InvalidFilename(PathBuf),
+
+	#[error("The config is not valid: {0}")]
+	InvalidConfig(PathBuf),
 
 	/// Unknown error
 	#[error("Unknown error")]

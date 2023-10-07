@@ -1,0 +1,20 @@
+# Schema: Parity PR Documentation Schema (prdoc)
+
+title: Foobar
+
+doc:
+  - audience: Builder
+    description: |
+      Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
+      ullamco enim qui enim.
+
+  - audience: Validator
+    description:
+      Ad incididunt qui consequat sint.
+
+migrations:
+  db: []
+  runtime: []
+
+crates: []
+host_functions: []

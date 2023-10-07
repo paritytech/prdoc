@@ -5,7 +5,8 @@ title: ...
 
 doc:
   - audience: Core Dev
-    description: ...
+    description: |
+      ...
 
 migrations:
   db: []
