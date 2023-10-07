@@ -61,6 +61,32 @@ You also need:
 Should initially have created the file with another extension such as `.txt`, make sure to change the format to
 `YAML` and the right schema should then be picked up.
 
+### YAML Anchors
+
+You may use YAML anchors as demonnstrated below.
+
+    # Schema: Parity PR Documentation Schema (prdoc)
+
+    # Anchoring is NOT supported yet.
+
+    title: Foobar
+
+    doc:
+      - audience: Builder
+        description: &desc |
+          Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
+          ullamco enim qui enim.
+
+      - audience: Validator
+        description: *desc
+
+    migrations:
+      db: []
+      runtime: []
+
+    crates: []
+    host_functions: []
+
 ## Usage
 
     prdoc is a cli utility to generate, check and load prdoc files.
