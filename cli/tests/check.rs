@@ -2,8 +2,8 @@
 mod cli_tests {
 	#[cfg(test)]
 	mod check {
-		use std::env;
 		use assert_cmd::Command;
+		use std::env;
 
 		#[test]
 		fn it_check_passes_without_args() {
