@@ -21,7 +21,12 @@ fn main() -> color_eyre::Result<()> {
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
-			match GenerateCmd::run(cmd_opts.save, cmd_opts.number, cmd_opts.title, cmd_opts.output_dir) {
+			let dir = match cmd_opts.output_dir {
+				Some(d) => d,
+				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
+			};
+			debug!("PRDoc folder: {dir:?}");
+			match GenerateCmd::run(!cmd_opts.dry_run, cmd_opts.number, cmd_opts.title, Some(dir)) {
 				Ok(_) => Ok(()),
 				Err(e) => {
 					eprint!("{e:?}");
