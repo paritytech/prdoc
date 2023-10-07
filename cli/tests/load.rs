@@ -2,10 +2,14 @@
 mod cli_tests {
 	#[cfg(test)]
 	mod check {
+		use std::env;
+
 		use assert_cmd::Command;
 
 		#[test]
 		fn it_loads_one_file() {
+			env::set_var("PRDOC_DIR", "tests/data/all");
+
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.arg("load").args(["--file", "pr_1237.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
@@ -13,6 +17,7 @@ mod cli_tests {
 
 		#[test]
 		fn it_loads_one_by_number() {
+			env::set_var("PRDOC_DIR", "tests/data/all");
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.arg("load").args(["-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
@@ -20,6 +25,7 @@ mod cli_tests {
 
 		#[test]
 		fn it_loads_some_by_number() {
+			env::set_var("PRDOC_DIR", "tests/data/all");
 			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 			let assert = cmd.arg("load").args(["-n", "1234", "-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
