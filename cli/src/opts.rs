@@ -53,6 +53,10 @@ pub enum SubCommand {
 	#[allow(missing_docs)]
 	#[clap(version = crate_version!(), author = crate_authors!())]
 	Schema(SchemaOpts),
+
+	#[allow(missing_docs)]
+	#[clap(version = crate_version!(), author = crate_authors!())]
+	Archive(ArchiveOpts),
 }
 /// Generate a new file. It will be printed to stdout by default unless you provide
 /// the `--save` flag.
@@ -88,7 +92,7 @@ pub struct CheckOpts {
 	#[clap(short, long, conflicts_with = "number")]
 	pub file: Option<PathBuf>,
 
-	/// number
+	/// PR number
 	#[clap(short, long)]
 	pub number: Option<Vec<PRNumber>>,
 
@@ -134,3 +138,34 @@ pub struct LoadOpts {
 /// Retrieve the JSON schema that is used internally
 #[derive(Parser, Debug)]
 pub struct SchemaOpts {}
+
+
+/// Archive one or more PRDoc files to a sub-folder.
+#[derive(Parser, Debug)]
+pub struct ArchiveOpts {
+	/// Base directory where the PRDoc files are stored. Default to folder `PRDOC_DIR` under the root of your project.
+	#[clap(short, long)]
+	pub directory: Option<PathBuf>,
+
+	/// Target directory for the archive.
+	#[clap(short, long)]
+	pub output: PathBuf,
+
+	/// file path
+	#[clap(short, long, conflicts_with = "number")]
+	pub file: Option<PathBuf>,
+
+	/// One or more PR numbers.
+	/// Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the
+	/// `--list` option instead.
+	#[clap(short, long)]
+	pub number: Option<Vec<PRNumber>>,
+
+	/// Get the list of PR numbers from a file
+	#[clap(short, long, conflicts_with_all = ["file", "number"])]
+	pub list: Option<PathBuf>,
+
+	/// Do not actually archive, show what will be done instead
+	#[clap(long)]
+	pub dry_run: bool,
+}

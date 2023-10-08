@@ -9,6 +9,7 @@ use prdoclib::commands::{
 	check::CheckCmd, generate::GenerateCmd, load::LoadCmd, scan::ScanCmd, schema::SchemaCmd, version::VersionCmd,
 };
 use std::env;
+use prdoclib::commands::archive::ArchiveCmd;
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
@@ -100,6 +101,19 @@ fn main() -> color_eyre::Result<()> {
 		Some(SubCommand::Schema(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");
 			SchemaCmd::run();
+			Ok(())
+		}
+
+		Some(SubCommand::Archive(cmd_opts)) => {
+			debug!("cmd_opts: {cmd_opts:#?}");
+			let dir = match cmd_opts.directory {
+				Some(d) => d,
+				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
+			};
+			debug!("PRDoc folder: {dir:?}");
+
+			let _ = ArchiveCmd::run(&dir, cmd_opts.file, cmd_opts.number, cmd_opts.list, cmd_opts.output, cmd_opts.dry_run).unwrap();
+
 			Ok(())
 		}
 

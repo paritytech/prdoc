@@ -18,7 +18,8 @@ use crate::{
 /// A `prdoc` is made of its content: a [DocFile](/prdoclib::docfile::DocFile) but also requires a
 /// valid filename. This struct describe the filename pattern and provide helpers to build and check
 /// valid `prdoc` filenames.
-#[derive(Debug, PartialEq, Serialize, Hash, Eq)]
+// TODO: Clone should only be for tests
+#[derive(Debug, PartialEq, Serialize, Hash, Eq, Clone)]
 pub struct DocFileName {
 	pub number: PRNumber,
 	pub title: Option<Title>,
@@ -27,7 +28,7 @@ pub struct DocFileName {
 impl DocFileName {
 	pub fn filename(&self) -> OsString {
 		if let Some(title) = &self.title {
-			OsString::from(format!("pr_{}_{:?}.prdoc", self.number, title.to_string()))
+			OsString::from(format!("pr_{}{}.prdoc", self.number, title.to_string()))
 		} else {
 			OsString::from(format!("pr_{}.prdoc", self.number))
 		}
@@ -206,5 +207,14 @@ mod test_doc_file_name {
 		.unwrap();
 		assert_eq!(1234, dfn.number);
 		assert_eq!(Some(Title::from("_some_test_minimal")), dfn.title);
+	}
+
+	#[test]
+	fn test_to_pathbuf() {
+		let dfn = DocFileName::new(1244, Some("_anchoring".into()));
+		let file = PathBuf::from(dfn.clone());
+		println!("{file:?}");
+
+		assert_eq!(PathBuf::from("pr_1244_anchoring.prdoc"), file);
 	}
 }

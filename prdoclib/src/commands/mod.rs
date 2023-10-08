@@ -7,3 +7,4 @@ pub mod load;
 pub mod scan;
 pub mod schema;
 pub mod version;
+pub mod archive;
