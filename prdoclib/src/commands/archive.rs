@@ -69,7 +69,7 @@ impl ArchiveCmd {
         log::debug!("Archiving '{}' to '{}'", file.display(), folder.display());
 
         let target_folder = if folder.is_absolute() {
-            folder.clone()
+            get_pr_doc_folder().unwrap().join(folder.clone())
         } else {
             get_pr_doc_folder().unwrap().join(folder)
         };
@@ -145,12 +145,14 @@ impl ArchiveCmd {
         output: PathBuf,
         dry_run: bool,
     ) -> crate::error::Result<()> {
-        log::debug!("Archive from directory {}", dir.display());
+        let output_abs = if output.is_relative() { get_pr_doc_folder().unwrap().join(&output) } else { output.clone() };
+        log::debug!("Archive from: {}", dir.display());
+        log::debug!("Archive to  : {}", output_abs.display());
 
         let _ = match (file, numbers, list) {
             (Some(f), None, None) => {
                 let file_abs = if f.is_relative() { Path::new(&dir).join(&f) } else { f.clone() };
-                Self::archive_file(&file_abs, &output, dry_run)?;
+                Self::archive_file(&file_abs, &output_abs, dry_run)?;
                 ()
             }
 

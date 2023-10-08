@@ -8,6 +8,7 @@ use std::{
 	path::{Path, PathBuf},
 	str::FromStr,
 };
+use std::fmt::Formatter;
 
 use crate::{
 	common::PRNumber,
