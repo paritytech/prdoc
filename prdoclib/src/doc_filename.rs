@@ -164,7 +164,7 @@ impl TryFrom<&PathBuf> for DocFileName {
 		if let Some(number) = number {
 			Ok(DocFileName::new(number, title))
 		} else {
-			Err(PRdocLibError::InvalidFilename(filename.to_string()))
+			Err(PRdocLibError::InvalidFilename(filename.into()))
 		}
 	}
 }

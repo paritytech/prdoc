@@ -5,9 +5,9 @@ use clap::{crate_name, crate_version, Parser};
 use env_logger::Env;
 use log::*;
 use opts::*;
-use prdoclib::commands::{
+use prdoclib::{commands::{
 	check::CheckCmd, generate::GenerateCmd, load::LoadCmd, scan::ScanCmd, schema::SchemaCmd, version::VersionCmd,
-};
+}, config::Config};
 use std::env;
 
 /// Main entry point of the cli
@@ -18,6 +18,8 @@ fn main() -> color_eyre::Result<()> {
 	let opts: Opts = Opts::parse();
 	trace!("opts: {opts:#?}");
 
+	let config = Config::get_config_file(opts.config).unwrap();
+	log::debug!("Config found in: {}", config.display());
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			debug!("cmd_opts: {cmd_opts:#?}");

@@ -15,9 +15,9 @@ pub struct Opts {
 	#[clap(short, long, global = true, display_order = 99)]
 	pub json: bool,
 
-	// /// Less output
-	// #[clap(short, long, global = true, display_order = 99)]
-	// pub quiet: bool,
+	/// Less output
+	#[clap(short, long, global = true, env = "PRDOC_CONFIG")]
+	pub config: Option<PathBuf>,
 
 	// /// Do not write color information to the output. This is recommended for scripts.
 	// #[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]

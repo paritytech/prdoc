@@ -28,9 +28,12 @@ pub enum PRdocLibError {
 	#[error("The config is not valid: {0}")]
 	InvalidConfig(PathBuf),
 
+	#[error("No valid config found")]
+	MissingConfig,
+
 	/// Unknown error
 	#[error("Unknown error")]
-	Unknown(),
+	Unknown,
 }
 
 impl From<std::io::Error> for PRdocLibError {
