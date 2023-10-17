@@ -103,6 +103,10 @@ pub struct ScanOpts {
 	/// Also return invalid files
 	#[clap(short, long)]
 	pub all: bool,
+
+	/// Sort the output
+	#[clap(short, long)]
+	pub sort: bool,
 }
 
 /// Load one or more prdoc

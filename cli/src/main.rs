@@ -91,7 +91,35 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
-			ScanCmd::run(prdoc_dir, cmd_opts.all);
+			let files = ScanCmd::run(prdoc_dir, cmd_opts.all);
+			let mut res: Vec<(Option<PRNumber>, PathBuf)> = files
+				.iter()
+				.map(|f| {
+					let prdoc = LoadCmd::load_file(f);
+					let n = match prdoc {
+						Ok(p) => Some(p.filename.number),
+						Err(_) => None,
+					};
+
+					(n, f.clone())
+				})
+				.collect();
+
+			if cmd_opts.sort {
+				res.sort_by(|a, b| a.1.cmp(&b.1));
+			}
+
+			if opts.json {
+				println!("{}", serde_json::to_string_pretty(&res).unwrap());
+			} else {
+				res.iter().for_each(|(n, f)| {
+					println!(
+						"{number}\t{file}",
+						file = f.display(),
+						number = if let Some(number) = n { number.to_string() } else { "n/a".to_string() }
+					);
+				});
+			}
 			Ok(())
 		}
 

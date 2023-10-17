@@ -55,7 +55,7 @@ impl LoadCmd {
 	}
 
 	/// Load one file and returns a wrapper
-	pub(crate) fn load_file(file: &PathBuf) -> Result<DocFileWrapper> {
+	pub fn load_file(file: &PathBuf) -> Result<DocFileWrapper> {
 		let filename = DocFileName::try_from(file)?;
 		let value = Schema::load(&file)?;
 		let wrapper = DocFileWrapper::new(file.clone(), filename, value);
