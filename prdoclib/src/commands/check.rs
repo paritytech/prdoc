@@ -1,4 +1,3 @@
-use super::utils::get_numbers_from_file;
 use crate::{
 	common::PRNumber,
 	doc_filename::DocFileName,
@@ -6,6 +5,7 @@ use crate::{
 	error::{self},
 	prdoc_source::PRDocSource,
 	schema::Schema,
+	utils::get_numbers_from_file,
 };
 use std::{
 	collections::HashSet,
@@ -104,7 +104,7 @@ impl CheckCmd {
 	pub fn global_result(hs: HashSet<CheckResult>) -> bool {
 		for item in hs.iter() {
 			if !item.1 {
-				return false;
+				return false
 			}
 		}
 

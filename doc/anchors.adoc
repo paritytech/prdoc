@@ -1,0 +1,8 @@
+
+=== YAML Anchors
+
+You may use YAML anchors as demonnstrated below.
+
+----
+include::../tests/data/all/pr_1244_anchoring.prdoc[]
+----

@@ -5,13 +5,12 @@ use crate::{
 	docfile_wrapper::DocFileWrapper,
 	error::{self, Result},
 	schema::Schema,
+	utils::get_numbers_from_file,
 };
 use std::{
 	collections::HashSet,
 	path::{Path, PathBuf},
 };
-
-use super::utils::get_numbers_from_file;
 
 pub struct LoadCmd;
 
@@ -19,10 +18,7 @@ pub type LoadResult = (bool, HashSet<DocFileWrapper>);
 
 impl LoadCmd {
 	/// Load PRDoc from one or more numbers
-	pub(crate) fn load_numbers(
-		numbers: Vec<PRNumber>,
-		dir: &PathBuf,
-	) -> error::Result<LoadResult> {
+	pub(crate) fn load_numbers(numbers: Vec<PRNumber>, dir: &PathBuf) -> error::Result<LoadResult> {
 		let mut global_result = true;
 
 		let res = numbers
@@ -66,10 +62,7 @@ impl LoadCmd {
 		Ok(wrapper)
 	}
 
-	pub(crate) fn load_list(
-		file: &PathBuf,
-		dir: &PathBuf,
-	) -> Result<LoadResult> {
+	pub(crate) fn load_list(file: &PathBuf, dir: &PathBuf) -> Result<LoadResult> {
 		let extract_numbers = get_numbers_from_file(file)?;
 		let numbers: Vec<PRNumber> =
 			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();

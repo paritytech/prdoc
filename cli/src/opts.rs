@@ -67,9 +67,10 @@ pub struct GenOpts {
 	#[clap(short, long)]
 	pub title: Option<Title>,
 
-	/// Save the generated document to file with the proper naming
-	#[clap(short, long)]
-	pub save: bool,
+	/// Do not save the generated document to file with the proper naming, show the content
+	/// instead
+	#[clap(long)]
+	pub dry_run: bool,
 
 	/// Optional output directory. It not passed, the default `PRDOC_DIR` will be used
 	/// under the root of the current project.
@@ -124,7 +125,3 @@ pub struct LoadOpts {
 	#[clap(short, long, conflicts_with_all = ["file", "number"])]
 	pub list: Option<PathBuf>,
 }
-
-// /// Retrieve the JSON schema that is used internally
-// #[derive(Parser, Debug)]
-// pub struct SchemaOpts {}

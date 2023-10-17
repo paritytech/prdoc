@@ -5,8 +5,8 @@ mod cli_tests {
 
 	#[cfg(test)]
 	mod check {
-		use prdoclib::config;
 		use crate::common::*;
+		use prdoclib::config;
 
 		#[test]
 		fn it_check_passes_without_args() {
@@ -52,9 +52,7 @@ mod cli_tests {
 		fn it_check_with_list_all() {
 			let mut cmd = prdoc_bin();
 
-			let assert = cmd
-				.args(["check", "--list", "../tests/data/lists/simple/all_good.txt"])
-				.assert();
+			let assert = cmd.args(["check", "--list", "../tests/data/lists/simple/all_good.txt"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
@@ -62,9 +60,7 @@ mod cli_tests {
 		fn it_check_with_list_some() {
 			let mut cmd = prdoc_bin();
 
-			let assert = cmd
-				.args(["check", "--list", "../tests/data/lists/simple/some_good.txt"])
-				.assert();
+			let assert = cmd.args(["check", "--list", "../tests/data/lists/simple/some_good.txt"]).assert();
 			assert.failure().code(exitcode::DATAERR);
 		}
 	}

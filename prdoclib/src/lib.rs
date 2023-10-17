@@ -9,7 +9,7 @@ pub mod prdoc_source;
 pub mod title;
 
 pub mod schema;
+pub mod utils;
 
 pub mod config;
 pub mod error;
-pub mod utils;
