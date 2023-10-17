@@ -12,7 +12,7 @@ use std::{fs::File, path::Path};
 use valico::json_schema;
 
 /// Default schema for the validation of data provided by developers
-pub const JSON_SCHEMA: &str = include_str!("./schema_user.json");
+pub const JSON_SCHEMA: &str = include_str!("./prdoc_schema_user.json");
 
 /// Default file extension
 pub const EXTENSION: &str = "prdoc";

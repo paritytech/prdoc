@@ -36,11 +36,14 @@ impl DocFile {
 		String::from(template)
 	}
 
-	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
+	/// Returns an iterator if the `dir` was a valid directory or an error otherwise.
+	pub fn find(
+		dir: &PathBuf,
+		valid_only: bool,
+	) -> crate::error::Result<impl Iterator<Item = PathBuf>> {
 		trace!("valid_only: {valid_only}");
 
-		std::fs::read_dir(dir)
-			.unwrap()
+		let res = std::fs::read_dir(dir)?
 			.filter_map(|res| res.ok())
 			// Map the directory entries to paths
 			.map(|dir_entry| dir_entry.path())
@@ -86,6 +89,7 @@ impl DocFile {
 				} else {
 					Some(path)
 				}
-			})
+			});
+		Ok(res)
 	}
 }

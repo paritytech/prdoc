@@ -114,7 +114,7 @@ impl DocFileName {
 
 impl Display for DocFileName {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		f.write_str(self.filename().to_str().expect("Our filename are valid path"))
+		f.write_str(self.filename().to_str().expect("Our filename is a valid path"))
 	}
 }
 
@@ -126,7 +126,7 @@ impl From<PRNumber> for DocFileName {
 
 impl From<DocFileName> for PathBuf {
 	fn from(val: DocFileName) -> Self {
-		PathBuf::from_str(&val.to_string()).expect("Our filename are valid path")
+		PathBuf::from_str(&val.to_string()).expect("Our filename is a valid path")
 	}
 }
 

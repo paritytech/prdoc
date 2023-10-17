@@ -1,6 +1,6 @@
 //! Custom errors
 
-use std::{ffi::OsString, path::PathBuf};
+use std::path::PathBuf;
 
 use thiserror::Error;
 use valico::json_schema::ValidationState;
@@ -30,6 +30,12 @@ pub enum PRdocLibError {
 
 	#[error("No valid config found")]
 	MissingConfig,
+
+	#[error("No valid file found in {0}")]
+	NoValidFileFound(PathBuf),
+
+	#[error("Some valid files in {0}")]
+	SomeInvalidFiles(PathBuf),
 
 	/// Unknown error
 	#[error("Unknown error")]

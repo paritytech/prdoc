@@ -1,0 +1,6 @@
+version=1
+schema="prdoc_schema_user.json"
+prdoc_folder= [
+    "tests/data/all",
+    "tests/data/some",
+]

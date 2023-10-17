@@ -1,8 +1,12 @@
-// 20230817152351
-// https://raw.githubusercontent.com/paritytech/prdoc/master/schema_user.json
-
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-2020-12/schema#",
+    "$id": "https://raw.githubusercontent.com/paritytech/prdoc/master/schema_user.json",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0,
+      "timestamp": 20230817152351
+    },
     "title": "Parity PR Documentation Schema",
     "description": "JSON Schema definition for Polkadot/Substrate PR documentation",
     "type": "object",
@@ -74,14 +78,13 @@
     ],
     "$defs": {
       "audience": {
-        "type": "string",
-        "enum": [
-          "Core Dev",
-          "Validator",
-          "Parachain Dev",
-          "Node Operator",
-          "Builder"
-        ]
+        "oneOf": [
+          {"const": "Core Dev", "title": "todo core dev"},
+          {"const": "Validator", "title": "todo validator"},
+          {"const": "Parachain Dev", "title": "todo parachain dev"},
+          {"const": "Node Operator", "title": "todo node op"},
+          {"const": "Builder", "title": "todo builder"}
+      ]
       },
       "crate": {
         "type": "object",

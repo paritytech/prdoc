@@ -660,7 +660,7 @@ checksum = "8afb450f006bf6385ca15ef45d71d2288452bc3683ce2e2cacc0d18e4be60b58"
 
 [[package]]
 name = "prdoc"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "assert_cmd",
  "clap",
@@ -676,7 +676,7 @@ dependencies = [
 
 [[package]]
 name = "prdoclib"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "exitcode",
  "log",

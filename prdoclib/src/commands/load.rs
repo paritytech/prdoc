@@ -15,12 +15,14 @@ use super::utils::get_numbers_from_file;
 
 pub struct LoadCmd;
 
+pub type LoadResult = (bool, HashSet<DocFileWrapper>);
+
 impl LoadCmd {
 	/// Load PRDoc from one or more numbers
 	pub(crate) fn load_numbers(
 		numbers: Vec<PRNumber>,
 		dir: &PathBuf,
-	) -> error::Result<(bool, HashSet<DocFileWrapper>)> {
+	) -> error::Result<LoadResult> {
 		let mut global_result = true;
 
 		let res = numbers
@@ -38,7 +40,7 @@ impl LoadCmd {
 						let yaml = Schema::load(&file);
 
 						if let Ok(value) = yaml {
-							Some(DocFileWrapper::new(filename, value))
+							Some(DocFileWrapper::new(file, filename, value))
 						} else {
 							global_result &= false;
 							None
@@ -60,14 +62,14 @@ impl LoadCmd {
 	pub(crate) fn load_file(file: &PathBuf) -> Result<DocFileWrapper> {
 		let filename = DocFileName::try_from(file)?;
 		let value = Schema::load(&file)?;
-		let wrapper = DocFileWrapper::new(filename, value);
+		let wrapper = DocFileWrapper::new(file.clone(), filename, value);
 		Ok(wrapper)
 	}
 
 	pub(crate) fn load_list(
 		file: &PathBuf,
 		dir: &PathBuf,
-	) -> Result<(bool, HashSet<DocFileWrapper>)> {
+	) -> Result<LoadResult> {
 		let extract_numbers = get_numbers_from_file(file)?;
 		let numbers: Vec<PRNumber> =
 			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();
@@ -79,18 +81,19 @@ impl LoadCmd {
 		Ok((global_result, wrapper))
 	}
 
-	pub(crate) fn load_from_folder(dir: &PathBuf) -> Result<(bool, HashSet<DocFileWrapper>)> {
+	pub(crate) fn load_from_folder(dir: &PathBuf) -> Result<LoadResult> {
 		let res = DocFile::find(dir, false);
-		let mut global_result = true;
+		let mut global_result = res.is_ok();
 
 		let wrapper = res
+			.unwrap()
 			.filter_map(|file| {
 				let filename_maybe = DocFileName::try_from(&file);
 
 				if let Ok(filename) = filename_maybe {
 					let yaml = Schema::load(&file);
 					if let Ok(value) = yaml {
-						let wrapper = DocFileWrapper::new(filename, value);
+						let wrapper = DocFileWrapper::new(file.clone(), filename, value);
 
 						global_result &= true;
 						log::info!("OK  {}", file.display());
@@ -115,46 +118,37 @@ impl LoadCmd {
 		file: Option<PathBuf>,
 		numbers: Option<Vec<PRNumber>>,
 		list: Option<PathBuf>,
-		json: bool,
-	) -> Result<Option<bool>> {
+	) -> Result<LoadResult> {
 		log::debug!("Loading from directory {}", dir.display());
 
-		let (global_result, wrapper) = match (file, numbers, list) {
+		Ok(match (file, numbers, list) {
 			(Some(f), None, None) => {
 				let file_abs = if f.is_relative() { Path::new(&dir).join(&f) } else { f.clone() };
 				let mut wrapper = HashSet::new();
 				wrapper.insert(Self::load_file(&file_abs)?);
 
-				(None, wrapper)
+				(true, wrapper)
 			},
 
 			(None, Some(numbers), None) => {
 				log::debug!("Loading numbers {:?}", numbers);
 				let (global_result, wrapper) = Self::load_numbers(numbers, dir)?;
-				(Some(global_result), wrapper)
+				(global_result, wrapper)
 			},
 
 			(None, None, Some(list)) => {
 				log::debug!("Loading list from {:?}", list);
 				let (global_result, wrapper) = Self::load_list(&list, dir)?;
-				(Some(global_result), wrapper)
+				(global_result, wrapper)
 			},
 
 			(None, None, None) => {
 				log::debug!("Loading all files in folder {}", dir.display());
 				let (global_result, wrapper) = Self::load_from_folder(dir)?;
-				(Some(global_result), wrapper)
+				(global_result, wrapper)
 			},
 
 			_ => unreachable!(),
-		};
-
-		if json {
-			println!("{}", serde_json::to_string_pretty(&wrapper).unwrap());
-		} else {
-			println!("{}", serde_yaml::to_string(&wrapper).unwrap());
-		}
-
-		Ok(global_result)
+		})
 	}
 }

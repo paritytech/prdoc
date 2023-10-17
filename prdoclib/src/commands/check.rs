@@ -1,6 +1,12 @@
 use super::utils::get_numbers_from_file;
-use crate::{common::PRNumber, doc_filename::DocFileName, docfile::DocFile, error, schema::Schema};
-use log::debug;
+use crate::{
+	common::PRNumber,
+	doc_filename::DocFileName,
+	docfile::DocFile,
+	error::{self},
+	prdoc_source::PRDocSource,
+	schema::Schema,
+};
 use std::{
 	collections::HashSet,
 	path::{Path, PathBuf},
@@ -9,22 +15,18 @@ use std::{
 /// Implementation of the main [check](/prdoc::opts::CheckOpts) command of the cli.
 pub struct CheckCmd;
 
-//TODO: remove std::process::exit and return proper errors
+/// PRDoc are checked via a PR number or a file.
+/// - When passing a file path, it may not result in a `PRNumber`.
+/// - When passing a PRNumber, it also may not result in a file
+pub type CheckResult = (PRDocSource, bool);
 
 impl CheckCmd {
-	pub(crate) fn check_number(number: PRNumber, dir: &PathBuf) -> error::Result<(PathBuf, bool)> {
-		let file = DocFileName::find(number, None, dir)?;
-		Ok((file.clone(), Self::check_file(&file)))
-	}
-
-	pub(crate) fn check_file(file: &PathBuf) -> bool {
-		Schema::check_file(&file)
-	}
-
 	pub(crate) fn check_numbers(
 		numbers: Vec<PRNumber>,
 		dir: &PathBuf,
-	) -> error::Result<HashSet<(PRNumber, bool)>> {
+	) -> error::Result<HashSet<CheckResult>> {
+		log::debug!("Checking PR #{:?}", numbers);
+
 		let res = numbers
 			.iter()
 			.map(|&number| {
@@ -37,14 +39,14 @@ impl CheckCmd {
 						let yaml = Schema::load(&file);
 
 						if let Ok(_value) = yaml {
-							(number, true)
+							(number.into(), true)
 						} else {
-							(number, false)
+							(number.into(), false)
 						}
 					},
 					Err(e) => {
 						log::warn!("{e:?}");
-						(number, false)
+						(number.into(), false)
 					},
 				}
 			})
@@ -53,114 +55,88 @@ impl CheckCmd {
 		Ok(res)
 	}
 
-	pub(crate) fn check_list(
-		file: &PathBuf,
-		dir: &PathBuf,
-	) -> error::Result<HashSet<(PRNumber, bool)>> {
+	/// Check a PRDoc based on its number in a given folder.
+	pub(crate) fn _check_number(number: PRNumber, dir: &PathBuf) -> error::Result<CheckResult> {
+		let file = DocFileName::find(number, None, dir)?;
+		Ok((file.clone().into(), Self::check_file(&file).1))
+	}
+
+	/// Check a specific file given its full path
+	pub(crate) fn check_file(file: &PathBuf) -> CheckResult {
+		// log::debug!("Checking file {}", file.display());
+
+		let value = Schema::load(&file);
+		let filename_maybe = DocFileName::try_from(file);
+		if let Ok(_value) = value {
+			if let Ok(filename) = filename_maybe {
+				(filename.into(), true)
+			} else {
+				(file.into(), false)
+			}
+		} else if let Ok(f) = filename_maybe {
+			(f.into(), false)
+		} else {
+			(file.into(), false)
+		}
+	}
+
+	pub(crate) fn check_files_in_folder(dir: &PathBuf) -> error::Result<HashSet<CheckResult>> {
+		log::debug!("Checking all files in folder {}", dir.display());
+
+		let files = DocFile::find(dir, false)?;
+		let hs: HashSet<CheckResult> = files.map(|f| Self::check_file(&f)).collect();
+		Ok(hs)
+	}
+
+	/// Check a list of PRDoc files based on:
+	///  - a `file` containing the list of PR numbers
+	///  - a base `dir` where to look for those PRDoc files
+	pub(crate) fn check_list(file: &PathBuf, dir: &PathBuf) -> error::Result<HashSet<CheckResult>> {
 		let extract_numbers = get_numbers_from_file(file)?;
 
 		let numbers: Vec<PRNumber> =
 			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();
 
-		let res = Self::check_numbers(numbers, dir).unwrap();
-		Ok(res)
+		Self::check_numbers(numbers, dir)
 	}
 
+	/// Return true if all checks were OK, false otherwise.
+	pub fn global_result(hs: HashSet<CheckResult>) -> bool {
+		for item in hs.iter() {
+			if !item.1 {
+				return false;
+			}
+		}
+
+		true
+	}
+
+	/// Run the check: considering an input directory and either a file, some numbers, of a list
+	/// file, run thru the list and check the validity of the PRDoc files.
+	/// We return a Vec instead of a HashSet because a check based on a file may not always lead
+	/// to a PR number, making the HashSet made of a bunch of (None, bool).
 	pub fn run(
 		dir: &PathBuf,
 		file: Option<PathBuf>,
 		numbers: Option<Vec<PRNumber>>,
 		list: Option<PathBuf>,
-	) -> HashSet<(Option<PRNumber>, bool)> {
-		debug!("Checking directory {}", dir.display());
+	) -> crate::error::Result<HashSet<CheckResult>> {
+		log::debug!("Checking directory {}", dir.display());
 
-		let result = match (file, numbers, list) {
+		match (file, numbers, list) {
 			(Some(file), None, None) => {
 				let file =
 					if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
-				debug!("Checking file {}", file.display());
-
-				let value = Schema::load(&file);
-				let number = DocFileName::try_from(&file);
-				let result = if let Ok(_value) = value {
-					if let Ok(n) = number {
-						(Some(n.number), true)
-					} else {
-						(None, false)
-					}
-				} else if let Ok(n) = number {
-					(Some(n.number), false)
-				} else {
-					(None, false)
-				};
-				let mut h_result = HashSet::new();
-				h_result.insert(result);
-				h_result
+				let mut hs = HashSet::new();
+				let _ = hs.insert(Self::check_file(&file));
+				Ok(hs)
 			},
 
-			(None, Some(numbers), None) => {
-				debug!("Checking PR #{:?}", numbers);
-
-				numbers
-					.iter()
-					.map(|&number| match Self::check_number(number, dir) {
-						Ok((_file, res)) => (Some(number), res),
-						Err(_e) => (None, false),
-					})
-					.collect()
-			},
-
-			(None, None, Some(list)) => Self::check_list(&list, dir)
-				.unwrap()
-				.iter()
-				.map(|(num, status)| (Some(*num), *status))
-				.collect(),
-
-			(None, None, None) => {
-				debug!("Checking all files in folder {}", dir.display());
-				let res = DocFile::find(dir, false);
-				let mut global_result = true;
-
-				let mut count = 0;
-
-				res.for_each(|file| {
-					count += 1;
-
-					// todo: DEDUP that
-					let result = Schema::check_file(&file);
-					if result {
-						global_result &= true;
-						println!("OK  {}", file.display());
-					} else {
-						global_result &= false;
-						eprintln!("ERR {}", file.display());
-					}
-				});
-
-				if count == 0 {
-					eprintln!("⚠️ No valid file found in {}", dir.display());
-					std::process::exit(exitcode::DATAERR);
-				}
-
-				if global_result {
-					println!("All OK in {}", dir.display());
-					std::process::exit(exitcode::OK);
-				} else {
-					eprintln!("__________");
-					eprintln!(
-						"⚠️ There are errors with files in {}",
-						std::fs::canonicalize(dir)
-							.map(|p| p.display().to_string())
-							.unwrap_or("?".to_string())
-					);
-					// todo: show the issues
-					std::process::exit(exitcode::DATAERR);
-				}
-			},
+			(None, Some(numbers), None) => Self::check_numbers(numbers, dir),
+			(None, None, Some(list)) => Self::check_list(&list, dir),
+			(None, None, None) => Self::check_files_in_folder(dir),
 
 			_ => unreachable!(),
-		};
-
-		result
+		}
 	}
 }
