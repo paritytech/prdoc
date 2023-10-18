@@ -1,4 +1,4 @@
-Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
+Generate a new file. It will be saved by default unless you provide --dry-run
 
 Usage: prdoc generate [OPTIONS] <NUMBER>
 

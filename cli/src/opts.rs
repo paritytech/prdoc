@@ -51,12 +51,8 @@ pub enum SubCommand {
 	#[allow(missing_docs)]
 	#[clap(version = crate_version!(), author = crate_authors!())]
 	Load(LoadOpts),
-	// #[allow(missing_docs)]
-	// #[clap(version = crate_version!(), author = crate_authors!())]
-	// Schema(SchemaOpts),
 }
-/// Generate a new file. It will be printed to stdout by default unless you provide
-/// the `--save` flag.
+/// Generate a new file. It will be saved by default unless you provide --dry-run.
 #[derive(Parser, Debug)]
 pub struct GenOpts {
 	/// Change number

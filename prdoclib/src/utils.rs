@@ -1,4 +1,4 @@
-use crate::{common::PRNumber, error, config::PRDocConfig};
+use crate::{common::PRNumber, config::PRDocConfig, error};
 use std::{
 	env,
 	fs::read_dir,
@@ -43,7 +43,7 @@ pub(crate) fn get_numbers_from_file(file: &PathBuf) -> error::Result<Vec<ParseRe
 /// Return the path of the folder where PRDoc are stored
 pub fn get_pr_doc_folder(out_dir: Option<PathBuf>, config: &PRDocConfig) -> PathBuf {
 	if let Some(path) = out_dir {
-		return path;
+		return path
 	}
 
 	config.out_dir.clone()

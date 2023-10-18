@@ -19,7 +19,7 @@ pub struct PRDocConfig {
 	pub prdoc_folders: Vec<PathBuf>,
 
 	/// Used by the generate command
-	pub out_dir: PathBuf
+	pub out_dir: PathBuf,
 }
 
 pub struct Config;

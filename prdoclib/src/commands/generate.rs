@@ -1,5 +1,6 @@
 use crate::{
-	common::PRNumber, doc_filename::DocFileName, docfile::DocFile, schema::PRDOC_DEFAULT_DIR, title::Title,
+	common::PRNumber, doc_filename::DocFileName, docfile::DocFile, schema::PRDOC_DEFAULT_DIR,
+	title::Title,
 };
 use std::path::{Path, PathBuf};
 
@@ -13,9 +14,7 @@ impl GenerateCmd {
 			match project_root::get_project_root() {
 				Ok(dir) => dir.join(PRDOC_DEFAULT_DIR),
 				Err(e) => {
-					eprint!(
-						"Project root not found, falling back to the current folder: {e:?}"
-					);
+					eprint!("Project root not found, falling back to the current folder: {e:?}");
 					PathBuf::from(".")
 				},
 			}
