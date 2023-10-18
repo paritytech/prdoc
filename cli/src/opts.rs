@@ -18,7 +18,7 @@ pub struct Opts {
 	#[clap(short, long, global = true, env = config::env::PRDOC_CONFIG)]
 	pub config: Option<PathBuf>,
 
-	#[clap(short = 'd', alias = "dir", long, global = true, env = config::env::PRDOC_FOLDER)]
+	#[clap(short = 'd', alias = "dir", long, global = true, env = config::env::PRDOC_FOLDERS)]
 	pub prdoc_folders: Option<PathBuf>,
 
 	// /// Do not write color information to the output. This is recommended for scripts.

@@ -6,7 +6,7 @@ const CONFIG_NAMES: &[&str] = &["prdoc.toml", ".prdoc.toml"];
 
 pub mod env {
 	pub const PRDOC_CONFIG: &str = "PRDOC_CONFIG";
-	pub const PRDOC_FOLDER: &str = "PRDOC_FOLDER";
+	pub const PRDOC_FOLDERS: &str = "PRDOC_FOLDERS";
 }
 
 #[derive(Debug, Deserialize)]
