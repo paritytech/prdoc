@@ -2,9 +2,9 @@
 
 use log::*;
 use serde_yaml::Value;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
-use crate::{common::PRNumber, doc_filename::DocFileName, schema::Schema};
+use crate::{common::PRNumber, doc_filename::DocFileName, error, schema::Schema};
 
 #[derive(Debug)]
 pub struct DocFile {
@@ -32,9 +32,15 @@ impl DocFile {
 	}
 
 	/// Generate a new PRDoc
-	pub fn generate() -> String {
-		let template = include_str!("../template.prdoc");
-		String::from(template)
+	pub fn generate(file: PathBuf) -> error::Result<String> {
+		let template_file = if file.is_absolute() {
+			file
+		} else {
+			let repo_root = project_root::get_project_root().expect("We need to work in a repo");
+			repo_root.join(file)
+		};
+
+		Ok(fs::read_to_string(template_file)?)
 	}
 
 	/// Returns an iterator if the `dir` was a valid directory or an error otherwise.

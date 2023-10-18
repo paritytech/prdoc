@@ -53,7 +53,7 @@ pub enum SubCommand {
 	Load(LoadOpts),
 }
 /// Generate a new file. It will be saved by default unless you provide --dry-run.
-/// The `generate` command will fail if the target file already exists.
+/// The command will fail if the target file already exists.
 #[derive(Parser, Debug)]
 pub struct GenOpts {
 	/// Change number
@@ -71,7 +71,7 @@ pub struct GenOpts {
 	pub output_dir: Option<PathBuf>,
 }
 
-/// Check one or MORE `prdoc` files for validity.
+/// Check one or more prdoc files for validity.
 #[derive(Parser, Debug)]
 pub struct CheckOpts {
 	/// Directly specify the file to be checked. It can be relative to the base directory.

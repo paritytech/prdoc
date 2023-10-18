@@ -21,7 +21,10 @@ pub struct PRDocConfig {
 	pub prdoc_folders: Vec<PathBuf>,
 
 	/// Used by the generate command
-	pub out_dir: PathBuf,
+	pub output_dir: PathBuf,
+
+	/// Path of the file to use as template
+	pub template: PathBuf,
 }
 
 pub struct Config;
@@ -58,7 +61,7 @@ impl Config {
 
 	pub fn load(config_opts: Option<PathBuf>) -> Result<PRDocConfig> {
 		let config_file = Self::get_config_file(config_opts)?;
-		log::debug!("Loading {config_file:?}");
+		log::debug!("Loading config from {config_file:?}");
 		let str = match fs::read_to_string(config_file.clone()) {
 			Ok(s) => s,
 			Err(_) => Err(crate::error::PRdocLibError::InvalidConfig(config_file.clone()))?,
@@ -77,7 +80,8 @@ impl Default for PRDocConfig {
 			version: 1,
 			schema: "prdoc_schema__user.json".into(),
 			prdoc_folders: vec!["prdoc".into()],
-			out_dir: "prdoc".into(),
+			output_dir: "prdoc".into(),
+			template: "template.prdoc".into(),
 		}
 	}
 }

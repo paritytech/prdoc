@@ -1,6 +1,10 @@
 
 include::authoring.adoc[]
 
+include::config.adoc[]
+
+include::paths.adoc[]
+
 include::schema.adoc[]
 
 include::anchors.adoc[]

@@ -1,4 +1,4 @@
-Check one or MORE `prdoc` files for validity
+Check one or more prdoc files for validity
 
 Usage: prdoc check [OPTIONS]
 

@@ -1,0 +1,19 @@
+== Config
+
+Using a configuration file makes it easier for all users as they will be able to omit some of the required flags when
+using the {cli}.
+
+=== Config file name and location
+
+The config will be found if located at the root of the repo and named either:
+- `prdoc.toml`
+- `.prdoc.toml`
+
+Alternatively, it can be defined as an ENV named `PRDOC_CONFIG` and contain the path of the config, relative to the
+repository's root.
+
+=== Content
+
+----
+include::../prdoc.toml[]
+----

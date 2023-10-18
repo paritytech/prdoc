@@ -41,12 +41,16 @@ pub(crate) fn get_numbers_from_file(file: &PathBuf) -> error::Result<Vec<ParseRe
 }
 
 /// Return the path of the folder where PRDoc are stored
-pub fn get_pr_doc_folder(out_dir: Option<PathBuf>, config: &PRDocConfig) -> PathBuf {
-	if let Some(path) = out_dir {
+pub fn get_pr_doc_folder(output_dir: Option<PathBuf>, config: &PRDocConfig) -> PathBuf {
+	if let Some(path) = output_dir {
 		return path
 	}
 
-	config.out_dir.clone()
+	config.output_dir.clone()
+}
+
+pub fn get_template_path(config: &PRDocConfig) -> PathBuf {
+	config.template.clone()
 }
 
 #[cfg(test)]

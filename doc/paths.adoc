@@ -1,0 +1,19 @@
+== Paths
+
+In order to make it easier to use, {cli} and its configuration always refer to the root of the repository.
+
+This allows users to use commands such as:
+
+    prdoc check -n 1234
+
+instead of:
+
+    prdoc check -n 1234 -d ../../folder/where/prdoc_files/are/stored
+
+Or also:
+
+    prdoc generate 1234
+
+instead of;
+
+    prdoc generate 1234 -o ../../folder/where/prdoc_files/are/stored

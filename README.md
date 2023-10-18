@@ -61,9 +61,49 @@ You do not need any tooling but a text editor to author a new prdoc. You may sim
 (where `NNN` is the PR number) in the repo’s prdoc folder (`./prdoc` is the default\`).
 
 You will however find it more comfortable to [install](https://github.com/paritytech/prdoc#install) and use the `prddoc`
-cli:
+cli and just run `prdoc generate 9999`.
 
-    prdoc generate 9999
+## Config
+
+Using a configuration file makes it easier for all users as they will be able to omit some of the required flags when
+using the `prdoc`.
+
+### Config file name and location
+
+The config will be found if located at the root of the repo and named either:
+- `prdoc.toml`
+- `.prdoc.toml`
+
+Alternatively, it can be defined as an ENV named `PRDOC_CONFIG` and contain the path of the config, relative to the
+repository’s root.
+
+### Content
+
+    version = 1
+    schema = "prdoc_schema_user.json"
+    output_dir = "/tmp/prdoc"
+    prdoc_folders = ["tests/data/all", "tests/data/some"]
+    template = "template.prdoc"
+
+## Paths
+
+In order to make it easier to use, `prdoc` and its configuration always refer to the root of the repository.
+
+This allows users to use commands such as:
+
+    prdoc check -n 1234
+
+instead of:
+
+    prdoc check -n 1234 -d ../../folder/where/prdoc_files/are/stored
+
+Or also:
+
+    prdoc generate 1234
+
+instead of;
+
+    prdoc generate 1234 -o ../../folder/where/prdoc_files/are/stored
 
 ## Schemas
 
@@ -120,8 +160,8 @@ You may use YAML anchors as demonnstrated below.
     Usage: prdoc [OPTIONS] [COMMAND]
 
     Commands:
-      generate  Generate a new file. It will be saved by default unless you provide --dry-run. The `generate` command will fail if the target file already exists
-      check     Check one or MORE `prdoc` files for validity
+      generate  Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
+      check     Check one or more prdoc files for validity
       scan      Scan a directory for prdoc files based on their name
       load      Load one or more prdoc
       help      Print this message or the help of the given subcommand(s)
@@ -144,7 +184,7 @@ You may use YAML anchors as demonnstrated below.
 
 ### Generate
 
-    Generate a new file. It will be saved by default unless you provide --dry-run. The `generate` command will fail if the target file already exists
+    Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
 
     Usage: prdoc generate [OPTIONS] <NUMBER>
 
@@ -175,7 +215,7 @@ You may use YAML anchors as demonnstrated below.
 
 ### Check
 
-    Check one or MORE `prdoc` files for validity
+    Check one or more prdoc files for validity
 
     Usage: prdoc check [OPTIONS]
 

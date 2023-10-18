@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 pub struct GenerateCmd;
 
 impl GenerateCmd {
-	fn get_out_dir(output_dir: Option<PathBuf>) -> PathBuf {
+	fn get_output_dir(output_dir: Option<PathBuf>) -> PathBuf {
 		if let Some(dir) = output_dir {
 			dir
 		} else {
@@ -30,8 +30,9 @@ impl GenerateCmd {
 		number: PRNumber,
 		title: Option<Title>,
 		output_dir: Option<PathBuf>,
+		template: PathBuf,
 	) -> error::Result<()> {
-		let template = DocFile::generate();
+		let template = DocFile::generate(template)?;
 
 		// print to stdout or save to file
 		if dry_run {
@@ -41,13 +42,13 @@ impl GenerateCmd {
 		} else {
 			// generate filename based on number and title
 			let filename: PathBuf = DocFileName::new(number, title).into();
-			let out_dir = Self::get_out_dir(output_dir);
-			log::debug!("Storing prdoc in {out_dir:?}");
-			std::fs::create_dir_all(&out_dir).unwrap_or_else(|why| {
+			let output_dir = Self::get_output_dir(output_dir);
+			log::debug!("Storing prdoc in {output_dir:?}");
+			std::fs::create_dir_all(&output_dir).unwrap_or_else(|why| {
 				println!("! {:?}", why.kind());
 			});
 
-			let output_file = Path::new(&out_dir).join(filename);
+			let output_file = Path::new(&output_dir).join(filename);
 			log::debug!("output_file = {:?}", &output_file);
 
 			if !output_file.exists() {
