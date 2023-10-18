@@ -9,7 +9,7 @@ code change documentation. While platform like Github allow a simple description
 limited to a title, description and some labels. The description itself is often used to describe the change but not
 document it.
 
-The schema can be found here: [prdoc\_schema\_user](prdoc_schema_user).
+The schema can be found here: [prdoc\_schema\_user.json](prdoc_schema_user.json).
 
 ## Install
 
