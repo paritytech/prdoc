@@ -21,18 +21,18 @@ The schema can be found here: link:prdoc_schema_user.json[prdoc_schema_user.json
 
 Alternatively, you may use a the container image if you prefer not installing anything on your system:
 
-    podman run --rm -it -v $PWD:/doc paritytech/prdoc --help
+    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
 
 ----
     ENGINE=podman
     DOC_PATH="$PWD/tests/data/some"
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc --help
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc scan --all
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc check
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc load
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
 ----
 
-NOTE: The container image is working by default in `/doc` so it makes it simpler if you mount your doc there as shown
+NOTE: The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
 above.
 
 == Features
@@ -46,7 +46,7 @@ above.
 
 === Configuration, cli flags and environment variables
 
-In order to provide a simple and uniform behavior in a repo, `prdoc` will search for a local configuration file.
+In order to provide a simple and uniform behavior in a repo, {cli} will search for a local configuration file.
 The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
 
 The configuration file can alternatively be passed via ENV or CLI flags. ENV and CLI flags have precedence over the

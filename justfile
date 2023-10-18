@@ -55,7 +55,7 @@ build-container:
 	#!/usr/bin/env bash
 	ENGINE=${ENGINE:-podman}
 	$ENGINE build -t prdoc:v$TAG -t paritytech/prdoc -t docker.io/paritytech/prdoc .
-	$ENGINE run --rm -it prdoc --version
+	$ENGINE run --rm -it -v $PWD:/repo  prdoc --version
 	$ENGINE images | grep prdoc
 
 # Build the Rust doc

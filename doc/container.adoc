@@ -1,0 +1,40 @@
+
+== Containers
+
+If you prefer not having to install Rust & Cargo and have Podman or Docker installed, you may prefer to run a containerized
+version of {cli}. The next chapters explain how to proceed.
+
+{prj} is designed to work at the repository level and you need to mount your repo as `/repo` into the {prj} container.
+
+=== Run
+
+Commands can end up quite lengthy so you may like to set an alias:
+
+[subs="attributes+"]
+----
+    alias {prj}='podman run --rm -it -v $PWD:/repo {prj}'
+----
+
+After setting this alias, you may use {cli} by simply invoking the {cli} command:
+
+[subs="attributes+"]
+----
+    {prj} --version
+----
+
+This is out of the scope of this documentation but note that you cannot just invoke `{prj} check`` and expect it to work in
+your repo as long as it contains a valid configuration file and schema.
+
+[subs="attributes+"]
+----
+    podman run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml {cli} list
+----
+
+=== Build
+
+You can pull the container image from `paritytech`/{cli} or build you own:
+
+[subs="attributes+"]
+----
+    podman build -t {prj} .
+----

@@ -17,16 +17,16 @@ The schema can be found here: [prdoc\_schema\_user.json](prdoc_schema_user.json)
 
 Alternatively, you may use a the container image if you prefer not installing anything on your system:
 
-    podman run --rm -it -v $PWD:/doc paritytech/prdoc --help
+    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
 
         ENGINE=podman
         DOC_PATH="$PWD/tests/data/some"
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc --help
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc scan --all
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc check
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc load
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
 
-The container image is working by default in `/doc` so it makes it simpler if you mount your doc there as shown
+The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
 above.
 
 ## Features
@@ -57,12 +57,13 @@ when either a config or an `.env` file is present.
 ## Authoring a PRDoc
 
 You do not need any tooling but a text editor to author a new prdoc. You may simply copy
-[this template](https://github.com/paritytech/prdoc/blob/master/template.prdoc) and save the file as `pr_##.prdoc`
-(where `####` is the PR number) in the repo’s prdoc folder (`./prdoc` is the default\`).
+[this template](https://github.com/paritytech/prdoc/blob/master/template.prdoc) and save the file as `pr_NNNN.prdoc`
+(where `NNN` is the PR number) in the repo’s prdoc folder (`./prdoc` is the default\`).
 
 You will however find it more comfortable to [install](https://github.com/paritytech/prdoc#install) and use the `prddoc`
 cli:
-prdoc generate 9999
+
+    prdoc generate 9999
 
 ## Schemas
 
@@ -202,33 +203,33 @@ You may use YAML anchors as demonnstrated below.
       -j, --json                           Output as json
       -h, --help                           Print help
 
-## Docker
+## Containers
 
-If you prefer not having to install Rust & Cargo and have Docker installed, you may prefer to run a containerized
+If you prefer not having to install Rust & Cargo and have Podman or Docker installed, you may prefer to run a containerized
 version of `prdoc`. The next chapters explain how to proceed.
+
+prdoc is designed to work at the repository level and you need to mount your repo as `/repo` into the prdoc container.
 
 ### Run
 
-Docker commands can end up quite lengthy so you may like to set an alias:
+Commands can end up quite lengthy so you may like to set an alias:
 
-        alias prdoc='docker run --rm -it prdoc'
+        alias prdoc='podman run --rm -it -v $PWD:/repo prdoc'
 
 After setting this alias, you may use `prdoc` by simply invoking the `prdoc` command:
 
         prdoc --version
 
-If you prefer a shorter a command, you may set an alias for `rl` instead of `prdoc`.
+This is out of the scope of this documentation but note that you cannot just invoke `` prdoc check` `` and expect it to work in
+your repo as long as it contains a valid configuration file and schema.
 
-This is out of the scope of this documentation but note that you cannot just invoke `prdoc` check and expect it to work on
-your local `specs.yaml`. For that to work, you need to mount your `specs.yaml` into the container. That looks like this:
-
-        docker run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml <literal>prdoc</literal> list
+        podman run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml <literal>prdoc</literal> list
 
 ### Build
 
-You can pull the docker image from `paritytech`/`prdoc` or build you own:
+You can pull the container image from `paritytech`/`prdoc` or build you own:
 
-        docker build -t prdoc .
+        podman build -t prdoc .
 
 ## License
 
