@@ -155,7 +155,7 @@ impl TryFrom<&PathBuf> for DocFileName {
 					}
 				})
 			})
-			.expect("We cover both cases where there is a title or not");
+			.unwrap_or_default();
 
 		if let Some(number) = number {
 			Ok(DocFileName::new(number, title))
