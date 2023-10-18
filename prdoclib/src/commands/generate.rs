@@ -1,5 +1,9 @@
 use crate::{
-	common::PRNumber, doc_filename::DocFileName, docfile::DocFile, schema::PRDOC_DEFAULT_DIR,
+	common::PRNumber,
+	doc_filename::DocFileName,
+	docfile::DocFile,
+	error::{self, PRdocLibError},
+	schema::PRDOC_DEFAULT_DIR,
 	title::Title,
 };
 use std::path::{Path, PathBuf};
@@ -22,23 +26,21 @@ impl GenerateCmd {
 	}
 
 	pub fn run(
-		save: bool,
+		dry_run: bool,
 		number: PRNumber,
 		title: Option<Title>,
 		output_dir: Option<PathBuf>,
-	) -> std::io::Result<()> {
-		// generate doc
+	) -> error::Result<()> {
 		let template = DocFile::generate();
 
 		// print to stdout or save to file
-		if !save {
-			log::debug!("Printing to stdout only, use --save to save to a file");
+		if dry_run {
+			log::debug!("Printing to stdout only due to --dry-run");
 			println!("{}", &template);
 			Ok(())
 		} else {
 			// generate filename based on number and title
 			let filename: PathBuf = DocFileName::new(number, title).into();
-
 			let out_dir = Self::get_out_dir(output_dir);
 			log::debug!("Storing prdoc in {out_dir:?}");
 			std::fs::create_dir_all(&out_dir).unwrap_or_else(|why| {
@@ -47,7 +49,13 @@ impl GenerateCmd {
 
 			let output_file = Path::new(&out_dir).join(filename);
 			log::debug!("output_file = {:?}", &output_file);
-			std::fs::write(output_file, template)
+
+			if !output_file.exists() {
+				std::fs::write(output_file, template).map_err(PRdocLibError::IO)
+			} else {
+				eprintln!("There is already a file, not overwriting {}", output_file.display());
+				Err(PRdocLibError::FileAlreadyExists(output_file.clone()))
+			}
 		}
 	}
 }

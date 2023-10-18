@@ -119,7 +119,7 @@ You may use YAML anchors as demonnstrated below.
     Usage: prdoc [OPTIONS] [COMMAND]
 
     Commands:
-      generate  Generate a new file. It will be saved by default unless you provide --dry-run
+      generate  Generate a new file. It will be saved by default unless you provide --dry-run. The `generate` command will fail if the target file already exists
       check     Check one or MORE `prdoc` files for validity
       scan      Scan a directory for prdoc files based on their name
       load      Load one or more prdoc
@@ -143,7 +143,7 @@ You may use YAML anchors as demonnstrated below.
 
 ### Generate
 
-    Generate a new file. It will be saved by default unless you provide --dry-run
+    Generate a new file. It will be saved by default unless you provide --dry-run. The `generate` command will fail if the target file already exists
 
     Usage: prdoc generate [OPTIONS] <NUMBER>
 

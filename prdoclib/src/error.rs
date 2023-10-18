@@ -22,6 +22,9 @@ pub enum PRdocLibError {
 	#[error("PRDoc not found for number {0}")]
 	NumberNotFound(PRNumber),
 
+	#[error("PRDoc file already exists: {0}")]
+	FileAlreadyExists(PathBuf),
+
 	#[error("The filename is not valid: {0}")]
 	InvalidFilename(PathBuf),
 

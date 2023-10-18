@@ -31,6 +31,7 @@ impl DocFile {
 		Schema::load(file)
 	}
 
+	/// Generate a new PRDoc
 	pub fn generate() -> String {
 		let template = include_str!("../template.prdoc");
 		String::from(template)

@@ -53,17 +53,13 @@ pub enum SubCommand {
 	Load(LoadOpts),
 }
 /// Generate a new file. It will be saved by default unless you provide --dry-run.
+/// The `generate` command will fail if the target file already exists.
 #[derive(Parser, Debug)]
 pub struct GenOpts {
 	/// Change number
 	#[clap(index = 1)]
 	pub number: PRNumber,
 
-	// Removed for now as it brings confusion between title in the filename
-	// and the actual title in the prdoc file itself.
-	// /// Change title
-	// #[clap(short, long)]
-	// pub title: Option<Title>,
 	/// Do not save the generated document to file with the proper naming, show the content
 	/// instead
 	#[clap(long)]

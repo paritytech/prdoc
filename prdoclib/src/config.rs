@@ -1,7 +1,6 @@
 use crate::{error::Result, utils::get_project_root};
 use serde::Deserialize;
 use std::{fs, path::PathBuf};
-// use toml::Table;
 
 const CONFIG_NAMES: &[&str] = &["prdoc.toml", ".prdoc.toml"];
 
@@ -12,7 +11,10 @@ pub mod env {
 
 #[derive(Debug, Deserialize)]
 pub struct PRDocConfig {
+	/// Config version
 	pub version: u16,
+
+	/// Path of the schema
 	pub schema: PathBuf,
 
 	/// Used for load, scan, check
@@ -38,11 +40,6 @@ impl Config {
 				return Ok(PathBuf::from(name))
 			}
 		}
-
-		// if root.join(".prdoc.toml").exists() {
-		// 	log::debug!("Found config in .prdoc.toml");
-		// 	return Ok(PathBuf::from(".prdoc.toml"));
-		// }
 
 		if let Some(config) = config_file {
 			if PathBuf::from(&config).exists() {

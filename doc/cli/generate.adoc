@@ -1,4 +1,4 @@
-Generate a new file. It will be saved by default unless you provide --dry-run
+Generate a new file. It will be saved by default unless you provide --dry-run. The `generate` command will fail if the target file already exists
 
 Usage: prdoc generate [OPTIONS] <NUMBER>
 
