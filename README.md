@@ -151,11 +151,10 @@ You may use YAML anchors as demonnstrated below.
       <NUMBER>  Change number
 
     Options:
-      -t, --title <TITLE>                  Change title
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
           --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
       -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
       -j, --json                           Output as json
       -h, --help                           Print help
 

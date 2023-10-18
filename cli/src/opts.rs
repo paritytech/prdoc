@@ -2,7 +2,7 @@
 //! supported by the cli.
 
 use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
-use prdoclib::{common::PRNumber, config, title::Title};
+use prdoclib::{common::PRNumber, config};
 use std::path::PathBuf;
 
 /// prdoc is a cli utility to generate, check and load prdoc files.
@@ -59,10 +59,11 @@ pub struct GenOpts {
 	#[clap(index = 1)]
 	pub number: PRNumber,
 
-	/// Change title
-	#[clap(short, long)]
-	pub title: Option<Title>,
-
+	// Removed for now as it brings confusion between title in the filename
+	// and the actual title in the prdoc file itself.
+	// /// Change title
+	// #[clap(short, long)]
+	// pub title: Option<Title>,
 	/// Do not save the generated document to file with the proper naming, show the content
 	/// instead
 	#[clap(long)]

@@ -48,7 +48,7 @@ fn main() -> color_eyre::Result<()> {
 			let dir = prdoclib::utils::get_pr_doc_folder(cmd_opts.output_dir, &config);
 
 			log::debug!("PRDoc folder: {dir:?}");
-			match GenerateCmd::run(!cmd_opts.dry_run, cmd_opts.number, cmd_opts.title, Some(dir)) {
+			match GenerateCmd::run(!cmd_opts.dry_run, cmd_opts.number, None, Some(dir)) {
 				Ok(_) => Ok(()),
 				Err(e) => {
 					eprint!("{e:?}");
