@@ -3,7 +3,7 @@
 title: Foobar
 
 doc:
-  - audience: Builder
+  - audience: Runtime User
     description: &desc |
       Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
       ullamco enim qui enim.

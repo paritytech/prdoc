@@ -6,14 +6,12 @@ mod cli_tests {
 	#[cfg(test)]
 	mod check {
 		use crate::common::*;
-		use prdoclib::config;
 
 		#[test]
 		fn it_check_passes_without_args() {
 			let mut cmd = prdoc_bin();
-			cmd.env_clear().env(config::env::PRDOC_FOLDER, "../tests/data/all");
 
-			let assert = cmd.arg("check").assert();
+			let assert = cmd.arg("check").args(["-d", "../tests/data/all"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 

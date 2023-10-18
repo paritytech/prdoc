@@ -13,13 +13,15 @@ code change documentation. While platform like Github allow a simple description
 limited to a title, description and some labels. The description itself is often used to describe the change but not
 document it.
 
-The schema can be found here: link:schema_user.json[schema_user.json].
+The schema can be found here: link:prdoc_schema_user[prdoc_schema_user].
 
 == Install
 
     cargo install prdoc
 
-Alternatively, you may use a the container image:
+Alternatively, you may use a the container image if you prefer not installing anything on your system:
+
+    podman run --rm -it -v $PWD:/doc paritytech/prdoc --help
 
 ----
     ENGINE=podman
@@ -35,11 +37,25 @@ above.
 
 == Features
 
-- provide the `prdoc` user schema
 - generate new documents
 - scan for `prdoc` in a folder
 - check `prdoc` files
 - load/aggregate `prdoc` files
+
+== Philosophy
+
+=== Configuration, cli flags and environment variables
+
+In order to provide a simple and uniform behavior in a repo, `prdoc` will search for a local configuration file.
+The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
+
+The configuration file can alternatively be passed via ENV or CLI flags. ENV and CLI flags have precedence over the
+local configuration file.
+
+=== Simple to use
+
+While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
+when either a config or an `.env` file is present.
 
 include::doc/index.adoc[]
 

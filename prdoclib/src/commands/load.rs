@@ -25,7 +25,6 @@ impl LoadCmd {
 			.iter()
 			.filter_map(|&number| {
 				log::debug!("Loading PR #{}", number);
-
 				let file_maybe = DocFileName::find(number, None, dir);
 
 				match file_maybe {

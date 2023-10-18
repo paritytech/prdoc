@@ -11,9 +11,8 @@
     ],
     "yaml.schemas": {
         "/Users/Shared/projects/dotgovprop/govprop-schema.json": "*.govprop",
-        "/Users/Shared/projects/prdoc/schema_user.json": [
-            "*.prdoc",
-            "file:///Users/Shared/projects/prdoc/tests/data/all/pr_1226.prdoc"
-        ]
+        "/Users/Shared/projects/prdoc/prdoc_schema_user.json": [
+            "*.prdoc"
+        ],
     }
 }

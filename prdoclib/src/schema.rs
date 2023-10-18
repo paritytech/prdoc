@@ -38,6 +38,7 @@ impl Schema {
 		Self::load(file).is_ok()
 	}
 
+	// TODO: Handle those errors
 	/// Load the content of a file. The name does not matter here.
 	pub fn load<P: AsRef<Path>>(file: &P) -> crate::error::Result<Value> {
 		let schema_str = Self::get(true);
@@ -58,12 +59,27 @@ impl Schema {
 		let validation_result_strict = validation.is_strictly_valid();
 
 		if !(validation_result && validation_result_strict) {
-			// todo: add a way to see those
-			// println!("errors: {:#?}", validation.errors);
-			// println!("missing: {:#?}", validation.missing);
+			log::warn!("validation_result: {validation_result}");
+			log::warn!("validation_result_strict: {validation_result_strict}");
+			log::warn!("errors: {:#?}", validation.errors);
+			log::warn!("missing: {:#?}", validation.missing);
 			return Err(PRdocLibError::ValidationErrors(validation))
 		}
 
 		Ok(doc_as_yaml)
+	}
+}
+
+#[cfg(test)]
+mod test_schema_validation {
+	use super::*;
+	use std::path::PathBuf;
+
+	#[test]
+	fn test_valid_1234() {
+		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
+		let prdoc = Schema::load(&file);
+		println!("prdoc = {:?}", prdoc);
+		assert!(Schema::check_file(&file));
 	}
 }

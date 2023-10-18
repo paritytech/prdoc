@@ -67,18 +67,6 @@ impl Config {
 			Err(_e) => Err(crate::error::PRdocLibError::InvalidConfig(config_file))?,
 		}
 	}
-
-	// fn get_config_from_cargo_toml() -> Result<PRDocConfig> {
-	//     let root = get_project_root()?;
-	//     let cargo_toml = root.join("Cargo.toml");
-	//     match fs::read_to_string(cargo_toml)?.parse() {
-	//         Ok(c) => Ok(c),
-	//         Err(_) => todo!(),
-	//     }
-	//     // let toml = "foo = 'bar'".parse::<Table>().unwrap();
-
-	//     // Err(crate::error::PRdocLibError::InvalidConfig(cargo_toml))
-	// }
 }
 
 impl Default for PRDocConfig {

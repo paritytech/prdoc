@@ -25,7 +25,7 @@ impl CheckCmd {
 		numbers: Vec<PRNumber>,
 		dir: &PathBuf,
 	) -> error::Result<HashSet<CheckResult>> {
-		log::debug!("Checking PR #{:?}", numbers);
+		log::debug!("Checking PRs: {:?}", numbers);
 
 		let res = numbers
 			.iter()
@@ -63,7 +63,7 @@ impl CheckCmd {
 
 	/// Check a specific file given its full path
 	pub(crate) fn check_file(file: &PathBuf) -> CheckResult {
-		// log::debug!("Checking file {}", file.display());
+		log::debug!("Checking file {}", file.display());
 
 		let value = Schema::load(&file);
 		let filename_maybe = DocFileName::try_from(file);

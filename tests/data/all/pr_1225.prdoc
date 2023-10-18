@@ -2,8 +2,12 @@
 
 title: Foobar
 
+authors: [ chevdor<chevdor@gmail.com> ]
+
+tags: [ lambda, foo, bar ]
+
 doc:
-  - audience: Builder
+  - audience: Runtime User
     description: |
       Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
       ullamco enim qui enim.
@@ -17,4 +21,5 @@ migrations:
   runtime: []
 
 crates: []
+
 host_functions: []

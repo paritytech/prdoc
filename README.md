@@ -9,13 +9,15 @@ code change documentation. While platform like Github allow a simple description
 limited to a title, description and some labels. The description itself is often used to describe the change but not
 document it.
 
-The schema can be found here: [schema\_user.json](schema_user.json).
+The schema can be found here: [prdoc\_schema\_user](prdoc_schema_user).
 
 ## Install
 
     cargo install prdoc
 
-Alternatively, you may use a the container image:
+Alternatively, you may use a the container image if you prefer not installing anything on your system:
+
+    podman run --rm -it -v $PWD:/doc paritytech/prdoc --help
 
         ENGINE=podman
         DOC_PATH="$PWD/tests/data/some"
@@ -29,8 +31,6 @@ above.
 
 ## Features
 
--   provide the `prdoc` user schema
-
 -   generate new documents
 
 -   scan for `prdoc` in a folder
@@ -38,6 +38,21 @@ above.
 -   check `prdoc` files
 
 -   load/aggregate `prdoc` files
+
+## Philosophy
+
+### Configuration, cli flags and environment variables
+
+In order to provide a simple and uniform behavior in a repo, `prdoc` will search for a local configuration file.
+The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
+
+The configuration file can alternatively be passed via ENV or CLI flags. ENV and CLI flags have precedence over the
+local configuration file.
+
+### Simple to use
+
+While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
+when either a config or an `.env` file is present.
 
 ## Schemas
 
@@ -49,7 +64,7 @@ This is essentially a `yaml` file and the extension helps using the right JSON s
 In VScode, open your user settings and ensure you have the following section:
 
     "yaml.schemas":  {
-        "/path/of/schema/schema_user.json": "*.prdoc"
+        "/path/of/schema/prdoc_schema_user.json": "*.prdoc"
     },
 
 You also need:
@@ -66,8 +81,6 @@ Should initially have created the file with another extension such as `.txt`, ma
 You may use YAML anchors as demonnstrated below.
 
     # Schema: Parity PR Documentation Schema (prdoc)
-
-    # Anchoring is NOT supported yet.
 
     title: Foobar
 
