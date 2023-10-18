@@ -1,4 +1,6 @@
 
+include::authoring.adoc[]
+
 include::schema.adoc[]
 
 include::anchors.adoc[]

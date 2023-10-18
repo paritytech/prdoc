@@ -14,7 +14,12 @@ pub mod env {
 pub struct PRDocConfig {
 	pub version: u16,
 	pub schema: PathBuf,
-	pub prdoc_folder: Vec<PathBuf>,
+
+	/// Used for load, scan, check
+	pub prdoc_folders: Vec<PathBuf>,
+
+	/// Used by the generate command
+	pub out_dir: PathBuf
 }
 
 pub struct Config;
@@ -74,7 +79,8 @@ impl Default for PRDocConfig {
 		Self {
 			version: 1,
 			schema: "prdoc_schema__user.json".into(),
-			prdoc_folder: vec!["prdoc".into()],
+			prdoc_folders: vec!["prdoc".into()],
+			out_dir: "prdoc".into(),
 		}
 	}
 }

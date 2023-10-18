@@ -4,11 +4,6 @@
 include::usage.adoc[]
 ----
 
-=== Schema
-----
-include::schema.adoc[]
-----
-
 === Generate
 ----
 include::generate.adoc[]

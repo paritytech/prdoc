@@ -65,7 +65,7 @@ impl DocFileName {
 		directory: &PathBuf,
 	) -> error::Result<PathBuf> {
 		if title.is_some() {
-			todo!("Searching by Number + title is not implemented yet, needed ?");
+			todo!("Searching by Number + Title is not implemented yet, open an issue if there is a need.");
 		}
 
 		// We search for matching patterns and capture the `number` group
@@ -136,16 +136,12 @@ impl TryFrom<&PathBuf> for DocFileName {
 	fn try_from(p: &PathBuf) -> Result<Self, Self::Error> {
 		let re: Regex = Self::get_regex();
 
-		//todo: remove unwrap in here
-		let file = p.file_name().expect("Invalid file");
-		let filename = file.to_str().expect("Invalid file");
+		let file = p.file_name().ok_or(PRdocLibError::InvalidFilename(p.clone()))?;
+		let filename = file.to_str().ok_or(PRdocLibError::InvalidFilename(p.clone()))?;
 
 		let number = re.captures(filename).and_then(|cap| {
-			cap.name("number").map(|n| {
-				let s = n.as_str();
-				let my_num: PRNumber = s.parse().unwrap();
-				my_num
-			})
+			cap.name("number")
+				.map(|n| n.as_str().parse().expect("The regexp captures numbers"))
 		});
 
 		let title: Option<Title> = re
@@ -159,7 +155,7 @@ impl TryFrom<&PathBuf> for DocFileName {
 					}
 				})
 			})
-			.unwrap();
+			.expect("We cover both cases where there is a title or not");
 
 		if let Some(number) = number {
 			Ok(DocFileName::new(number, title))

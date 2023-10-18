@@ -1,6 +1,6 @@
 version=1
 schema="prdoc_schema_user.json"
-prdoc_folder= [
+prdoc_folders= [
     "tests/data/all",
     "tests/data/some",
 ]

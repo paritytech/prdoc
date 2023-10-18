@@ -19,7 +19,7 @@ pub struct Opts {
 	pub config: Option<PathBuf>,
 
 	#[clap(short = 'd', alias = "dir", long, global = true, env = config::env::PRDOC_FOLDER)]
-	pub prdoc_folder: Option<PathBuf>,
+	pub prdoc_folders: Option<PathBuf>,
 
 	// /// Do not write color information to the output. This is recommended for scripts.
 	// #[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]

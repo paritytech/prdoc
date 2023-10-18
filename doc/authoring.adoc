@@ -1,0 +1,9 @@
+== Authoring a PRDoc
+
+You do not need any tooling but a text editor to author a new prdoc. You may simply copy
+https://github.com/paritytech/prdoc/blob/master/template.prdoc[this template] and save the file as `pr_\####.prdoc`
+(where `\####` is the PR number) in the repo's prdoc folder (`./prdoc` is the default`).
+
+You will however find it more comfortable to https://github.com/paritytech/prdoc#install[install] and use the `prddoc`
+cli:
+    prdoc generate 9999

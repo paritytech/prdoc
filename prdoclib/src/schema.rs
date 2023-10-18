@@ -18,7 +18,7 @@ pub const JSON_SCHEMA: &str = include_str!("./prdoc_schema_user.json");
 pub const EXTENSION: &str = "prdoc";
 
 /// Default location where prdoc are stored
-pub const PRDOC_DIR: &str = "prdoc";
+pub const PRDOC_DEFAULT_DIR: &str = "prdoc";
 
 /// The schema embedded in [prdoc](/prdoc).
 pub struct Schema {}
@@ -76,10 +76,14 @@ mod test_schema_validation {
 	use std::path::PathBuf;
 
 	#[test]
-	fn test_valid_1234() {
+	fn test_load_valid_1234() {
 		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
-		let prdoc = Schema::load(&file);
-		println!("prdoc = {:?}", prdoc);
+		assert!(Schema::load(&file).is_ok());
+	}
+
+	#[test]
+	fn test_check_valid_1234() {
+		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
 		assert!(Schema::check_file(&file));
 	}
 }

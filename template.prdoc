@@ -1,7 +1,11 @@
-# Schema: Parity PR Documentation Schema (prdoc)
+# Schema: Parity PR Documentation Schema (prdoc) v1.0.0
 # See doc at https://github.com/paritytech/prdoc
 
 title: ...
+
+authors: []
+
+tags: []
 
 doc:
   - audience: Node Dev

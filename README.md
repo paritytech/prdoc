@@ -54,6 +54,16 @@ local configuration file.
 While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
 when either a config or an `.env` file is present.
 
+## Authoring a PRDoc
+
+You do not need any tooling but a text editor to author a new prdoc. You may simply copy
+[this template](https://github.com/paritytech/prdoc/blob/master/template.prdoc) and save the file as `pr_##.prdoc`
+(where `####` is the PR number) in the repo’s prdoc folder (`./prdoc` is the default\`).
+
+You will however find it more comfortable to [install](https://github.com/paritytech/prdoc#install) and use the `prddoc`
+cli:
+prdoc generate 9999
+
 ## Schemas
 
 ### PR Doc
@@ -85,7 +95,7 @@ You may use YAML anchors as demonnstrated below.
     title: Foobar
 
     doc:
-      - audience: Builder
+      - audience: Runtime User
         description: &desc |
           Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
           ullamco enim qui enim.
@@ -113,10 +123,15 @@ You may use YAML anchors as demonnstrated below.
       check     Check one or MORE `prdoc` files for validity
       scan      Scan a directory for prdoc files based on their name
       load      Load one or more prdoc
-      schema    Retrieve the JSON schema that is used internally
       help      Print this message or the help of the given subcommand(s)
 
     Options:
+      -c, --config <CONFIG>
+              [env: PRDOC_CONFIG=prdoc.toml]
+
+      -d, --prdoc-folders <PRDOC_FOLDERS>
+              [env: PRDOC_FOLDER=]
+
       -v, --version
               Show the version
 
@@ -125,16 +140,6 @@ You may use YAML anchors as demonnstrated below.
 
       -h, --help
               Print help (see a summary with '-h')
-
-### Schema
-
-    Retrieve the JSON schema that is used internally
-
-    Usage: prdoc schema [OPTIONS]
-
-    Options:
-      -j, --json  Output as json
-      -h, --help  Print help
 
 ### Generate
 
@@ -146,25 +151,27 @@ You may use YAML anchors as demonnstrated below.
       <NUMBER>  Change number
 
     Options:
-      -t, --title <TITLE>            Change title
-      -s, --save                     Save the generated document to file with the proper naming
-      -o, --output-dir <OUTPUT_DIR>  Output directory [default: .]
-      -j, --json                     Output as json
-      -h, --help                     Print help
+      -t, --title <TITLE>                  Change title
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+          --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
 ### Scan
 
     Scan a directory for prdoc files based on their name
 
-    Usage: prdoc scan [OPTIONS] [DIRECTORY]
-
-    Arguments:
-      [DIRECTORY]  directory path [default: .]
+    Usage: prdoc scan [OPTIONS]
 
     Options:
-      -a, --all   Also return invalid files
-      -j, --json  Output as json
-      -h, --help  Print help
+      -a, --all                            Also return invalid files
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -s, --sort                           Sort the output
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
 ### Check
 
@@ -173,12 +180,13 @@ You may use YAML anchors as demonnstrated below.
     Usage: prdoc check [OPTIONS]
 
     Options:
-      -d, --directory <DIRECTORY>  Base directory for the files [default: .]
-      -f, --file <FILE>            Directly specify the file to be checked. It can be relative to the base directory
-      -n, --number <NUMBER>        number
-      -l, --list <LIST>            Get the list of PR numbers from a file
-      -j, --json                   Output as json
-      -h, --help                   Print help
+      -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -n, --number <NUMBER>                number
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -l, --list <LIST>                    Get the list of PR numbers from a file
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
 ### Load
 
@@ -187,12 +195,13 @@ You may use YAML anchors as demonnstrated below.
     Usage: prdoc load [OPTIONS]
 
     Options:
-      -d, --directory <DIRECTORY>  directory path [default: .]
-      -f, --file <FILE>            file path
-      -n, --number <NUMBER>        One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
-      -l, --list <LIST>            Get the list of PR numbers from a file
-      -j, --json                   Output as json
-      -h, --help                   Print help
+      -f, --file <FILE>                    file path
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -n, --number <NUMBER>                One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -l, --list <LIST>                    Get the list of PR numbers from a file
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
 ## Docker
 

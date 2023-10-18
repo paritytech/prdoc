@@ -25,7 +25,6 @@ fn main() -> color_eyre::Result<()> {
 	let opts: Opts = Opts::parse();
 	log::debug!("opts: {opts:#?}");
 
-	// let config = Config::get_config_file(opts.config).unwrap();
 	let config = match Config::load(opts.config) {
 		Ok(c) => {
 			log::debug!("Config found: {:#?}", c);
@@ -37,8 +36,8 @@ fn main() -> color_eyre::Result<()> {
 		}
 	};
 
-	let prdoc_dir: Vec<PathBuf> = match (config.prdoc_folder, opts.prdoc_folder) {
-		(config_list, None) => config_list,
+	let prdoc_dir: Vec<PathBuf> = match (&config.prdoc_folders, opts.prdoc_folders) {
+		(config_list, None) => config_list.clone(),
 		(_config_list, Some(args)) => vec![args],
 	};
 
@@ -46,10 +45,8 @@ fn main() -> color_eyre::Result<()> {
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
-			let dir = match cmd_opts.output_dir {
-				Some(d) => d,
-				None => prdoclib::utils::get_pr_doc_folder().expect("Always have a default"),
-			};
+			let dir = prdoclib::utils::get_pr_doc_folder(cmd_opts.output_dir, &config);
+
 			log::debug!("PRDoc folder: {dir:?}");
 			match GenerateCmd::run(!cmd_opts.dry_run, cmd_opts.number, cmd_opts.title, Some(dir)) {
 				Ok(_) => Ok(()),
@@ -66,7 +63,6 @@ fn main() -> color_eyre::Result<()> {
 			let results: HashSet<CheckResult> = prdoc_dir
 				.iter()
 				.flat_map(|d| {
-					log::debug!("Checking files in {:#?}", d);
 					CheckCmd::run(d, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone()).unwrap()
 				})
 				.collect();
