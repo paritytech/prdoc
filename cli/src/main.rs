@@ -3,7 +3,8 @@
 
 mod opts;
 
-use clap::{crate_name, crate_version, Parser};
+use clap::{crate_name, crate_version, Command, CommandFactory, Parser};
+use clap_complete::{generate, Generator};
 use env_logger::Env;
 use opts::*;
 use prdoclib::{
@@ -17,7 +18,7 @@ use prdoclib::{
 	common::PRNumber,
 	config::Config,
 };
-use std::{collections::HashSet, env, path::PathBuf};
+use std::{collections::HashSet, env, io, path::PathBuf};
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
@@ -26,6 +27,12 @@ fn main() -> color_eyre::Result<()> {
 
 	let opts: Opts = Opts::parse();
 	log::debug!("opts: {opts:#?}");
+
+	if let Some(generator) = opts.generator {
+		let mut cmd = Opts::command();
+		print_completions(generator, &mut cmd);
+		std::process::exit(exitcode::OK);
+	}
 
 	let config = match Config::load(opts.config) {
 		Ok(c) => {
@@ -159,4 +166,8 @@ fn main() -> color_eyre::Result<()> {
 			}
 		}
 	}
+}
+
+fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
+	generate(gen, cmd, cmd.get_name().to_string(), &mut io::stdout());
 }

@@ -65,3 +65,10 @@ rustdoc:
 # Watch and hot-reload the rustdoc
 rustdoc_watch:
 	cargo watch -s './scripts/build-doc.sh && browser-sync start --ss target/doc -s target/doc --directory --no-open'
+
+gen_completion_zsh:
+	#!/usr/bin/env zsh
+	COMPLETION_PATH=/usr/local/share/zsh/site-functions
+	cargo run -- --generate-completions zsh > $COMPLETION_PATH/_prdoc
+	ls -al $COMPLETION_PATH | grep prdoc
+	echo "Make sure to run compinit now"
