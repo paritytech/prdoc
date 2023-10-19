@@ -22,9 +22,6 @@ pub struct Opts {
 	#[clap(short = 'd', alias = "dir", long, global = true, env = config::env::PRDOC_FOLDERS)]
 	pub prdoc_folders: Option<PathBuf>,
 
-	// /// Do not write color information to the output. This is recommended for scripts.
-	// #[clap(short, long, global = true, env = "NO_COLOR", display_order = 99)]
-	// pub no_color: bool,
 	#[allow(missing_docs)]
 	#[clap(subcommand)]
 	pub subcmd: Option<SubCommand>,
@@ -91,9 +88,6 @@ pub struct CheckOpts {
 /// Scan a directory for prdoc files based on their name
 #[derive(Parser, Debug)]
 pub struct ScanOpts {
-	// /// directory path
-	// #[clap(index = 1, default_value = ".")]
-	// pub directory: PathBuf,
 	/// Also return invalid files
 	#[clap(short, long)]
 	pub all: bool,
@@ -106,9 +100,6 @@ pub struct ScanOpts {
 /// Load one or more prdoc
 #[derive(Parser, Debug)]
 pub struct LoadOpts {
-	// /// directory path
-	// #[clap(short, long, default_value = ".")]
-	// pub directory: PathBuf,
 	/// file path
 	#[clap(short, long, conflicts_with = "number")]
 	pub file: Option<PathBuf>,

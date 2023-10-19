@@ -7,55 +7,13 @@
 
 image::https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master[link="https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml"]
 
+include::doc/intro.adoc[]
 
-`prdoc` is a tool helping with `.prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
-code change documentation. While platform like Github allow a simple description for a Pull Request (PR), this is
-limited to a title, description and some labels. The description itself is often used to describe the change but not
-document it.
+include::doc/features.adoc[]
 
-The schema can be found here: link:prdoc_schema_user.json[prdoc_schema_user.json].
+include::doc/install.adoc[]
 
-== Install
-
-    cargo install prdoc
-
-Alternatively, you may use a the container image if you prefer not installing anything on your system:
-
-    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
-
-----
-    ENGINE=podman
-    DOC_PATH="$PWD/tests/data/some"
-    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
-    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
-    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
-    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
-----
-
-NOTE: The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
-above.
-
-== Features
-
-- generate new documents
-- scan for `prdoc` in a folder
-- check `prdoc` files
-- load/aggregate `prdoc` files
-
-== Philosophy
-
-=== Configuration, cli flags and environment variables
-
-In order to provide a simple and uniform behavior in a repo, {cli} will search for a local configuration file.
-The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
-
-The configuration file can alternatively be passed via ENV or CLI flags. ENV and CLI flags have precedence over the
-local configuration file.
-
-=== Simple to use
-
-While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
-when either a config or an `.env` file is present.
+include::doc/philosophy.adoc[]
 
 include::doc/index.adoc[]
 

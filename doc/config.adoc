@@ -1,3 +1,4 @@
+[reftext="config"]
 == Config
 
 Using a configuration file makes it easier for all users as they will be able to omit some of the required flags when

@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "adoc",
         "Canonicalize",
         "DATAERR",
         "docfile",
@@ -10,7 +11,6 @@
         "valico"
     ],
     "yaml.schemas": {
-        "/Users/Shared/projects/dotgovprop/govprop-schema.json": "*.govprop",
         "/Users/Shared/projects/prdoc/prdoc_schema_user.json": [
             "*.prdoc"
         ],

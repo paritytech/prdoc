@@ -7,8 +7,6 @@ include::paths.adoc[]
 
 include::schema.adoc[]
 
-include::anchors.adoc[]
-
 include::cli/index.adoc[]
 
 include::container.adoc[]
