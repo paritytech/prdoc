@@ -1,4 +1,4 @@
-prdoc is a cli utility to generate, check and load prdoc files.
+prdoc is a utility to generate, check and load PRDoc files.
 
 More at <https://github.com/paritytech/prdoc>
 

@@ -172,7 +172,7 @@ Should you initially have created the file with another extension such as `.txt`
 
 ## Usage
 
-    prdoc is a cli utility to generate, check and load prdoc files.
+    prdoc is a utility to generate, check and load PRDoc files.
 
     More at <https://github.com/paritytech/prdoc>
 
