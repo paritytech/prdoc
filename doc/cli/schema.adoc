@@ -1,7 +1,0 @@
-Retrieve the JSON schema that is used internally
-
-Usage: prdoc schema [OPTIONS]
-
-Options:
-  -j, --json  Output as json
-  -h, --help  Print help

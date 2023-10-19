@@ -14,7 +14,6 @@ test:
 # Generate usage samples
 usage:
 	cargo run -q -- --help > doc/cli/usage.adoc
-	cargo run -q -- schema --help > doc/cli/schema.adoc
 	cargo run -q -- generate --help > doc/cli/generate.adoc
 	cargo run -q -- scan --help > doc/cli/scan.adoc
 	cargo run -q -- check --help > doc/cli/check.adoc
@@ -56,7 +55,7 @@ build-container:
 	#!/usr/bin/env bash
 	ENGINE=${ENGINE:-podman}
 	$ENGINE build -t prdoc:v$TAG -t paritytech/prdoc -t docker.io/paritytech/prdoc .
-	$ENGINE run --rm -it prdoc --version
+	$ENGINE run --rm -it -v $PWD:/repo  prdoc --version
 	$ENGINE images | grep prdoc
 
 # Build the Rust doc
@@ -66,3 +65,10 @@ rustdoc:
 # Watch and hot-reload the rustdoc
 rustdoc_watch:
 	cargo watch -s './scripts/build-doc.sh && browser-sync start --ss target/doc -s target/doc --directory --no-open'
+
+gen_completion_zsh:
+	#!/usr/bin/env zsh
+	COMPLETION_PATH=/usr/local/share/zsh/site-functions
+	cargo run -- --generate-completions zsh > $COMPLETION_PATH/_prdoc
+	ls -al $COMPLETION_PATH | grep prdoc
+	echo "Make sure to run compinit now"

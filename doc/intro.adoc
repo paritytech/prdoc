@@ -1,0 +1,11 @@
+`prdoc` is a tool designed to help generating, checking and loading `.prdoc` files.
+`.prdoc` files are YAML files adhering to defined JSON schema and helping with
+code change documentation.
+
+While platform like Github allow a simple description for a Pull Request (PR), this is
+limited to a title, description and some labels.
+
+The description of a PR itself is often used to describe the change but not
+document it in a structured fashion.
+A sample schema can be found here: link:prdoc_schema_user.json[prdoc_schema_user.json] but each repository is free to
+define its own JSON Schema.

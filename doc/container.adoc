@@ -1,0 +1,64 @@
+
+== Containers
+
+If you prefer not having to install Rust & Cargo and have Podman or Docker installed, you may prefer to run a containerized
+version of {cli}. This chapter explains how to proceed.
+
+{prj} is designed to work at the repository level and you need to mount your repo as `/repo` into the {prj} container.
+
+    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
+
+----
+    ENGINE=podman
+    DOC_PATH="$PWD/tests/data/some"
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
+----
+
+NOTE: The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
+above.
+
+=== Run
+
+ podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
+
+----
+    ENGINE=podman
+    DOC_PATH="$PWD/tests/data/some"
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+    $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
+----
+
+NOTE: The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
+above.
+
+Commands can end up quite lengthy so you may like to set an alias:
+
+[subs="attributes+"]
+----
+    alias {prj}='podman run --rm -it -v $PWD:/repo paritytech/prdoc'
+----
+
+After setting this alias, you may use {cli} by simply invoking the {cli} command:
+
+[subs="attributes+"]
+----
+    {prj} --version
+----
+
+This is out of the scope of this documentation but note that you can just invoke `{prj} check` and expect it to work in
+your repo as long as it contains a valid configuration file and schema. Check out the <<Configuration>> chapter for more
+details.
+
+=== Build
+
+You can pull the container image from `paritytech`/{cli} or build you own:
+
+[subs="attributes+"]
+----
+    podman build -t {prj} .
+----

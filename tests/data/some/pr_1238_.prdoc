@@ -1,6 +1,6 @@
 title: foo
 doc:
-  - audience: Core Dev
+  - audience: Node Dev
     description: some text
 
   - audience: Validator

@@ -1,0 +1,11 @@
+== Shell Completions
+
+=== Zsh
+
+[source,zsh]
+----
+    COMPLETION_PATH=/usr/local/share/zsh/site-functions
+    prdoc --generate-completions zsh > $COMPLETION_PATH/_prdoc
+    ls -al $COMPLETION_PATH | grep prdoc
+    compinit
+----

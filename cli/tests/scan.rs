@@ -1,13 +1,15 @@
+mod common;
+
 #[cfg(test)]
 mod cli_tests {
 	#[cfg(test)]
 	mod scan {
-		use assert_cmd::Command;
+		use crate::common::prdoc_bin;
 
 		#[test]
 		fn it_provides_a_scan() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
-			let assert = cmd.args(["scan", "../tests/data/some"]).assert();
+			let mut cmd = prdoc_bin();
+			let assert = cmd.args(["-d", "../tests/data/some"]).args(["scan"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 	}

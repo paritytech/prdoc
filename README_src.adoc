@@ -7,39 +7,13 @@
 
 image::https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master[link="https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml"]
 
+include::doc/intro.adoc[]
 
-`prdoc` is a tool helping with `.prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
-code change documentation. While platform like Github allow a simple description for a Pull Request (PR), this is
-limited to a title, description and some labels. The description itself is often used to describe the change but not
-document it.
+include::doc/features.adoc[]
 
-The schema can be found here: link:schema_user.json[schema_user.json].
+include::doc/install.adoc[]
 
-== Install
-
-    cargo install prdoc
-
-Alternatively, you may use a the container image:
-
-----
-    ENGINE=podman
-    DOC_PATH="$PWD/tests/data/some"
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc --help
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc scan --all
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc check
-    $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc load
-----
-
-NOTE: The container image is working by default in `/doc` so it makes it simpler if you mount your doc there as shown
-above.
-
-== Features
-
-- provide the `prdoc` user schema
-- generate new documents
-- scan for `prdoc` in a folder
-- check `prdoc` files
-- load/aggregate `prdoc` files
+include::doc/philosophy.adoc[]
 
 include::doc/index.adoc[]
 

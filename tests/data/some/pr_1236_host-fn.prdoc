@@ -1,6 +1,6 @@
 title: foo
 doc:
-  - audience: Core Dev
+  - audience: Node Dev
     description: some important text
     notes:
       - not so important note
@@ -17,7 +17,7 @@ doc:
         and this is the last
       - Also don't forget to foo your bar
 
-  - audience: Builder
+  - audience: Runtime User
     title: Optional title override for the `Exchange` audience
     description: Change the `foo` of `bar`
 

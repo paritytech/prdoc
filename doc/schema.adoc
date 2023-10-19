@@ -7,19 +7,23 @@ This is essentially a `yaml` file and the extension helps using the right JSON s
 
 In VScode, open your user settings and ensure you have the following section:
 
-----
-"yaml.schemas":  {
-    "/path/of/schema/schema_user.json": "*.prdoc"
-},
-----
-
-You also need:
-
+You first need to tell VScode that .prdoc files are YAML files:
 ----
 "files.associations": {
     "*.prdoc": "yaml",
 },
 ----
 
-NOTE: Should initially have created the file with another extension such as `.txt`, make sure to change the format to
-`YAML` and the right schema should then be picked up.
+You then need to point to the right schemas:
+----
+ "yaml.schemas": {
+    [...other schemas...]
+    "/path/to/polkadot-sdk/prdoc/schema_user.json": "*polkadot-sdk*/**/*.prdoc",
+    "/path/to/subxt/prdoc/schema_user.json": "*subxt*/**/*.prdoc"
+  },
+----
+
+NOTE: You need to restart/reload VSCode after those changes for the new settings to be picked up.
+
+NOTE: Should you initially have created the file with another extension such as `.txt`, make sure to change the format to
+`YAML` in the VSCode status bar and the right schema should then be picked up.

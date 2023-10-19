@@ -1,11 +1,12 @@
-Check one or MORE `prdoc` files for validity
+Check one or more prdoc files for validity
 
 Usage: prdoc check [OPTIONS]
 
 Options:
-  -d, --directory <DIRECTORY>  Base directory for the files [default: .]
-  -f, --file <FILE>            Directly specify the file to be checked. It can be relative to the base directory
-  -n, --number <NUMBER>        number
-  -l, --list <LIST>            Get the list of PR numbers from a file
-  -j, --json                   Output as json
-  -h, --help                   Print help
+  -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+  -n, --number <NUMBER>                number
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+  -l, --list <LIST>                    Get the list of PR numbers from a file
+  -j, --json                           Output as json
+  -h, --help                           Print help

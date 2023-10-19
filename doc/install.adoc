@@ -1,0 +1,7 @@
+[reftext="generate command"]
+== Install
+
+    cargo install prdoc
+
+Alternatively, you may use a the container image if you prefer not installing anything on your system. See the
+<<Containers>> section for more details on containers.

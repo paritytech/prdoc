@@ -4,7 +4,7 @@
 title: Foobarization of all bar
 
 doc:
-  - audience: Core Dev
+  - audience: Node Dev
     # The description can be single line
     description: some important text
     # Notes are optional, the `notes` property can be skipped
@@ -26,7 +26,7 @@ doc:
         and this is the last
       - Also don't forget to foo your bar
 
-  - audience: Exchange
+  - audience: Node Operator
     title: Optional title override for the `Exchange` audience
     description: Change the `foo` of `bar`
 

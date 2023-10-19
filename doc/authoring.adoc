@@ -1,0 +1,36 @@
+== Authoring a PRDoc
+
+=== Without tooling
+
+No tooling but a text editor is required to author a new PRDoc. You may simply copy the template from your repo.
+The template is defined in the <<config>>:
+```
+grep template *prdoc.toml
+```
+
+You then need to save the file as `pr_NNNN.prdoc` (where `NNN` is the PR number) in the repo's prdoc folder.
+This folder is also defined in the config (`./prdoc` is the default`):
+```
+grep output *prdoc.toml
+```
+
+=== Using the `prdoc` cli
+
+You will however find it more convenient to https://github.com/paritytech/prdoc#install[install] and use the `prddoc`
+cli and just run:
+
+```
+prdoc generate 9999
+```
+
+After editing the PRDoc file, you may check whether is adheres to the schema using:
+
+```
+prdoc check check -n 1226
+```
+
+=== Using VSCode
+
+See the <<Schemas>> chapter to learn how to configure VSCode to recognize and check PRDoc files.
+
+include::anchors.adoc[]

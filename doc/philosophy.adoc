@@ -1,0 +1,14 @@
+== Philosophy
+
+=== Configuration, cli flags and environment variables
+
+In order to provide a simple and uniform behavior in a repo, {cli} will search for a local configuration file.
+The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
+
+The configuration file can alternatively be passed via ENV (`PRDOC_CONFIG`) or cli flag (`-c`|`--config`).
+ENV and cli flags have precedence over the local configuration file.
+
+=== Simple to use
+
+While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
+when either a config or an `.env` file is present.
