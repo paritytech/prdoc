@@ -16,7 +16,7 @@ Options:
           [env: PRDOC_CONFIG=prdoc.toml]
 
   -d, --prdoc-folders <PRDOC_FOLDERS>
-          [env: PRDOC_FOLDER=]
+          [env: PRDOC_FOLDERS=tests/data/some]
 
   -v, --version
           Show the version

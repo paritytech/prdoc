@@ -171,7 +171,7 @@ You may use YAML anchors as demonnstrated below.
               [env: PRDOC_CONFIG=prdoc.toml]
 
       -d, --prdoc-folders <PRDOC_FOLDERS>
-              [env: PRDOC_FOLDER=]
+              [env: PRDOC_FOLDERS=tests/data/some]
 
       -v, --version
               Show the version
@@ -195,7 +195,7 @@ You may use YAML anchors as demonnstrated below.
           --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
       -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
       -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -j, --json                           Output as json
       -h, --help                           Print help
 
@@ -209,7 +209,7 @@ You may use YAML anchors as demonnstrated below.
       -a, --all                            Also return invalid files
       -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
       -s, --sort                           Sort the output
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -j, --json                           Output as json
       -h, --help                           Print help
 
@@ -223,7 +223,7 @@ You may use YAML anchors as demonnstrated below.
       -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
       -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
       -n, --number <NUMBER>                number
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -l, --list <LIST>                    Get the list of PR numbers from a file
       -j, --json                           Output as json
       -h, --help                           Print help
@@ -238,7 +238,7 @@ You may use YAML anchors as demonnstrated below.
       -f, --file <FILE>                    file path
       -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
       -n, --number <NUMBER>                One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -l, --list <LIST>                    Get the list of PR numbers from a file
       -j, --json                           Output as json
       -h, --help                           Print help

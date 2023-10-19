@@ -24,6 +24,8 @@ pub const PRDOC_DEFAULT_DIR: &str = "prdoc";
 pub struct Schema {}
 
 impl Schema {
+	/// JSON Schema sometimes do contain comments. This function strips them to allow
+	/// proper deserialization.
 	pub fn get(strip_comments: bool) -> String {
 		if !strip_comments {
 			JSON_SCHEMA.to_string()
@@ -34,6 +36,7 @@ impl Schema {
 		}
 	}
 
+	/// Check the validity of a file by attempting to load it
 	pub fn check_file<P: AsRef<Path>>(file: &P) -> bool {
 		Self::load(file).is_ok()
 	}

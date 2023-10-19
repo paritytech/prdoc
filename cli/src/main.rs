@@ -1,4 +1,6 @@
 //! Entry point of the cli. The cli itself does not contain much, it is mostly a shell around the [prdoclib].
+#![warn(missing_docs)]
+
 mod opts;
 
 use clap::{crate_name, crate_version, Parser};
@@ -29,11 +31,11 @@ fn main() -> color_eyre::Result<()> {
 		Ok(c) => {
 			log::debug!("Config found: {:#?}", c);
 			c
-		},
+		}
 		Err(_e) => {
 			log::warn!("No config could be found, using default");
 			Config::get_default_config()
-		},
+		}
 	};
 
 	let prdoc_dir: Vec<PathBuf> = match (&config.prdoc_folders, opts.prdoc_folders) {
@@ -42,6 +44,7 @@ fn main() -> color_eyre::Result<()> {
 	};
 
 	log::debug!("prdoc_dir: {:#?}", prdoc_dir);
+
 	match opts.subcmd {
 		Some(SubCommand::Generate(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
@@ -49,34 +52,21 @@ fn main() -> color_eyre::Result<()> {
 			let template_path = prdoclib::utils::get_template_path(&config);
 
 			log::debug!("PRDoc folder: {dir:?}");
-			match GenerateCmd::run(
-				cmd_opts.dry_run,
-				cmd_opts.number,
-				None,
-				Some(dir),
-				template_path,
-			) {
+			match GenerateCmd::run(cmd_opts.dry_run, cmd_opts.number, None, Some(dir), template_path) {
 				Ok(_) => Ok(()),
 				Err(e) => {
 					eprint!("{e:?}");
 					std::process::exit(exitcode::IOERR);
-				},
+				}
 			}
-		},
+		}
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
-			log::debug!("prdoc_dir: {prdoc_dir:?}");
 			let results: HashSet<CheckResult> = prdoc_dir
 				.iter()
 				.flat_map(|d| {
-					CheckCmd::run(
-						d,
-						cmd_opts.file.clone(),
-						cmd_opts.number.clone(),
-						cmd_opts.list.clone(),
-					)
-					.unwrap()
+					CheckCmd::run(d, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone()).unwrap()
 				})
 				.collect();
 
@@ -86,8 +76,7 @@ fn main() -> color_eyre::Result<()> {
 					println!("PR #{pr_number: <4} -> {}", if *result { "OK " } else { "ERR" });
 				}
 			} else {
-				let json =
-					serde_json::to_string_pretty(&results).expect("We can serialize the result");
+				let json = serde_json::to_string_pretty(&results).expect("We can serialize the result");
 				println!("{json}");
 			}
 
@@ -97,7 +86,7 @@ fn main() -> color_eyre::Result<()> {
 			} else {
 				std::process::exit(exitcode::DATAERR)
 			}
-		},
+		}
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
@@ -107,7 +96,7 @@ fn main() -> color_eyre::Result<()> {
 				.map(|f| {
 					let prdoc = LoadCmd::load_file(f);
 					let n = match prdoc {
-						Ok(p) => Some(p.filename.number),
+						Ok(p) => Some(p.doc_filename.number),
 						Err(_) => None,
 					};
 
@@ -126,16 +115,12 @@ fn main() -> color_eyre::Result<()> {
 					println!(
 						"{number}\t{file}",
 						file = f.display(),
-						number = if let Some(number) = n {
-							number.to_string()
-						} else {
-							"n/a".to_string()
-						}
+						number = if let Some(number) = n { number.to_string() } else { "n/a".to_string() }
 					);
 				});
 			}
 			Ok(())
-		},
+		}
 
 		Some(SubCommand::Load(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
@@ -143,13 +128,7 @@ fn main() -> color_eyre::Result<()> {
 			let result = prdoc_dir
 				.iter()
 				.map(|dir| {
-					LoadCmd::run(
-						dir,
-						cmd_opts.file.clone(),
-						cmd_opts.number.clone(),
-						cmd_opts.list.clone(),
-					)
-					.unwrap()
+					LoadCmd::run(dir, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone()).unwrap()
 				})
 				.fold((true, HashSet::new()), |(acc_status, acc_wrapper), (status, wrapper)| {
 					let mut new_wrapper = acc_wrapper;
@@ -167,7 +146,7 @@ fn main() -> color_eyre::Result<()> {
 			} else {
 				std::process::exit(exitcode::DATAERR)
 			}
-		},
+		}
 
 		None => {
 			if opts.version {
@@ -178,6 +157,6 @@ fn main() -> color_eyre::Result<()> {
 			} else {
 				unreachable!("We show help if there is no arg");
 			}
-		},
+		}
 	}
 }

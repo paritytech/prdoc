@@ -1,3 +1,7 @@
+//! Implementation of the load command. This command loads a PRDoc file and outputs its content as
+//! YAML or JSON. Load can also work on several files and aggregates its output as array in that
+//! case.
+
 use crate::{
 	common::PRNumber,
 	doc_filename::DocFileName,
@@ -12,8 +16,10 @@ use std::{
 	path::{Path, PathBuf},
 };
 
+/// Wrapper for the load command
 pub struct LoadCmd;
 
+/// Type alias for the load command result
 pub type LoadResult = (bool, HashSet<DocFileWrapper>);
 
 impl LoadCmd {
@@ -105,6 +111,7 @@ impl LoadCmd {
 		Ok((global_result, wrapper))
 	}
 
+	/// Run of the load command
 	pub fn run(
 		dir: &PathBuf,
 		file: Option<PathBuf>,

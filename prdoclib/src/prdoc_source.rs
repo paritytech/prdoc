@@ -1,3 +1,5 @@
+//! A PRDoc is mostly identified by its `PRNumber` but it can also be identified by its filename.
+
 use crate::{common::PRNumber, doc_filename::DocFileName};
 use serde::Serialize;
 use std::path::PathBuf;
@@ -5,8 +7,13 @@ use std::path::PathBuf;
 /// This enum defines the initial input used to find a PRDoc.
 #[derive(Debug, PartialEq, Eq, Hash, Serialize)]
 pub enum PRDocSource {
+	/// Filename of the PRDoc
 	File(PathBuf),
+
+	/// PR number of the PRDoc
 	Number(PRNumber),
+
+	/// Filename and PR number of the PRDoc
 	Both(PathBuf, PRNumber),
 }
 

@@ -1,5 +1,6 @@
 //! This module contains the definition of all commands, sub-commands and arguments
 //! supported by the cli.
+#![warn(missing_docs)]
 
 use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
 use prdoclib::{common::PRNumber, config};

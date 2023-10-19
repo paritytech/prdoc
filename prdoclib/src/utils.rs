@@ -1,3 +1,4 @@
+//! Set of utils
 use crate::{common::PRNumber, config::PRDocConfig, error};
 use std::{
 	env,
@@ -6,6 +7,7 @@ use std::{
 	path::PathBuf,
 };
 
+/// Type alias for the result of parsing a file
 pub type ParseResult = (String, bool, Option<PRNumber>);
 
 /// Get the project root (relative to closest Cargo.lock file)
@@ -49,6 +51,7 @@ pub fn get_pr_doc_folder(output_dir: Option<PathBuf>, config: &PRDocConfig) -> P
 	config.output_dir.clone()
 }
 
+/// Get the template path from the config
 pub fn get_template_path(config: &PRDocConfig) -> PathBuf {
 	config.template.clone()
 }

@@ -11,6 +11,7 @@ use crate::common::PRNumber;
 pub type Result<T> = std::result::Result<T, PRdocLibError>;
 
 /// Custom error
+#[allow(missing_docs)]
 #[derive(Error, Debug)]
 pub enum PRdocLibError {
 	#[error("ValidationErrors {0:?}")]

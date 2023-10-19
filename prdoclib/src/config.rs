@@ -1,14 +1,23 @@
+//! PRDoc config
+
 use crate::{error::Result, utils::get_project_root};
 use serde::Deserialize;
 use std::{fs, path::PathBuf};
 
 const CONFIG_NAMES: &[&str] = &["prdoc.toml", ".prdoc.toml"];
 
+/// Environment variables used by PRDoc
 pub mod env {
+	/// If the config is not located at the root of the project or does not have standard name, it
+	/// can still be provided via this env variable
 	pub const PRDOC_CONFIG: &str = "PRDOC_CONFIG";
+
+	/// Not fully supported yet
+	//TODO: Add proper support
 	pub const PRDOC_FOLDERS: &str = "PRDOC_FOLDERS";
 }
 
+/// PRDoc config
 #[derive(Debug, Deserialize)]
 pub struct PRDocConfig {
 	/// Config version
@@ -27,6 +36,7 @@ pub struct PRDocConfig {
 	pub template: PathBuf,
 }
 
+/// Wrapper struct for the `PRDocConfig`
 pub struct Config;
 
 impl Config {
@@ -55,10 +65,12 @@ impl Config {
 		Err(crate::error::PRdocLibError::MissingConfig)
 	}
 
+	/// Return a default config. This is used when no config was found or the config file is invalid
 	pub fn get_default_config() -> PRDocConfig {
 		PRDocConfig::default()
 	}
 
+	/// Load the config from the config file
 	pub fn load(config_opts: Option<PathBuf>) -> Result<PRDocConfig> {
 		let config_file = Self::get_config_file(config_opts)?;
 		log::debug!("Loading config from {config_file:?}");

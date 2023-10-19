@@ -20,11 +20,21 @@ use crate::{
 /// valid `prdoc` filenames.
 #[derive(Debug, PartialEq, Serialize, Hash, Eq)]
 pub struct DocFileName {
+	/// The PR number
 	pub number: PRNumber,
+
+	/// The title of the PR as mentioned in the filename. Note: This is NOT the title property of a
+	/// PRDoc file.
 	pub title: Option<Title>,
 }
 
 impl DocFileName {
+	/// Construct a new `DocFileName` from a PR number and an optional title.
+	pub fn new(number: PRNumber, title: Option<Title>) -> Self {
+		Self { number, title }
+	}
+
+	/// Return the filename of the `prdoc` file.
 	pub fn filename(&self) -> OsString {
 		if let Some(title) = &self.title {
 			OsString::from(format!("pr_{}_{:?}.prdoc", self.number, title.to_string()))
@@ -33,14 +43,14 @@ impl DocFileName {
 		}
 	}
 
-	pub fn new(number: PRNumber, title: Option<Title>) -> Self {
-		Self { number, title }
-	}
-
+	/// Return the regex used to parse filenames
 	fn get_regex() -> Regex {
 		Regex::new(r"^pr_(?<number>\d+)(?<title>.*)\.prdoc$").unwrap()
 	}
 
+	/// Return true if a filename **looks** like it could be a valid `prdoc` file.
+	/// This is done solely based on the filename and the content it not attemptedly parsed or
+	/// deserialized.
 	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
 		let re = Self::get_regex();
 		let file_only = filename.as_ref().components().last();
@@ -50,6 +60,7 @@ impl DocFileName {
 				std::path::Component::RootDir |
 				std::path::Component::CurDir |
 				std::path::Component::ParentDir => false,
+
 				std::path::Component::Normal(f) =>
 					re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
 			}

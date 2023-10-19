@@ -6,6 +6,6 @@ Options:
   -a, --all                            Also return invalid files
   -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
   -s, --sort                           Sort the output
-  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
   -j, --json                           Output as json
   -h, --help                           Print help

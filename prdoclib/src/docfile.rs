@@ -6,9 +6,13 @@ use std::{fs, path::PathBuf};
 
 use crate::{common::PRNumber, doc_filename::DocFileName, error, schema::Schema};
 
+/// Wrapper around filename and content of a `prdoc` file
 #[derive(Debug)]
 pub struct DocFile {
+	/// The file path
 	pub file: PathBuf,
+
+	/// The content of the PRDoc
 	pub content: Value,
 }
 
@@ -20,13 +24,15 @@ impl From<PathBuf> for DocFile {
 }
 
 impl DocFile {
-	pub fn new(n: PRNumber) -> Self {
+	/// Load a `prdoc` file given its PR number
+	pub fn load_from_number(n: PRNumber) -> Self {
 		let filename = DocFileName::from(n);
 		let file = PathBuf::from(filename);
 		let content = Self::load(&file).unwrap();
 		Self { file, content }
 	}
 
+	/// Attempt to load a `prdoc` file given its filename
 	pub fn load(file: &PathBuf) -> crate::error::Result<Value> {
 		Schema::load(file)
 	}

@@ -1,3 +1,6 @@
+//! Implementation of the check command. This command attempts to load a PRDoc file and checks
+//! whether it adheres to the schema or not.
+
 use crate::{
 	common::PRNumber,
 	doc_filename::DocFileName,
@@ -80,10 +83,17 @@ impl CheckCmd {
 		}
 	}
 
-	pub(crate) fn check_files_in_folder(dir: &PathBuf) -> error::Result<HashSet<CheckResult>> {
+	/// Check all files in a given folder. The dot files (ie filenames starting with a dot) are
+	/// ignored This functions allows checking all files or only the valid ones thanks to the
+	/// `valid_only` argument.
+	pub(crate) fn check_files_in_folder(
+		dir: &PathBuf,
+		valid_only: bool,
+	) -> error::Result<HashSet<CheckResult>> {
 		log::debug!("Checking all files in folder {}", dir.display());
 
-		let files = DocFile::find(dir, false)?;
+		let files = DocFile::find(dir, valid_only)?
+			.filter(|f| !f.file_name().unwrap_or_default().to_string_lossy().starts_with('.'));
 		let hs: HashSet<CheckResult> = files.map(|f| Self::check_file(&f)).collect();
 		Ok(hs)
 	}
@@ -127,6 +137,7 @@ impl CheckCmd {
 			(Some(file), None, None) => {
 				let file =
 					if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
+
 				let mut hs = HashSet::new();
 				let _ = hs.insert(Self::check_file(&file));
 				Ok(hs)
@@ -134,7 +145,7 @@ impl CheckCmd {
 
 			(None, Some(numbers), None) => Self::check_numbers(numbers, dir),
 			(None, None, Some(list)) => Self::check_list(&list, dir),
-			(None, None, None) => Self::check_files_in_folder(dir),
+			(None, None, None) => Self::check_files_in_folder(dir, false),
 
 			_ => unreachable!(),
 		}

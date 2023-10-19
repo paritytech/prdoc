@@ -12,14 +12,20 @@ use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Hash, PartialEq, Eq)]
 pub struct DocFileWrapper {
+	/// The file path
 	pub file: PathBuf,
-	pub filename: DocFileName,
+
+	/// The filename
+	pub doc_filename: DocFileName,
+
+	/// The content of the PRDoc
 	pub content: Value,
 }
 
 impl DocFileWrapper {
+	/// Create a new wrapper
 	pub fn new(file: PathBuf, filename: DocFileName, content: Value) -> Self {
 		let file = file.canonicalize().expect("Canonicalize works");
-		Self { file, filename, content }
+		Self { file, doc_filename: filename, content }
 	}
 }

@@ -6,7 +6,7 @@ Options:
   -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
   -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
   -n, --number <NUMBER>                number
-  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDER=]
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
   -l, --list <LIST>                    Get the list of PR numbers from a file
   -j, --json                           Output as json
   -h, --help                           Print help

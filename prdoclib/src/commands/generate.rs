@@ -1,3 +1,5 @@
+//! Implementation of the generate command. This command generates a new PRDoc file.
+
 use crate::{
 	common::PRNumber,
 	doc_filename::DocFileName,
@@ -8,6 +10,7 @@ use crate::{
 };
 use std::path::{Path, PathBuf};
 
+/// Wrapper to the generate command
 pub struct GenerateCmd;
 
 impl GenerateCmd {
@@ -25,6 +28,7 @@ impl GenerateCmd {
 		}
 	}
 
+	/// Run of the generate command
 	pub fn run(
 		dry_run: bool,
 		number: PRNumber,
@@ -34,8 +38,8 @@ impl GenerateCmd {
 	) -> error::Result<()> {
 		let template = DocFile::generate(template)?;
 
-		// print to stdout or save to file
 		if dry_run {
+			// print to stdout or save to file
 			log::debug!("Printing to stdout only due to --dry-run");
 			println!("{}", &template);
 			Ok(())
@@ -54,7 +58,6 @@ impl GenerateCmd {
 			if !output_file.exists() {
 				std::fs::write(output_file, template).map_err(PRdocLibError::IO)
 			} else {
-				eprintln!("There is already a file, not overwriting {}", output_file.display());
 				Err(PRdocLibError::FileAlreadyExists(output_file.clone()))
 			}
 		}
