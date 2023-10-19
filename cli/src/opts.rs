@@ -6,7 +6,7 @@ use clap::{crate_authors, crate_version, ColorChoice, Parser, Subcommand};
 use prdoclib::{common::PRNumber, config};
 use std::path::PathBuf;
 
-/// prdoc is a cli utility to generate, check and load prdoc files.
+/// prdoc is a utility to generate, check and load PRDoc files.
 ///
 /// More at <https://github.com/paritytech/prdoc>
 #[derive(Parser, Debug)]

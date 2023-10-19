@@ -10,16 +10,16 @@ include::usage.adoc[]
 include::generate.adoc[]
 ----
 
-[reftext="scan command"]
-=== scan
-----
-include::scan.adoc[]
-----
-
 [reftext="check command"]
 === check
 ----
 include::check.adoc[]
+----
+
+[reftext="scan command"]
+=== scan
+----
+include::scan.adoc[]
 ----
 
 [reftext="load command"]

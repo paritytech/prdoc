@@ -218,20 +218,6 @@ Should you initially have created the file with another extension such as `.txt`
       -j, --json                           Output as json
       -h, --help                           Print help
 
-### scan
-
-    Scan a directory for prdoc files based on their name
-
-    Usage: prdoc scan [OPTIONS]
-
-    Options:
-      -a, --all                            Also return invalid files
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
-      -s, --sort                           Sort the output
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
-      -j, --json                           Output as json
-      -h, --help                           Print help
-
 ### check
 
     Check one or more prdoc files for validity
@@ -244,6 +230,20 @@ Should you initially have created the file with another extension such as `.txt`
       -n, --number <NUMBER>                number
       -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -l, --list <LIST>                    Get the list of PR numbers from a file
+      -j, --json                           Output as json
+      -h, --help                           Print help
+
+### scan
+
+    Scan a directory for prdoc files based on their name
+
+    Usage: prdoc scan [OPTIONS]
+
+    Options:
+      -a, --all                            Also return invalid files
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -s, --sort                           Sort the output
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
       -j, --json                           Output as json
       -h, --help                           Print help
 
