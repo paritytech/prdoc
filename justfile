@@ -14,7 +14,6 @@ test:
 # Generate usage samples
 usage:
 	cargo run -q -- --help > doc/cli/usage.adoc
-	cargo run -q -- schema --help > doc/cli/schema.adoc
 	cargo run -q -- generate --help > doc/cli/generate.adoc
 	cargo run -q -- scan --help > doc/cli/scan.adoc
 	cargo run -q -- check --help > doc/cli/check.adoc
@@ -56,7 +55,7 @@ build-container:
 	#!/usr/bin/env bash
 	ENGINE=${ENGINE:-podman}
 	$ENGINE build -t prdoc:v$TAG -t paritytech/prdoc -t docker.io/paritytech/prdoc .
-	$ENGINE run --rm -it prdoc --version
+	$ENGINE run --rm -it -v $PWD:/repo  prdoc --version
 	$ENGINE images | grep prdoc
 
 # Build the Rust doc

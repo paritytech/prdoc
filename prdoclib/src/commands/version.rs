@@ -1,8 +1,12 @@
+//! Implementation of the version command
+
 use serde_json::json;
 
+/// Wrapper for the version command
 pub struct VersionCmd;
 
 impl VersionCmd {
+	/// Run the version command
 	pub fn run(name: &str, version: &str, json: bool) {
 		let commit_hash = std::env::var("PRDOC_CLI_GIT_COMMIT_HASH");
 		let build_date = std::env::var("PRDOC_CLI_BUILD_DATE");

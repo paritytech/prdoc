@@ -1,11 +1,11 @@
 Scan a directory for prdoc files based on their name
 
-Usage: prdoc scan [OPTIONS] [DIRECTORY]
-
-Arguments:
-  [DIRECTORY]  directory path [default: .]
+Usage: prdoc scan [OPTIONS]
 
 Options:
-  -a, --all   Also return invalid files
-  -j, --json  Output as json
-  -h, --help  Print help
+  -a, --all                            Also return invalid files
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+  -s, --sort                           Sort the output
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+  -j, --json                           Output as json
+  -h, --help                           Print help

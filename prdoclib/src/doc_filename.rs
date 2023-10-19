@@ -20,11 +20,21 @@ use crate::{
 /// valid `prdoc` filenames.
 #[derive(Debug, PartialEq, Serialize, Hash, Eq)]
 pub struct DocFileName {
+	/// The PR number
 	pub number: PRNumber,
+
+	/// The title of the PR as mentioned in the filename. Note: This is NOT the title property of a
+	/// PRDoc file.
 	pub title: Option<Title>,
 }
 
 impl DocFileName {
+	/// Construct a new `DocFileName` from a PR number and an optional title.
+	pub fn new(number: PRNumber, title: Option<Title>) -> Self {
+		Self { number, title }
+	}
+
+	/// Return the filename of the `prdoc` file.
 	pub fn filename(&self) -> OsString {
 		if let Some(title) = &self.title {
 			OsString::from(format!("pr_{}_{:?}.prdoc", self.number, title.to_string()))
@@ -33,14 +43,14 @@ impl DocFileName {
 		}
 	}
 
-	pub fn new(number: PRNumber, title: Option<Title>) -> Self {
-		Self { number, title }
-	}
-
+	/// Return the regex used to parse filenames
 	fn get_regex() -> Regex {
 		Regex::new(r"^pr_(?<number>\d+)(?<title>.*)\.prdoc$").unwrap()
 	}
 
+	/// Return true if a filename **looks** like it could be a valid `prdoc` file.
+	/// This is done solely based on the filename and the content it not attemptedly parsed or
+	/// deserialized.
 	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
 		let re = Self::get_regex();
 		let file_only = filename.as_ref().components().last();
@@ -50,6 +60,7 @@ impl DocFileName {
 				std::path::Component::RootDir |
 				std::path::Component::CurDir |
 				std::path::Component::ParentDir => false,
+
 				std::path::Component::Normal(f) =>
 					re.is_match(&PathBuf::from(f).display().to_string().to_lowercase()),
 			}
@@ -65,7 +76,7 @@ impl DocFileName {
 		directory: &PathBuf,
 	) -> error::Result<PathBuf> {
 		if title.is_some() {
-			todo!("Searching by Number + title is not implemented yet, needed ?");
+			todo!("Searching by Number + Title is not implemented yet, open an issue if there is a need.");
 		}
 
 		// We search for matching patterns and capture the `number` group
@@ -114,7 +125,7 @@ impl DocFileName {
 
 impl Display for DocFileName {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		f.write_str(self.filename().to_str().expect("Our filename are valid path"))
+		f.write_str(self.filename().to_str().expect("Our filename is a valid path"))
 	}
 }
 
@@ -126,7 +137,7 @@ impl From<PRNumber> for DocFileName {
 
 impl From<DocFileName> for PathBuf {
 	fn from(val: DocFileName) -> Self {
-		PathBuf::from_str(&val.to_string()).expect("Our filename are valid path")
+		PathBuf::from_str(&val.to_string()).expect("Our filename is a valid path")
 	}
 }
 
@@ -136,16 +147,12 @@ impl TryFrom<&PathBuf> for DocFileName {
 	fn try_from(p: &PathBuf) -> Result<Self, Self::Error> {
 		let re: Regex = Self::get_regex();
 
-		//todo: remove unwrap in here
-		let file = p.file_name().expect("Invalid file");
-		let filename = file.to_str().expect("Invalid file");
+		let file = p.file_name().ok_or(PRdocLibError::InvalidFilename(p.clone()))?;
+		let filename = file.to_str().ok_or(PRdocLibError::InvalidFilename(p.clone()))?;
 
 		let number = re.captures(filename).and_then(|cap| {
-			cap.name("number").map(|n| {
-				let s = n.as_str();
-				let my_num: PRNumber = s.parse().unwrap();
-				my_num
-			})
+			cap.name("number")
+				.map(|n| n.as_str().parse().expect("The regexp captures numbers"))
 		});
 
 		let title: Option<Title> = re
@@ -159,12 +166,12 @@ impl TryFrom<&PathBuf> for DocFileName {
 					}
 				})
 			})
-			.unwrap();
+			.unwrap_or_default();
 
 		if let Some(number) = number {
 			Ok(DocFileName::new(number, title))
 		} else {
-			Err(PRdocLibError::InvalidFilename(filename.to_string()))
+			Err(PRdocLibError::InvalidFilename(filename.into()))
 		}
 	}
 }

@@ -4,62 +4,78 @@
 <img src="https://github.com/paritytech/prdoc/actions/workflows/quick-check.yml/badge.svg?branch=master" alt="badge" />
 </figure>
 
-`prdoc` is a tool helping with `.prdoc` files. `.prdoc` files are YAML files following a defined schema and helping with
-code change documentation. While platform like Github allow a simple description for a Pull Request (PR), this is
-limited to a title, description and some labels. The description itself is often used to describe the change but not
-document it.
+`prdoc` is a tool designed to help generating, checking and loading `.prdoc` files.
+`.prdoc` files are YAML files adhering to defined JSON schema and helping with
+code change documentation.
 
-The schema can be found here: [schema\_user.json](schema_user.json).
+While platform like Github allow a simple description for a Pull Request (PR), this is
+limited to a title, description and some labels.
+
+The description of a PR itself is often used to describe the change but not
+document it in a structured fashion.
+A sample schema can be found here: [prdoc\_schema\_user.json](prdoc_schema_user.json) but each repository is free to
+define its own JSON Schema.
+
+## Features
+
+-   [generate command](#_install) to create new PRDoc files
+
+-   [scan command](#_scan): to quickly scan for PRDOc files in a folder
+
+-   [check command](#_check): to check one or more PRDOc files
+
+-   [load command](#_load): to load one or more PRDoc files
 
 ## Install
 
     cargo install prdoc
 
-Alternatively, you may use a the container image:
+Alternatively, you may use a the container image if you prefer not installing anything on your system. See the
+[Containers](#_containers) section for more details on containers.
 
-        ENGINE=podman
-        DOC_PATH="$PWD/tests/data/some"
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc --help
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc scan --all
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc check
-        $ENGINE run --rm -it -v $DOC_PATH:/doc paritytech/prdoc load
+## Philosophy
 
-The container image is working by default in `/doc` so it makes it simpler if you mount your doc there as shown
-above.
+### Configuration, cli flags and environment variables
 
-## Features
+In order to provide a simple and uniform behavior in a repo, `prdoc` will search for a local configuration file.
+The configuration file is a YAML file named `.prdoc.toml` or `prdoc.toml` and located in the root of the repo.
 
--   provide the `prdoc` user schema
+The configuration file can alternatively be passed via ENV (`PRDOC_CONFIG`) or cli flag (`-c`|`--config`).
+ENV and cli flags have precedence over the local configuration file.
 
--   generate new documents
+### Simple to use
 
--   scan for `prdoc` in a folder
+While most commands supports options, they are designed to be simple to use and require a minimal amount of user input
+when either a config or an `.env` file is present.
 
--   check `prdoc` files
+## Authoring a PRDoc
 
--   load/aggregate `prdoc` files
+### Without tooling
 
-## Schemas
+No tooling but a text editor is required to author a new PRDoc. You may simply copy the template from your repo.
+The template is defined in the [???](#config):
 
-### PR Doc
+    grep template *prdoc.toml
 
-The documentation for PRs comes as a file with the extension `.prdoc`.
-This is essentially a `yaml` file and the extension helps using the right JSON schema to validate the file.
+You then need to save the file as `pr_NNNN.prdoc` (where `NNN` is the PR number) in the repo’s prdoc folder.
+This folder is also defined in the config (`./prdoc` is the default\`):
 
-In VScode, open your user settings and ensure you have the following section:
+    grep output *prdoc.toml
 
-    "yaml.schemas":  {
-        "/path/of/schema/schema_user.json": "*.prdoc"
-    },
+### Using the `prdoc` cli
 
-You also need:
+You will however find it more convenient to [install](https://github.com/paritytech/prdoc#install) and use the `prddoc`
+cli and just run:
 
-    "files.associations": {
-        "*.prdoc": "yaml",
-    },
+    prdoc generate 9999
 
-Should initially have created the file with another extension such as `.txt`, make sure to change the format to
-`YAML` and the right schema should then be picked up.
+After editing the PRDoc file, you may check whether is adheres to the schema using:
+
+    prdoc check check -n 1226
+
+### Using VSCode
+
+See the [Schemas](#_schemas) chapter to learn how to configure VSCode to recognize and check PRDoc files.
 
 ### YAML Anchors
 
@@ -67,12 +83,10 @@ You may use YAML anchors as demonnstrated below.
 
     # Schema: Parity PR Documentation Schema (prdoc)
 
-    # Anchoring is NOT supported yet.
-
     title: Foobar
 
     doc:
-      - audience: Builder
+      - audience: Runtime User
         description: &desc |
           Sunt voluptate ad duis consequat ea in dolore non adipisicing incididunt
           ullamco enim qui enim.
@@ -87,23 +101,97 @@ You may use YAML anchors as demonnstrated below.
     crates: []
     host_functions: []
 
+## Config
+
+Using a configuration file makes it easier for all users as they will be able to omit some of the required flags when
+using the `prdoc`.
+
+### Config file name and location
+
+The config will be found if located at the root of the repo and named either:
+- `prdoc.toml`
+- `.prdoc.toml`
+
+Alternatively, it can be defined as an ENV named `PRDOC_CONFIG` and contain the path of the config, relative to the
+repository’s root.
+
+### Content
+
+    version = 1
+    schema = "prdoc_schema_user.json"
+    output_dir = "/tmp/prdoc"
+    prdoc_folders = ["tests/data/all", "tests/data/some"]
+    template = "template.prdoc"
+
+## Paths
+
+In order to make it easier to use, `prdoc` and its configuration always refer to the **root of the repository**.
+
+It means you can pass either absolute paths or relative ones but relatives ones are based on the root of the repo and
+**not** the current working directory.
+
+This allows users to use commands such as:
+
+    prdoc check -n 1234
+    # instead of:
+    # prdoc check -n 1234 -d ../../folder/where/prdoc_files/are/stored
+
+Or also:
+
+    prdoc generate 1234
+    # instead of;
+    # prdoc generate 1234 -o ../../folder/where/prdoc_files/are/stored
+
+## Schemas
+
+### PR Doc
+
+The documentation for PRs comes as a file with the extension `.prdoc`.
+This is essentially a `yaml` file and the extension helps using the right JSON schema to validate the file.
+
+In VScode, open your user settings and ensure you have the following section:
+
+You first need to tell VScode that .prdoc files are YAML files:
+
+    "files.associations": {
+        "*.prdoc": "yaml",
+    },
+
+You then need to point to the right schemas:
+
+     "yaml.schemas": {
+        [...other schemas...]
+        "/path/to/polkadot-sdk/prdoc/schema_user.json": "*polkadot-sdk*/**/*.prdoc",
+        "/path/to/subxt/prdoc/schema_user.json": "*subxt*/**/*.prdoc"
+      },
+
+You need to restart/reload VSCode after those changes for the new settings to be picked up.
+
+Should you initially have created the file with another extension such as `.txt`, make sure to change the format to
+`YAML` in the VSCode status bar and the right schema should then be picked up.
+
 ## Usage
 
-    prdoc is a cli utility to generate, check and load prdoc files.
+    prdoc is a utility to generate, check and load PRDoc files.
 
     More at <https://github.com/paritytech/prdoc>
 
     Usage: prdoc [OPTIONS] [COMMAND]
 
     Commands:
-      generate  Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
-      check     Check one or MORE `prdoc` files for validity
+      generate  Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
+      check     Check one or more prdoc files for validity
       scan      Scan a directory for prdoc files based on their name
       load      Load one or more prdoc
-      schema    Retrieve the JSON schema that is used internally
       help      Print this message or the help of the given subcommand(s)
 
     Options:
+      -c, --config <CONFIG>
+              [env: PRDOC_CONFIG=prdoc.toml]
+
+      -d, --prdoc-folders <PRDOC_FOLDERS>
+              [env: PRDOC_FOLDERS=tests/data/some]
+
       -v, --version
               Show the version
 
@@ -113,19 +201,9 @@ You may use YAML anchors as demonnstrated below.
       -h, --help
               Print help (see a summary with '-h')
 
-### Schema
+### generate
 
-    Retrieve the JSON schema that is used internally
-
-    Usage: prdoc schema [OPTIONS]
-
-    Options:
-      -j, --json  Output as json
-      -h, --help  Print help
-
-### Generate
-
-    Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
+    Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
 
     Usage: prdoc generate [OPTIONS] <NUMBER>
 
@@ -133,81 +211,107 @@ You may use YAML anchors as demonnstrated below.
       <NUMBER>  Change number
 
     Options:
-      -t, --title <TITLE>            Change title
-      -s, --save                     Save the generated document to file with the proper naming
-      -o, --output-dir <OUTPUT_DIR>  Output directory [default: .]
-      -j, --json                     Output as json
-      -h, --help                     Print help
+          --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
-### Scan
+### check
 
-    Scan a directory for prdoc files based on their name
-
-    Usage: prdoc scan [OPTIONS] [DIRECTORY]
-
-    Arguments:
-      [DIRECTORY]  directory path [default: .]
-
-    Options:
-      -a, --all   Also return invalid files
-      -j, --json  Output as json
-      -h, --help  Print help
-
-### Check
-
-    Check one or MORE `prdoc` files for validity
+    Check one or more prdoc files for validity
 
     Usage: prdoc check [OPTIONS]
 
     Options:
-      -d, --directory <DIRECTORY>  Base directory for the files [default: .]
-      -f, --file <FILE>            Directly specify the file to be checked. It can be relative to the base directory
-      -n, --number <NUMBER>        number
-      -l, --list <LIST>            Get the list of PR numbers from a file
-      -j, --json                   Output as json
-      -h, --help                   Print help
+      -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -n, --number <NUMBER>                number
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -l, --list <LIST>                    Get the list of PR numbers from a file
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
-### Load
+### scan
+
+    Scan a directory for prdoc files based on their name
+
+    Usage: prdoc scan [OPTIONS]
+
+    Options:
+      -a, --all                            Also return invalid files
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -s, --sort                           Sort the output
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -j, --json                           Output as json
+      -h, --help                           Print help
+
+### load
 
     Load one or more prdoc
 
     Usage: prdoc load [OPTIONS]
 
     Options:
-      -d, --directory <DIRECTORY>  directory path [default: .]
-      -f, --file <FILE>            file path
-      -n, --number <NUMBER>        One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
-      -l, --list <LIST>            Get the list of PR numbers from a file
-      -j, --json                   Output as json
-      -h, --help                   Print help
+      -f, --file <FILE>                    file path
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -n, --number <NUMBER>                One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -l, --list <LIST>                    Get the list of PR numbers from a file
+      -j, --json                           Output as json
+      -h, --help                           Print help
 
-## Docker
+## Containers
 
-If you prefer not having to install Rust & Cargo and have Docker installed, you may prefer to run a containerized
-version of `prdoc`. The next chapters explain how to proceed.
+If you prefer not having to install Rust & Cargo and have Podman or Docker installed, you may prefer to run a containerized
+version of `prdoc`. This chapter explains how to proceed.
+
+prdoc is designed to work at the repository level and you need to mount your repo as `/repo` into the prdoc container.
+
+    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
+
+        ENGINE=podman
+        DOC_PATH="$PWD/tests/data/some"
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
+
+The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
+above.
 
 ### Run
 
-Docker commands can end up quite lengthy so you may like to set an alias:
+    podman run --rm -it -v $PWD:/repo paritytech/prdoc --help
 
-        alias prdoc='docker run --rm -it prdoc'
+        ENGINE=podman
+        DOC_PATH="$PWD/tests/data/some"
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc --help
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc scan --all
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc check
+        $ENGINE run --rm -it -v $DOC_PATH:/repo paritytech/prdoc load
+
+The container image is working by default in `/repo` so it makes it simpler if you mount your repo there as shown
+above.
+
+Commands can end up quite lengthy so you may like to set an alias:
+
+        alias prdoc='podman run --rm -it -v $PWD:/repo paritytech/prdoc'
 
 After setting this alias, you may use `prdoc` by simply invoking the `prdoc` command:
 
         prdoc --version
 
-If you prefer a shorter a command, you may set an alias for `rl` instead of `prdoc`.
-
-This is out of the scope of this documentation but note that you cannot just invoke `prdoc` check and expect it to work on
-your local `specs.yaml`. For that to work, you need to mount your `specs.yaml` into the container. That looks like this:
-
-        docker run --rm -it -v $PWD/specs.yaml:/usr/local/bin/specs.yaml <literal>prdoc</literal> list
+This is out of the scope of this documentation but note that you can just invoke `prdoc check` and expect it to work in
+your repo as long as it contains a valid configuration file and schema. Check out the [???](#Configuration) chapter for more
+details.
 
 ### Build
 
-You can pull the docker image from `paritytech`/`prdoc` or build you own:
+You can pull the container image from `paritytech`/`prdoc` or build you own:
 
-        docker build -t prdoc .
+        podman build -t prdoc .
 
 ## License
 

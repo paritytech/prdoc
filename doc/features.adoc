@@ -1,0 +1,6 @@
+== Features
+
+- <<generate command>> to create new PRDoc files
+- <<scan command>>: to quickly scan for PRDOc files in a folder
+- <<check command>>: to check one or more  PRDOc files
+- <<load command>>: to load one or more  PRDoc files

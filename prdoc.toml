@@ -1,0 +1,5 @@
+version = 1
+schema = "prdoc_schema_user.json"
+output_dir = "/tmp/prdoc"
+prdoc_folders = ["tests/data/all", "tests/data/some"]
+template = "template.prdoc"

@@ -1,8 +1,12 @@
 
-include::schema.adoc[]
+include::authoring.adoc[]
 
-include::anchors.adoc[]
+include::config.adoc[]
+
+include::paths.adoc[]
+
+include::schema.adoc[]
 
 include::cli/index.adoc[]
 
-include::docker.adoc[]
+include::container.adoc[]

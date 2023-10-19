@@ -1,18 +1,23 @@
-prdoc is a cli utility to generate, check and load prdoc files.
+prdoc is a utility to generate, check and load PRDoc files.
 
 More at <https://github.com/paritytech/prdoc>
 
 Usage: prdoc [OPTIONS] [COMMAND]
 
 Commands:
-  generate  Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
-  check     Check one or MORE `prdoc` files for validity
+  generate  Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
+  check     Check one or more prdoc files for validity
   scan      Scan a directory for prdoc files based on their name
   load      Load one or more prdoc
-  schema    Retrieve the JSON schema that is used internally
   help      Print this message or the help of the given subcommand(s)
 
 Options:
+  -c, --config <CONFIG>
+          [env: PRDOC_CONFIG=prdoc.toml]
+
+  -d, --prdoc-folders <PRDOC_FOLDERS>
+          [env: PRDOC_FOLDERS=tests/data/some]
+
   -v, --version
           Show the version
 

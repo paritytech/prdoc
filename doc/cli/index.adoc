@@ -4,27 +4,26 @@
 include::usage.adoc[]
 ----
 
-=== Schema
-----
-include::schema.adoc[]
-----
-
-=== Generate
+[reftext="generate command"]
+=== generate
 ----
 include::generate.adoc[]
 ----
 
-=== Scan
-----
-include::scan.adoc[]
-----
-
-=== Check
+[reftext="check command"]
+=== check
 ----
 include::check.adoc[]
 ----
 
-=== Load
+[reftext="scan command"]
+=== scan
+----
+include::scan.adoc[]
+----
+
+[reftext="load command"]
+=== load
 ----
 include::load.adoc[]
 ----

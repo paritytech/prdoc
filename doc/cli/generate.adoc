@@ -1,4 +1,4 @@
-Generate a new file. It will be printed to stdout by default unless you provide the `--save` flag
+Generate a new file. It will be saved by default unless you provide --dry-run. The command will fail if the target file already exists
 
 Usage: prdoc generate [OPTIONS] <NUMBER>
 
@@ -6,8 +6,9 @@ Arguments:
   <NUMBER>  Change number
 
 Options:
-  -t, --title <TITLE>            Change title
-  -s, --save                     Save the generated document to file with the proper naming
-  -o, --output-dir <OUTPUT_DIR>  Output directory [default: .]
-  -j, --json                     Output as json
-  -h, --help                     Print help
+      --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+  -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+  -j, --json                           Output as json
+  -h, --help                           Print help

@@ -2,8 +2,11 @@
 
 title: Foobar
 
+authors:
+  - chevdor<chevdor@gmail.com>
+
 doc:
-  - audience: Builder
+  - audience: Runtime User
     description: |
       - added: some new features
       - changed: something changed

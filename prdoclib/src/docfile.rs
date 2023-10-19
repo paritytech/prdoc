@@ -2,13 +2,17 @@
 
 use log::*;
 use serde_yaml::Value;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
-use crate::{common::PRNumber, doc_filename::DocFileName, schema::Schema};
+use crate::{common::PRNumber, doc_filename::DocFileName, error, schema::Schema};
 
+/// Wrapper around filename and content of a `prdoc` file
 #[derive(Debug)]
 pub struct DocFile {
+	/// The file path
 	pub file: PathBuf,
+
+	/// The content of the PRDoc
 	pub content: Value,
 }
 
@@ -20,27 +24,39 @@ impl From<PathBuf> for DocFile {
 }
 
 impl DocFile {
-	pub fn new(n: PRNumber) -> Self {
+	/// Load a `prdoc` file given its PR number
+	pub fn load_from_number(n: PRNumber) -> Self {
 		let filename = DocFileName::from(n);
 		let file = PathBuf::from(filename);
 		let content = Self::load(&file).unwrap();
 		Self { file, content }
 	}
 
+	/// Attempt to load a `prdoc` file given its filename
 	pub fn load(file: &PathBuf) -> crate::error::Result<Value> {
 		Schema::load(file)
 	}
 
-	pub fn generate() -> String {
-		let template = include_str!("../template.prdoc");
-		String::from(template)
+	/// Generate a new PRDoc
+	pub fn generate(file: PathBuf) -> error::Result<String> {
+		let template_file = if file.is_absolute() {
+			file
+		} else {
+			let repo_root = project_root::get_project_root().expect("We need to work in a repo");
+			repo_root.join(file)
+		};
+
+		Ok(fs::read_to_string(template_file)?)
 	}
 
-	pub fn find(dir: &PathBuf, valid_only: bool) -> impl Iterator<Item = PathBuf> {
+	/// Returns an iterator if the `dir` was a valid directory or an error otherwise.
+	pub fn find(
+		dir: &PathBuf,
+		valid_only: bool,
+	) -> crate::error::Result<impl Iterator<Item = PathBuf>> {
 		trace!("valid_only: {valid_only}");
 
-		std::fs::read_dir(dir)
-			.unwrap()
+		let res = std::fs::read_dir(dir)?
 			.filter_map(|res| res.ok())
 			// Map the directory entries to paths
 			.map(|dir_entry| dir_entry.path())
@@ -86,6 +102,7 @@ impl DocFile {
 				} else {
 					Some(path)
 				}
-			})
+			});
+		Ok(res)
 	}
 }
