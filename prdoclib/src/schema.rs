@@ -41,21 +41,20 @@ impl Schema {
 		Self::load(file).is_ok()
 	}
 
-	// TODO: Handle those errors
 	/// Load the content of a file. The name does not matter here.
 	pub fn load<P: AsRef<Path>>(file: &P) -> crate::error::Result<Value> {
 		let schema_str = Self::get(true);
-		let json_schema: serde_json::Value = serde_json::from_str(&schema_str).unwrap();
+		let json_schema: serde_json::Value = serde_json::from_str(&schema_str)?;
 
-		let reader = File::open(file).unwrap();
-		let mut doc_as_yaml: serde_yaml::Value = serde_yaml::from_reader(reader).unwrap();
-		doc_as_yaml.apply_merge().unwrap();
+		let reader = File::open(file)?;
+		let mut doc_as_yaml: serde_yaml::Value = serde_yaml::from_reader(reader)?;
+		doc_as_yaml.apply_merge()?;
 
 		let doc_as_json: serde_json::Value =
-			serde_yaml::from_value(serde_yaml::to_value(&doc_as_yaml).unwrap()).unwrap();
+			serde_yaml::from_value(serde_yaml::to_value(&doc_as_yaml)?)?;
 
 		let mut scope = json_schema::Scope::new();
-		let schema = scope.compile_and_return(json_schema, false).unwrap();
+		let schema = scope.compile_and_return(json_schema, false)?;
 
 		let validation = schema.validate(&doc_as_json);
 		let validation_result = validation.is_valid();

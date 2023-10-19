@@ -45,7 +45,7 @@ impl Config {
 	/// - $PROJECT_ROOT/.prdoc.toml
 	/// - $PRDOC_CONFIG
 	pub fn get_config_file(config_file: Option<PathBuf>) -> Result<PathBuf> {
-		let root = get_project_root().unwrap();
+		let root = get_project_root().expect("prdoc should run in a repo");
 
 		for name in CONFIG_NAMES {
 			if root.join(name).exists() {
