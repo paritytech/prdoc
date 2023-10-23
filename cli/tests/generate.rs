@@ -33,5 +33,12 @@ mod cli_tests {
 			let assert = cmd.args(["generate", "--output-dir", "/tmp/prdoc", "9999"]).assert();
 			assert.failure().code(exitcode::IOERR);
 		}
+
+		#[test]
+		fn it_should_not_fail() {
+			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let assert = cmd.args(["generate", "-d", "/projects/polkadot-sdk/prdoc", "9999"]).assert();
+			assert.success().code(exitcode::OK);
+		}
 	}
 }
