@@ -2,3 +2,4 @@ target
 .env*
 !.env-example
 executables
+.prdoc-sdk.toml

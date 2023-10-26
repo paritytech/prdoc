@@ -46,18 +46,18 @@ impl Config {
 	pub fn get_config_file(config_file: Option<PathBuf>) -> Result<PathBuf> {
 		let root = get_project_root().expect("prdoc should run in a repo");
 
+		if let Some(config) = config_file {
+			if PathBuf::from(&config).exists() {
+				log::debug!("Found config in {config:?}");
+				return Ok(config)
+			}
+		}
+
 		for name in CONFIG_NAMES {
 			let candidate = root.join(name);
 			if candidate.exists() {
 				log::debug!("Found config in {}", candidate.display());
 				return Ok(candidate)
-			}
-		}
-
-		if let Some(config) = config_file {
-			if PathBuf::from(&config).exists() {
-				log::debug!("Found config in {config:?}");
-				return Ok(config)
 			}
 		}
 

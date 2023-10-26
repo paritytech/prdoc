@@ -48,12 +48,19 @@ impl CheckCmd {
 
 				match file_maybe {
 					Ok(file) => {
+						log::debug!("Attempting to load file: {}", file.display());
 						let yaml = self.schema.load(&file);
 
-						if let Ok(_value) = yaml {
-							(number.into(), true)
-						} else {
-							(number.into(), false)
+						match yaml {
+							Ok(_value) => {
+								log::debug!("Loading was OK");
+								(number.into(), true)
+							},
+							Err(e) => {
+								log::error!("Loading the schema failed:");
+								log::error!("{e:?}");
+								(number.into(), false)
+							},
 						}
 					},
 					Err(e) => {

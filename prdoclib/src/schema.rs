@@ -51,8 +51,11 @@ impl Schema {
 
 	/// Load the content of a file. The name does not matter here.
 	pub fn load<P: AsRef<Path>>(&self, file: &P) -> crate::error::Result<Value> {
+		log::debug!("Loading schema file");
 		let content = fs::read_to_string(self.schema.clone())?.parse()?;
 		let schema_str = Self::get(content, true);
+
+		log::debug!("Parsing schema");
 		let json_schema: serde_json::Value = serde_json::from_str(&schema_str)?;
 
 		let reader = File::open(file)?;
@@ -65,6 +68,7 @@ impl Schema {
 		let mut scope = json_schema::Scope::new();
 		let schema = scope.compile_and_return(json_schema, false)?;
 
+		log::debug!("Validate file with schema");
 		let validation = schema.validate(&doc_as_json);
 		let validation_result = validation.is_valid();
 		let validation_result_strict = validation.is_strictly_valid();
