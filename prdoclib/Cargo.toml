@@ -18,5 +18,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_yaml = { version = "0.9", optional = false }
 serde_json = { version = "1.0", optional = false }
 valico = { version = "4.0", default-features = false, features = [] }
-project-root = "0.2.2"
 toml = "0.8.2"

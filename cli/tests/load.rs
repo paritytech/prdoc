@@ -1,49 +1,52 @@
+mod common;
+
 #[cfg(test)]
 mod cli_tests {
 	#[cfg(test)]
 	mod check {
-		use std::env;
-
+		use crate::common::prdoc_bin;
 		use assert_cmd::Command;
+		use std::env;
 
 		#[test]
 		fn it_loads_one_file() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
+
 			let assert = cmd.arg("load").args(["-d", "../tests/data/all"]).args(["--file", "pr_1237.prdoc"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_one_by_number() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
 			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_some_by_number() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
 			let assert = cmd.arg("load").args(["-d", "../tests/data/all", "-n", "1234", "-n", "1237"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_all_by_folder() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
 			let assert = cmd.arg("load").args(["-d", "../tests/data/all"]).assert();
 			assert.success().code(exitcode::OK);
 		}
 
 		#[test]
 		fn it_loads_some_by_folder() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
 			let assert = cmd.arg("load").args(["-d", "../tests/data/some"]).assert();
 			assert.failure().code(65);
 		}
 
 		#[test]
 		fn it_loads_all_by_list() {
-			let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
+			let mut cmd = prdoc_bin();
 			let assert = cmd
 				.arg("load")
 				.args(["-d", "../tests/data/all", "--list", "../tests/data/lists/simple/all_good.txt"])

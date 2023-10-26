@@ -649,7 +649,7 @@ checksum = "8afb450f006bf6385ca15ef45d71d2288452bc3683ce2e2cacc0d18e4be60b58"
 
 [[package]]
 name = "prdoc"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
  "assert_cmd",
  "clap",
@@ -665,11 +665,10 @@ dependencies = [
 
 [[package]]
 name = "prdoclib"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
  "exitcode",
  "log",
- "project-root",
  "regex",
  "serde",
  "serde_json",
@@ -715,12 +714,6 @@ checksum = "134c189feb4956b20f6f547d2cf727d4c0fe06722b20a0eec87ed445a97f92da"
 dependencies = [
  "unicode-ident",
 ]
-
-[[package]]
-name = "project-root"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8bccbff07d5ed689c4087d20d7307a52ab6141edeedf487c3876a55b86cf63df"
 
 [[package]]
 name = "psl"

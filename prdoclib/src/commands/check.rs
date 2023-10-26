@@ -3,12 +3,13 @@
 
 use crate::{
 	common::PRNumber,
+	config::PRDocConfig,
 	doc_filename::DocFileName,
 	docfile::DocFile,
 	error::{self},
 	prdoc_source::PRDocSource,
 	schema::Schema,
-	utils::get_numbers_from_file,
+	utils::{get_numbers_from_file, get_project_root},
 };
 use std::{
 	collections::HashSet,
@@ -16,7 +17,9 @@ use std::{
 };
 
 /// Implementation of the main [check](/prdoc::opts::CheckOpts) command of the cli.
-pub struct CheckCmd;
+pub struct CheckCmd {
+	pub(crate) schema: Schema,
+}
 
 /// PRDoc are checked via a PR number or a file.
 /// - When passing a file path, it may not result in a `PRNumber`.
@@ -24,7 +27,13 @@ pub struct CheckCmd;
 pub type CheckResult = (PRDocSource, bool);
 
 impl CheckCmd {
+	/// Create a new instance of the check command
+	pub fn new(schema: Schema) -> Self {
+		Self { schema }
+	}
+
 	pub(crate) fn check_numbers(
+		&self,
 		numbers: Vec<PRNumber>,
 		dir: &PathBuf,
 	) -> error::Result<HashSet<CheckResult>> {
@@ -39,7 +48,7 @@ impl CheckCmd {
 
 				match file_maybe {
 					Ok(file) => {
-						let yaml = Schema::load(&file);
+						let yaml = self.schema.load(&file);
 
 						if let Ok(_value) = yaml {
 							(number.into(), true)
@@ -59,16 +68,21 @@ impl CheckCmd {
 	}
 
 	/// Check a PRDoc based on its number in a given folder.
-	pub(crate) fn _check_number(number: PRNumber, dir: &PathBuf) -> error::Result<CheckResult> {
+	pub(crate) fn _check_number(
+		&self,
+		number: PRNumber,
+		dir: &PathBuf,
+	) -> error::Result<CheckResult> {
 		let file = DocFileName::find(number, None, dir)?;
-		Ok((file.clone().into(), Self::check_file(&file).1))
+		Ok((file.clone().into(), self.check_file(&file).1))
 	}
 
-	/// Check a specific file given its full path
-	pub(crate) fn check_file(file: &PathBuf) -> CheckResult {
+	/// Check a specific file given its full path.
+	/// All the other check_xxx functions are based on this one.
+	pub(crate) fn check_file(&self, file: &PathBuf) -> CheckResult {
 		log::debug!("Checking file {}", file.display());
 
-		let value = Schema::load(&file);
+		let value = self.schema.load(&file);
 		let filename_maybe = DocFileName::try_from(file);
 		if let Ok(_value) = value {
 			if let Ok(filename) = filename_maybe {
@@ -87,27 +101,33 @@ impl CheckCmd {
 	/// ignored This functions allows checking all files or only the valid ones thanks to the
 	/// `valid_only` argument.
 	pub(crate) fn check_files_in_folder(
+		self,
 		dir: &PathBuf,
 		valid_only: bool,
 	) -> error::Result<HashSet<CheckResult>> {
 		log::debug!("Checking all files in folder {}", dir.display());
 
-		let files = DocFile::find(dir, valid_only)?
+		let schema = self.schema.clone();
+		let files = DocFile::find(schema, dir, valid_only)?
 			.filter(|f| !f.file_name().unwrap_or_default().to_string_lossy().starts_with('.'));
-		let hs: HashSet<CheckResult> = files.map(|f| Self::check_file(&f)).collect();
+		let hs: HashSet<CheckResult> = files.map(|f| self.check_file(&f)).collect();
 		Ok(hs)
 	}
 
 	/// Check a list of PRDoc files based on:
 	///  - a `file` containing the list of PR numbers
 	///  - a base `dir` where to look for those PRDoc files
-	pub(crate) fn check_list(file: &PathBuf, dir: &PathBuf) -> error::Result<HashSet<CheckResult>> {
+	pub(crate) fn check_list(
+		&self,
+		file: &PathBuf,
+		dir: &PathBuf,
+	) -> error::Result<HashSet<CheckResult>> {
 		let extract_numbers = get_numbers_from_file(file)?;
 
 		let numbers: Vec<PRNumber> =
 			extract_numbers.iter().filter_map(|(_, _, n)| n.to_owned()).collect();
 
-		Self::check_numbers(numbers, dir)
+		self.check_numbers(numbers, dir)
 	}
 
 	/// Return true if all checks were OK, false otherwise.
@@ -126,12 +146,28 @@ impl CheckCmd {
 	/// We return a Vec instead of a HashSet because a check based on a file may not always lead
 	/// to a PR number, making the HashSet made of a bunch of (None, bool).
 	pub fn run(
+		config: &PRDocConfig,
 		dir: &PathBuf,
 		file: Option<PathBuf>,
 		numbers: Option<Vec<PRNumber>>,
 		list: Option<PathBuf>,
 	) -> crate::error::Result<HashSet<CheckResult>> {
 		log::debug!("Checking directory {}", dir.display());
+		log::debug!("From dir: {}", dir.canonicalize().unwrap().display());
+
+		let repo_root = get_project_root()?;
+		log::debug!("From repo root: {}", repo_root.canonicalize().unwrap().display());
+
+		let schema_path = if config.schema_path().is_absolute() {
+			config.schema_path()
+		} else {
+			repo_root.join(config.schema_path())
+		};
+
+		log::debug!("Using schema from: {}", schema_path.canonicalize().unwrap().display());
+		let schema = Schema::new(schema_path);
+
+		let check_cmd = CheckCmd::new(schema);
 
 		match (file, numbers, list) {
 			(Some(file), None, None) => {
@@ -139,13 +175,13 @@ impl CheckCmd {
 					if file.is_relative() { Path::new(&dir).join(&file) } else { file.clone() };
 
 				let mut hs = HashSet::new();
-				let _ = hs.insert(Self::check_file(&file));
+				let _ = hs.insert(check_cmd.check_file(&file));
 				Ok(hs)
 			},
 
-			(None, Some(numbers), None) => Self::check_numbers(numbers, dir),
-			(None, None, Some(list)) => Self::check_list(&list, dir),
-			(None, None, None) => Self::check_files_in_folder(dir, false),
+			(None, Some(numbers), None) => check_cmd.check_numbers(numbers, dir),
+			(None, None, Some(list)) => check_cmd.check_list(&list, dir),
+			(None, None, None) => check_cmd.check_files_in_folder(dir, false),
 
 			_ => unreachable!(),
 		}

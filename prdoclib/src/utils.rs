@@ -11,12 +11,6 @@ use std::{
 pub type ParseResult = (String, bool, Option<PRNumber>);
 
 /// Get the project root (relative to closest Cargo.lock file)
-/// ```rust
-/// match project_root::get_project_root() {
-///     Ok(p) => println!("Current project root is {:?}", p),
-///     Err(e) => println!("Error obtaining project root {:?}", e)
-/// };
-/// ```
 pub fn get_project_root() -> io::Result<PathBuf> {
 	let path = env::current_dir()?;
 	let path_ancestors = path.as_path().ancestors();

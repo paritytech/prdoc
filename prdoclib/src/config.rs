@@ -20,20 +20,19 @@ pub mod env {
 /// PRDoc config
 #[derive(Debug, Deserialize)]
 pub struct PRDocConfig {
-	/// Config version
-	pub version: u16,
-
+	// /// Config version
+	// pub(crate) version: u16,
 	/// Path of the schema
-	pub schema: PathBuf,
+	pub(crate) schema: PathBuf,
 
 	/// Used for load, scan, check
 	pub prdoc_folders: Vec<PathBuf>,
 
 	/// Used by the generate command
-	pub output_dir: PathBuf,
+	pub(crate) output_dir: PathBuf,
 
 	/// Path of the file to use as template
-	pub template: PathBuf,
+	pub(crate) template: PathBuf,
 }
 
 /// Wrapper struct for the `PRDocConfig`
@@ -48,9 +47,10 @@ impl Config {
 		let root = get_project_root().expect("prdoc should run in a repo");
 
 		for name in CONFIG_NAMES {
-			if root.join(name).exists() {
-				log::debug!("Found config in {name}");
-				return Ok(PathBuf::from(name))
+			let candidate = root.join(name);
+			if candidate.exists() {
+				log::debug!("Found config in {}", candidate.display());
+				return Ok(candidate)
 			}
 		}
 
@@ -89,11 +89,18 @@ impl Config {
 impl Default for PRDocConfig {
 	fn default() -> Self {
 		Self {
-			version: 1,
-			schema: "prdoc_schema__user.json".into(),
+			// version: 1,
+			schema: "prdoc/schema_user.json".into(),
 			prdoc_folders: vec!["prdoc".into()],
 			output_dir: "prdoc".into(),
 			template: "template.prdoc".into(),
 		}
+	}
+}
+
+impl PRDocConfig {
+	/// Return the path of the schema
+	pub fn schema_path(&self) -> PathBuf {
+		self.schema.clone()
 	}
 }

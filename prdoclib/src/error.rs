@@ -1,6 +1,6 @@
 //! Custom errors
 
-use std::path::PathBuf;
+use std::{convert::Infallible, path::PathBuf};
 
 use thiserror::Error;
 use valico::json_schema::{SchemaError, ValidationState};
@@ -76,5 +76,11 @@ impl From<serde_yaml::Error> for PRdocLibError {
 impl From<SchemaError> for PRdocLibError {
 	fn from(e: SchemaError) -> Self {
 		PRdocLibError::SchemaError(e)
+	}
+}
+
+impl From<Infallible> for PRdocLibError {
+	fn from(_value: Infallible) -> Self {
+		PRdocLibError::Unknown
 	}
 }

@@ -16,6 +16,7 @@ use prdoclib::{
 	},
 	common::PRNumber,
 	config::Config,
+	schema::Schema,
 };
 use std::{collections::HashSet, env, path::PathBuf};
 
@@ -66,7 +67,8 @@ fn main() -> color_eyre::Result<()> {
 			let results: HashSet<CheckResult> = prdoc_dir
 				.iter()
 				.flat_map(|d| {
-					CheckCmd::run(d, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone()).unwrap()
+					CheckCmd::run(&config, d, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone())
+						.unwrap()
 				})
 				.collect();
 
@@ -89,12 +91,17 @@ fn main() -> color_eyre::Result<()> {
 		}
 
 		Some(SubCommand::Scan(cmd_opts)) => {
+			let schema_path = config.schema_path();
+			let schema = Schema::new(schema_path);
+
 			log::debug!("cmd_opts: {cmd_opts:#?}");
-			let files = ScanCmd::run(prdoc_dir, cmd_opts.all);
+			let files = ScanCmd::run(schema.clone(), prdoc_dir, cmd_opts.all);
+			let load_cmd = LoadCmd::new(schema);
+
 			let mut res: Vec<(Option<PRNumber>, PathBuf)> = files
 				.iter()
 				.map(|f| {
-					let prdoc = LoadCmd::load_file(f);
+					let prdoc = load_cmd.load_file(f);
 					let n = match prdoc {
 						Ok(p) => Some(p.doc_filename.number),
 						Err(_) => None,
@@ -128,7 +135,8 @@ fn main() -> color_eyre::Result<()> {
 			let result = prdoc_dir
 				.iter()
 				.map(|dir| {
-					LoadCmd::run(dir, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone()).unwrap()
+					LoadCmd::run(&config, dir, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone())
+						.unwrap()
 				})
 				.fold((true, HashSet::new()), |(acc_status, acc_wrapper), (status, wrapper)| {
 					let mut new_wrapper = acc_wrapper;

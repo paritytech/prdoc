@@ -8,11 +8,11 @@
 use crate::error::PRdocLibError;
 use regex::Regex;
 use serde_yaml::Value;
-use std::{fs::File, path::Path};
+use std::{
+	fs::{self, File},
+	path::{Path, PathBuf},
+};
 use valico::json_schema;
-
-/// Default schema for the validation of data provided by developers
-pub const JSON_SCHEMA: &str = include_str!("./prdoc_schema_user.json");
 
 /// Default file extension
 pub const EXTENSION: &str = "prdoc";
@@ -21,29 +21,38 @@ pub const EXTENSION: &str = "prdoc";
 pub const PRDOC_DEFAULT_DIR: &str = "prdoc";
 
 /// The schema embedded in [prdoc](/prdoc).
-pub struct Schema {}
+#[derive(Debug, Clone)]
+pub struct Schema {
+	schema: PathBuf,
+}
 
 impl Schema {
+	/// Create a new instance of the schema
+	pub fn new(schema: PathBuf) -> Self {
+		Self { schema }
+	}
+
 	/// JSON Schema sometimes do contain comments. This function strips them to allow
 	/// proper deserialization.
-	pub fn get(strip_comments: bool) -> String {
+	pub fn get(s: String, strip_comments: bool) -> String {
 		if !strip_comments {
-			JSON_SCHEMA.to_string()
+			s
 		} else {
 			let re = Regex::new(r"(?m)^//(.*)$").unwrap();
-			let result = re.replace_all(JSON_SCHEMA, "");
+			let result = re.replace_all(&s, "");
 			result.to_string().trim().to_string()
 		}
 	}
 
 	/// Check the validity of a file by attempting to load it
-	pub fn check_file<P: AsRef<Path>>(file: &P) -> bool {
-		Self::load(file).is_ok()
+	pub fn check_file(&self, file: &PathBuf) -> bool {
+		self.load(file).is_ok()
 	}
 
 	/// Load the content of a file. The name does not matter here.
-	pub fn load<P: AsRef<Path>>(file: &P) -> crate::error::Result<Value> {
-		let schema_str = Self::get(true);
+	pub fn load<P: AsRef<Path>>(&self, file: &P) -> crate::error::Result<Value> {
+		let content = fs::read_to_string(self.schema.clone())?.parse()?;
+		let schema_str = Self::get(content, true);
 		let json_schema: serde_json::Value = serde_json::from_str(&schema_str)?;
 
 		let reader = File::open(file)?;
@@ -79,13 +88,16 @@ mod test_schema_validation {
 
 	#[test]
 	fn test_load_valid_1234() {
+		let schema = Schema::new("../tests/data/sample_schema.json".into());
 		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
-		assert!(Schema::load(&file).is_ok());
+		assert!(schema.load(&file).is_ok());
 	}
 
 	#[test]
 	fn test_check_valid_1234() {
+		let schema = Schema::new("../tests/data/sample_schema.json".into());
+
 		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
-		assert!(Schema::check_file(&file));
+		assert!(schema.check_file(&file));
 	}
 }
