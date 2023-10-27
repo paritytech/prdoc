@@ -83,6 +83,10 @@ pub struct CheckOpts {
 	/// Get the list of PR numbers from a file
 	#[clap(short, long, conflicts_with_all = ["file", "number"])]
 	pub list: Option<PathBuf>,
+
+	/// Schema to be used. Passing this flag/ENV overrides the value from the config.
+	#[clap(short, long, env = "PRDOC_SCHEMA")]
+	pub schema: Option<PathBuf>,
 }
 
 /// Scan a directory for prdoc files based on their name

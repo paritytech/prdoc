@@ -8,7 +8,7 @@ mod cli_tests {
 		use crate::common::*;
 
 		#[test]
-		fn it_check_passes_without_args() {
+		fn it_check_passes() {
 			let mut cmd = prdoc_bin();
 
 			let assert = cmd.arg("check").args(["-d", "../tests/data/all"]).assert();

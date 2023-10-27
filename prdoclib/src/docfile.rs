@@ -4,7 +4,9 @@ use log::*;
 use serde_yaml::Value;
 use std::{fs, path::PathBuf};
 
-use crate::{common::PRNumber, doc_filename::DocFileName, error, schema::Schema};
+use crate::{
+	common::PRNumber, doc_filename::DocFileName, error, schema::Schema, utils::get_project_root,
+};
 
 /// Wrapper around filename and content of a `prdoc` file
 #[derive(Debug)]
@@ -14,27 +16,36 @@ pub struct DocFile {
 
 	/// The content of the PRDoc
 	pub content: Value,
+
+	/// Schema
+	pub schema: Schema,
 }
 
-impl From<PathBuf> for DocFile {
-	fn from(file: PathBuf) -> Self {
-		let content = Self::load(&file).unwrap();
-		Self { file, content }
-	}
-}
+// impl From<PathBuf> for DocFile {
+// 	fn from(file: PathBuf) -> Self {
+// 		let content = Self::load(schema, &file).unwrap();
+// 		Self { file, content, schema }
+// 	}
+// }
 
 impl DocFile {
-	/// Load a `prdoc` file given its PR number
-	pub fn load_from_number(n: PRNumber) -> Self {
-		let filename = DocFileName::from(n);
-		let file = PathBuf::from(filename);
-		let content = Self::load(&file).unwrap();
-		Self { file, content }
+	/// Create a new instance of a `prdoc` file
+	pub fn new(schema: Schema, file: PathBuf) -> Self {
+		let content = Self::load(schema.clone(), &file).unwrap();
+		Self { file, content, schema }
 	}
 
-	/// Attempt to load a `prdoc` file given its filename
-	pub fn load(file: &PathBuf) -> crate::error::Result<Value> {
-		Schema::load(file)
+	/// Load a `prdoc` file given its PR number
+	pub fn load_from_number(schema: Schema, n: PRNumber) -> Self {
+		let filename = DocFileName::from(n);
+		let file = PathBuf::from(filename);
+		let content = Self::load(schema.clone(), &file).unwrap();
+		Self { file, content, schema }
+	}
+
+	/// Attempt to load a `prdoc` file given its filename and schema
+	pub fn load(schema: Schema, file: &PathBuf) -> crate::error::Result<Value> {
+		schema.load(file)
 	}
 
 	/// Generate a new PRDoc
@@ -42,7 +53,7 @@ impl DocFile {
 		let template_file = if file.is_absolute() {
 			file
 		} else {
-			let repo_root = project_root::get_project_root().expect("We need to work in a repo");
+			let repo_root = get_project_root().expect("We need to work in a repo");
 			repo_root.join(file)
 		};
 
@@ -51,6 +62,7 @@ impl DocFile {
 
 	/// Returns an iterator if the `dir` was a valid directory or an error otherwise.
 	pub fn find(
+		schema: Schema,
 		dir: &PathBuf,
 		valid_only: bool,
 	) -> crate::error::Result<impl Iterator<Item = PathBuf>> {
@@ -86,7 +98,7 @@ impl DocFile {
 				}
 			})
 			.filter_map(move |path| {
-				let schema_valid = Schema::check_file(&path);
+				let schema_valid = schema.check_file(&path);
 				trace!(
 					"{}: schema {}",
 					path.display(),

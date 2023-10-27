@@ -7,6 +7,7 @@ use crate::{
 	error::{self, PRdocLibError},
 	schema::PRDOC_DEFAULT_DIR,
 	title::Title,
+	utils::*,
 };
 use std::path::{Path, PathBuf};
 
@@ -18,7 +19,7 @@ impl GenerateCmd {
 		if let Some(dir) = output_dir {
 			dir
 		} else {
-			match project_root::get_project_root() {
+			match get_project_root() {
 				Ok(dir) => dir.join(PRDOC_DEFAULT_DIR),
 				Err(e) => {
 					eprint!("Project root not found, falling back to the current folder: {e:?}");

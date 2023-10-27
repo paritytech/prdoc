@@ -6,5 +6,6 @@ use prdoclib::config;
 pub(crate) fn prdoc_bin() -> Command {
 	let mut cmd = Command::cargo_bin(env!("CARGO_PKG_NAME")).expect("Failed getting test bin");
 	cmd.env(config::env::PRDOC_FOLDERS, "../tests/data/all");
+	cmd.env(config::env::PRDOC_CONFIG, "../prdoc.toml");
 	cmd
 }
