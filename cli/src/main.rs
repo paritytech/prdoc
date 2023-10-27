@@ -67,8 +67,15 @@ fn main() -> color_eyre::Result<()> {
 			let results: HashSet<CheckResult> = prdoc_dir
 				.iter()
 				.flat_map(|d| {
-					CheckCmd::run(&config, d, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone())
-						.unwrap()
+					CheckCmd::run(
+						&config,
+						cmd_opts.schema.clone(),
+						d,
+						cmd_opts.file.clone(),
+						cmd_opts.number.clone(),
+						cmd_opts.list.clone(),
+					)
+					.unwrap()
 				})
 				.collect();
 

@@ -154,24 +154,27 @@ impl CheckCmd {
 	/// to a PR number, making the HashSet made of a bunch of (None, bool).
 	pub fn run(
 		config: &PRDocConfig,
+		schema: Option<PathBuf>,
 		dir: &PathBuf,
 		file: Option<PathBuf>,
 		numbers: Option<Vec<PRNumber>>,
 		list: Option<PathBuf>,
 	) -> crate::error::Result<HashSet<CheckResult>> {
-		log::debug!("Checking directory {}", dir.display());
+		log::info!("Checking directory {}", dir.display());
 		log::debug!("From dir: {}", dir.canonicalize().unwrap().display());
 
 		let repo_root = get_project_root()?;
 		log::debug!("From repo root: {}", repo_root.canonicalize().unwrap().display());
 
-		let schema_path = if config.schema_path().is_absolute() {
+		let schema_path = if let Some(schema_path) = schema {
+			schema_path
+		} else if config.schema_path().is_absolute() {
 			config.schema_path()
 		} else {
 			repo_root.join(config.schema_path())
 		};
 
-		log::debug!("Using schema from: {}", schema_path.canonicalize().unwrap().display());
+		log::info!("Using schema: {}", schema_path.canonicalize().unwrap().display());
 		let schema = Schema::new(schema_path);
 
 		let check_cmd = CheckCmd::new(schema);
