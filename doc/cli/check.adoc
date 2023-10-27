@@ -4,9 +4,10 @@ Usage: prdoc check [OPTIONS]
 
 Options:
   -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
-  -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
   -n, --number <NUMBER>                number
-  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
   -l, --list <LIST>                    Get the list of PR numbers from a file
+  -s, --schema <SCHEMA>                Schema to be used. Passing this flag/ENV overrides the value from the config [env: PRDOC_SCHEMA=]
   -j, --json                           Output as json
   -h, --help                           Print help

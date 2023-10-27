@@ -13,10 +13,10 @@ Commands:
 
 Options:
   -c, --config <CONFIG>
-          [env: PRDOC_CONFIG=prdoc.toml]
+          [env: PRDOC_CONFIG=]
 
   -d, --prdoc-folders <PRDOC_FOLDERS>
-          [env: PRDOC_FOLDERS=tests/data/some]
+          [env: PRDOC_FOLDERS=]
 
   -v, --version
           Show the version

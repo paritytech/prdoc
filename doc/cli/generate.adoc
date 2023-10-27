@@ -7,8 +7,8 @@ Arguments:
 
 Options:
       --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
-  -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
   -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
-  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+  -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
   -j, --json                           Output as json
   -h, --help                           Print help

@@ -118,7 +118,7 @@ repository’s root.
 ### Content
 
     version = 1
-    schema = "prdoc_schema_user.json"
+    schema = "tests/data/sample_schema.json"
     output_dir = "/tmp/prdoc"
     prdoc_folders = ["tests/data/all", "tests/data/some"]
     template = "template.prdoc"
@@ -187,10 +187,10 @@ Should you initially have created the file with another extension such as `.txt`
 
     Options:
       -c, --config <CONFIG>
-              [env: PRDOC_CONFIG=prdoc.toml]
+              [env: PRDOC_CONFIG=]
 
       -d, --prdoc-folders <PRDOC_FOLDERS>
-              [env: PRDOC_FOLDERS=tests/data/some]
+              [env: PRDOC_FOLDERS=]
 
       -v, --version
               Show the version
@@ -212,9 +212,9 @@ Should you initially have created the file with another extension such as `.txt`
 
     Options:
           --dry-run                        Do not save the generated document to file with the proper naming, show the content instead
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
       -o, --output-dir <OUTPUT_DIR>        Optional output directory. It not passed, the default `PRDOC_DIR` will be used under the root of the current project
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
       -j, --json                           Output as json
       -h, --help                           Print help
 
@@ -226,10 +226,11 @@ Should you initially have created the file with another extension such as `.txt`
 
     Options:
       -f, --file <FILE>                    Directly specify the file to be checked. It can be relative to the base directory
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
       -n, --number <NUMBER>                number
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
       -l, --list <LIST>                    Get the list of PR numbers from a file
+      -s, --schema <SCHEMA>                Schema to be used. Passing this flag/ENV overrides the value from the config [env: PRDOC_SCHEMA=]
       -j, --json                           Output as json
       -h, --help                           Print help
 
@@ -241,9 +242,9 @@ Should you initially have created the file with another extension such as `.txt`
 
     Options:
       -a, --all                            Also return invalid files
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
       -s, --sort                           Sort the output
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
       -j, --json                           Output as json
       -h, --help                           Print help
 
@@ -255,9 +256,9 @@ Should you initially have created the file with another extension such as `.txt`
 
     Options:
       -f, --file <FILE>                    file path
-      -c, --config <CONFIG>                [env: PRDOC_CONFIG=prdoc.toml]
+      -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
       -n, --number <NUMBER>                One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
-      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=tests/data/some]
+      -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
       -l, --list <LIST>                    Get the list of PR numbers from a file
       -j, --json                           Output as json
       -h, --help                           Print help
