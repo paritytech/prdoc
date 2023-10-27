@@ -66,11 +66,11 @@ fn main() -> color_eyre::Result<()> {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
 			let results: HashSet<CheckResult> = prdoc_dir
 				.iter()
-				.flat_map(|d| {
+				.flat_map(|dir| {
 					CheckCmd::run(
 						&config,
 						cmd_opts.schema.clone(),
-						d,
+						dir,
 						cmd_opts.file.clone(),
 						cmd_opts.number.clone(),
 						cmd_opts.list.clone(),
@@ -142,8 +142,15 @@ fn main() -> color_eyre::Result<()> {
 			let result = prdoc_dir
 				.iter()
 				.map(|dir| {
-					LoadCmd::run(&config, dir, cmd_opts.file.clone(), cmd_opts.number.clone(), cmd_opts.list.clone())
-						.unwrap()
+					LoadCmd::run(
+						&config,
+						cmd_opts.schema.clone(),
+						dir,
+						cmd_opts.file.clone(),
+						cmd_opts.number.clone(),
+						cmd_opts.list.clone(),
+					)
+					.unwrap()
 				})
 				.fold((true, HashSet::new()), |(acc_status, acc_wrapper), (status, wrapper)| {
 					let mut new_wrapper = acc_wrapper;

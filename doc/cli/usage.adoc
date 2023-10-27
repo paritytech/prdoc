@@ -13,7 +13,7 @@ Commands:
 
 Options:
   -c, --config <CONFIG>
-          [env: PRDOC_CONFIG=]
+          [env: PRDOC_CONFIG=.prdoc-sdk.toml]
 
   -d, --prdoc-folders <PRDOC_FOLDERS>
           [env: PRDOC_FOLDERS=]

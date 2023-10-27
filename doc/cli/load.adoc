@@ -4,9 +4,10 @@ Usage: prdoc load [OPTIONS]
 
 Options:
   -f, --file <FILE>                    file path
-  -c, --config <CONFIG>                [env: PRDOC_CONFIG=]
+  -c, --config <CONFIG>                [env: PRDOC_CONFIG=.prdoc-sdk.toml]
   -n, --number <NUMBER>                One or more PR numbers. Depending on the host OS, the max length of a command may differ. If you run into issues, make sure to check the `--list` option instead
   -d, --prdoc-folders <PRDOC_FOLDERS>  [env: PRDOC_FOLDERS=]
   -l, --list <LIST>                    Get the list of PR numbers from a file
+  -s, --schema <SCHEMA>                Schema to be used. Passing this flag/ENV overrides the value from the config [env: PRDOC_SCHEMA=]
   -j, --json                           Output as json
   -h, --help                           Print help

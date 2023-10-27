@@ -106,7 +106,7 @@ impl LoadCmd {
 						let wrapper = DocFileWrapper::new(file.clone(), filename, value);
 
 						global_result &= true;
-						log::info!("OK  {}", file.display());
+						log::debug!("OK  {}", file.display());
 						Some(wrapper)
 					} else {
 						global_result &= false;
@@ -126,6 +126,7 @@ impl LoadCmd {
 	/// Run of the load command
 	pub fn run(
 		config: &PRDocConfig,
+		schema: Option<PathBuf>,
 		dir: &PathBuf,
 		file: Option<PathBuf>,
 		numbers: Option<Vec<PRNumber>>,
@@ -134,12 +135,16 @@ impl LoadCmd {
 		log::debug!("Loading from directory {}", dir.display());
 
 		let repo_root = get_project_root()?;
+		log::debug!("From repo root: {}", repo_root.canonicalize().unwrap().display());
 
-		let schema_path = if config.schema_path().is_absolute() {
+		let schema_path = if let Some(schema_path) = schema {
+			schema_path
+		} else if config.schema_path().is_absolute() {
 			config.schema_path()
 		} else {
 			repo_root.join(config.schema_path())
 		};
+		log::info!("Using schema: {}", schema_path.canonicalize().unwrap().display());
 
 		let schema = Schema::new(schema_path);
 		let load_cmd = LoadCmd::new(schema);

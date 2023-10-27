@@ -19,9 +19,12 @@ usage:
 	cargo run -q -- check --help > doc/cli/check.adoc
 	cargo run -q -- load --help > doc/cli/load.adoc
 
-# Generate documentation
-doc:
+# Build the Rust doc
+rustdoc:
 	./scripts/build-doc.sh
+
+# Generate documentation
+doc: rustdoc usage
 
 # Run rustfmt
 fmt:
@@ -51,16 +54,18 @@ tag-push:
 	git push origin "v$TAG"
 
 # Build container using podman by default
-build-container:
+container-build:
 	#!/usr/bin/env bash
 	ENGINE=${ENGINE:-podman}
 	$ENGINE build -t prdoc:v$TAG -t paritytech/prdoc -t docker.io/paritytech/prdoc .
 	$ENGINE run --rm -it -v $PWD:/repo  prdoc --version
 	$ENGINE images | grep prdoc
 
-# Build the Rust doc
-rustdoc:
-	./scripts/build-doc.sh
+container-check:
+	#!/usr/bin/env bash
+	ENGINE=${ENGINE:-podman}
+	$ENGINE run --rm -it -v $PWD:/repo  prdoc --help
+	$ENGINE run --rm -it -v $PWD:/repo  prdoc --version
 
 # Watch and hot-reload the rustdoc
 rustdoc_watch:
