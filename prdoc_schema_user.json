@@ -1,12 +1,5 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema#",
     "$id": "https://raw.githubusercontent.com/paritytech/prdoc/master/prdoc_schema_user.json",
-    "version": {
-      "major": 1,
-      "minor": 0,
-      "patch": 0,
-      "timestamp": 20230817152351
-    },
     "title": "Parity PR Documentation Schema",
     "description": "JSON Schema definition for the Polkadot SDK PR documentation",
     "type": "object",
@@ -99,20 +92,7 @@
     ],
     "$defs": {
       "audience": {
-        "oneOf": [
-          {"const": "Node Dev", "title": "Someone working on the node"},
-          {"const": "Runtime Dev", "title": "Someone working on runtimes, frames, pallets"},
-
-          {"const": "Node Operator", "title": "Someone running a node in general, not specific to validators"},
-          {"const": "Validator", "title": "Someone running a Validator node"},
-
-          {"const": "Parachain Builder", "title": "Someone building a parachain"},
-
-          {"const": "App Builder", "title": "Someone building Apps and dApps on the shoulder of the Polkadot network and its parachains"},
-
-          {"const": "Runtime User", "title": "Someone involved or interested in the governance process or noticeable changes to the runtime and/or its dependencies"}
-
-        ]
+        "enum": ["Node Dev", "Runtime Dev", "Node Operator", "Validator", "Parachain Builder", "App Builder","Runtime User"]
       },
       "crate": {
         "type": "object",
@@ -127,7 +107,11 @@
           "note": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "name",
+          "semver"
+        ]
       },
       "semver": {
         "type": "string",
@@ -191,7 +175,8 @@
             "description": "Optional relevant note",
             "$ref": "#/$defs/array_of_strings"
           }
-        }
+        },
+        "required": ["audience", "description"]
       },
       "array_of_strings": {
         "description": "An array of strings that can be empty",
