@@ -71,15 +71,15 @@ cli and just run:
 
 After editing the PRDoc file, you may check whether is adheres to the schema using:
 
-    prdoc check check -n 1226
+    prdoc check -n 1226
 
 ### Using VSCode
 
-See the [Schemas](#_schemas) chapter to learn how to configure VSCode to recognize and check PRDoc files.
+See the [Schemas](#schemas) chapter to learn how to configure VSCode to recognize and check PRDoc files.
 
 ### YAML Anchors
 
-You may use YAML anchors as demonnstrated below.
+You may use YAML anchors as demonstrated below.
 
     # Schema: Parity PR Documentation Schema (prdoc)
 
