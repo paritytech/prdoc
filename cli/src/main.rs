@@ -81,7 +81,9 @@ fn main() -> color_eyre::Result<()> {
 
 			if !opts.json {
 				for (src, result) in &results {
-					if *result { continue }
+					if *result {
+						continue;
+					}
 
 					let pr_number: PRNumber = src.into();
 					println!("PR #{pr_number: <4} -> ERR");
