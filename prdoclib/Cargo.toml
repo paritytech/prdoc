@@ -11,11 +11,11 @@ license.workspace = true
 
 [dependencies]
 log = "0.4"
-regex = "1.9"
+regex = "1.10"
 exitcode = "1.1"
 thiserror = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_yaml = { version = "0.9", optional = false }
 serde_json = { version = "1.0", optional = false }
 valico = { version = "4.0", default-features = false, features = [] }
-toml = "0.8.2"
+toml = "0.8.10"
