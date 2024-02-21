@@ -81,9 +81,16 @@ fn main() -> color_eyre::Result<()> {
 
 			if !opts.json {
 				for (src, result) in &results {
+					if *result {
+						continue;
+					}
+
 					let pr_number: PRNumber = src.into();
-					println!("PR #{pr_number: <4} -> {}", if *result { "OK " } else { "ERR" });
+					println!("PR #{pr_number: <4} -> ERR");
 				}
+
+				let plural_s = if results.len() > 1 { "s" } else { "" };
+				println!("Checked {} file{plural_s}.", results.len());
 			} else {
 				let json = serde_json::to_string_pretty(&results).expect("We can serialize the result");
 				println!("{json}");
