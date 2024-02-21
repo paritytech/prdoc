@@ -1,4 +1,4 @@
-FROM docker.io/paritytech/ci-unified:bullseye-1.73.0 as builder
+FROM docker.io/paritytech/ci-unified:bullseye-1.74.0 as builder
 
 ARG PROFILE=production
 WORKDIR /app
