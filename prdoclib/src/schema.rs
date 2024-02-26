@@ -74,10 +74,8 @@ impl Schema {
 		let validation_result_strict = validation.is_strictly_valid();
 
 		if !(validation_result && validation_result_strict) {
-			log::warn!("validation_result: {validation_result}");
-			log::warn!("validation_result_strict: {validation_result_strict}");
-			log::warn!("errors: {:#?}", validation.errors);
-			log::warn!("missing: {:#?}", validation.missing);
+			log::debug!("validation_result: {validation_result}");
+			log::debug!("validation_result_strict: {validation_result_strict}");
 			return Err(PRdocLibError::ValidationErrors(validation))
 		}
 

@@ -22,7 +22,7 @@ use std::{collections::HashSet, env, path::PathBuf};
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
-	env_logger::Builder::from_env(Env::default().default_filter_or("none")).init();
+	env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
 	color_eyre::install()?;
 
 	let opts: Opts = Opts::parse();

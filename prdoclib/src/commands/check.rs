@@ -6,7 +6,7 @@ use crate::{
 	config::PRDocConfig,
 	doc_filename::DocFileName,
 	docfile::DocFile,
-	error::{self},
+	error::{self, PRdocLibError},
 	prdoc_source::PRDocSource,
 	schema::Schema,
 	utils::{get_numbers_from_file, get_project_root},
@@ -56,6 +56,11 @@ impl CheckCmd {
 								log::debug!("Loading was OK");
 								(number.into(), true)
 							},
+							Err(PRdocLibError::ValidationErrors(validation)) => {
+								log::info!("errors: {:#?}", validation.errors);
+								log::info!("missing: {:#?}", validation.missing);
+								(number.into(), false)
+							},
 							Err(e) => {
 								log::error!("Loading the schema failed:");
 								log::error!("{e:?}");
@@ -64,7 +69,7 @@ impl CheckCmd {
 						}
 					},
 					Err(e) => {
-						log::warn!("{e:?}");
+						log::error!("{e:?}");
 						(number.into(), false)
 					},
 				}
