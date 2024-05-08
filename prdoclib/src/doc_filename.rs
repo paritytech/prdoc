@@ -87,7 +87,7 @@ impl DocFileName {
 				// First we exclude anything that is not a file
 				let metadata = std::fs::metadata(candidate.path()).unwrap();
 				if !metadata.is_file() {
-					return None
+					return None;
 				}
 
 				// Fetch the file name

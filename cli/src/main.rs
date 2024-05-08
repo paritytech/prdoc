@@ -16,8 +16,11 @@ use prdoclib::{
 	},
 	common::PRNumber,
 	config::Config,
+	prdoc_source::PRDocSource,
+	prdoc_source::PRDocSource::File,
 	schema::Schema,
 };
+use std::cmp::Ordering;
 use std::{collections::HashSet, env, path::PathBuf};
 
 /// Main entry point of the cli
@@ -64,7 +67,7 @@ fn main() -> color_eyre::Result<()> {
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
-			let results: HashSet<CheckResult> = prdoc_dir
+			let mut results: Vec<CheckResult> = prdoc_dir
 				.iter()
 				.flat_map(|dir| {
 					CheckCmd::run(
@@ -78,6 +81,13 @@ fn main() -> color_eyre::Result<()> {
 					.unwrap()
 				})
 				.collect();
+
+			results.sort_by(|a, b| match (&a.0, &b.0) {
+				(File(path_a), File(path_b)) => path_a.cmp(path_b),
+				(PRDocSource::Number(num_a), PRDocSource::Number(num_b))
+				| (PRDocSource::Both(_, num_a), PRDocSource::Both(_, num_b)) => num_a.cmp(num_b),
+				_ => Ordering::Greater,
+			});
 
 			if !opts.json {
 				for (src, result) in &results {

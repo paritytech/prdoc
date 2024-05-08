@@ -146,7 +146,7 @@ impl CheckCmd {
 	pub fn global_result(hs: HashSet<CheckResult>) -> bool {
 		for item in hs.iter() {
 			if !item.1 {
-				return false
+				return false;
 			}
 		}
 
