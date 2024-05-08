@@ -49,7 +49,7 @@ impl Config {
 		if let Some(config) = config_file {
 			if PathBuf::from(&config).exists() {
 				log::debug!("Found config in {config:?}");
-				return Ok(config)
+				return Ok(config);
 			}
 		}
 
@@ -57,7 +57,7 @@ impl Config {
 			let candidate = root.join(name);
 			if candidate.exists() {
 				log::debug!("Found config in {}", candidate.display());
-				return Ok(candidate)
+				return Ok(candidate);
 			}
 		}
 

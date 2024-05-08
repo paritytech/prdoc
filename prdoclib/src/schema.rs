@@ -76,7 +76,7 @@ impl Schema {
 		if !(validation_result && validation_result_strict) {
 			log::debug!("validation_result: {validation_result}");
 			log::debug!("validation_result_strict: {validation_result_strict}");
-			return Err(PRdocLibError::ValidationErrors(validation))
+			return Err(PRdocLibError::ValidationErrors(validation));
 		}
 
 		Ok(doc_as_yaml)
