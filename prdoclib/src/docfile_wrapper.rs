@@ -19,12 +19,12 @@ pub struct DocFileWrapper {
 	pub doc_filename: DocFileName,
 
 	/// The content of the PRDoc
-	pub content: Value,
+	pub content: Option<Value>,
 }
 
 impl DocFileWrapper {
 	/// Create a new wrapper
-	pub fn new(file: PathBuf, filename: DocFileName, content: Value) -> Self {
+	pub fn new(file: PathBuf, filename: DocFileName, content: Option<Value>) -> Self {
 		let file = file.canonicalize().expect("Canonicalize works");
 		Self { file, doc_filename: filename, content }
 	}

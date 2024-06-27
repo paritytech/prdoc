@@ -53,7 +53,7 @@ impl LoadCmd {
 						let yaml = self.schema.load(&file);
 
 						if let Ok(value) = yaml {
-							Some(DocFileWrapper::new(file, filename, value))
+							Some(DocFileWrapper::new(file, filename, Some(value)))
 						} else {
 							global_result &= false;
 							None
@@ -74,7 +74,7 @@ impl LoadCmd {
 	/// Load one file and returns a wrapper
 	pub fn load_file(&self, file: &PathBuf) -> Result<DocFileWrapper> {
 		let filename = DocFileName::try_from(file)?;
-		let value = self.schema.load(&file)?;
+		let value = self.schema.load(&file).ok();
 		let wrapper = DocFileWrapper::new(file.clone(), filename, value);
 		Ok(wrapper)
 	}
@@ -103,7 +103,7 @@ impl LoadCmd {
 				if let Ok(filename) = filename_maybe {
 					let yaml = self.schema.load(&file);
 					if let Ok(value) = yaml {
-						let wrapper = DocFileWrapper::new(file.clone(), filename, value);
+						let wrapper = DocFileWrapper::new(file.clone(), filename, Some(value));
 
 						global_result &= true;
 						log::debug!("OK  {}", file.display());
