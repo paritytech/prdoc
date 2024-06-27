@@ -57,7 +57,12 @@ impl DocFile {
 			repo_root.join(file)
 		};
 
-		Ok(fs::read_to_string(template_file)?)
+		match fs::read_to_string(&template_file) {
+			Ok(res) => Ok(res),
+			Err(ref e) if e.kind() == std::io::ErrorKind::NotFound =>
+				Err(error::PRdocLibError::MissingTemplateFile(template_file)),
+			Err(e) => Err(error::PRdocLibError::IO(e)),
+		}
 	}
 
 	/// Returns an iterator if the `dir` was a valid directory or an error otherwise.
