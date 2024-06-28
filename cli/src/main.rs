@@ -59,7 +59,7 @@ fn main() -> color_eyre::Result<()> {
 			match GenerateCmd::run(cmd_opts.dry_run, cmd_opts.number, None, Some(dir), template_path) {
 				Ok(_) => Ok(()),
 				Err(e) => {
-					eprint!("{e:?}");
+					log::error!("{e}");
 					std::process::exit(exitcode::IOERR);
 				}
 			}

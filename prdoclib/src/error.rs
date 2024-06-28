@@ -41,6 +41,9 @@ pub enum PRdocLibError {
 	#[error("No valid config found")]
 	MissingConfig,
 
+	#[error("Template file at {0} was not found")]
+	MissingTemplateFile(PathBuf),
+
 	#[error("No valid file found in {0}")]
 	NoValidFileFound(PathBuf),
 
