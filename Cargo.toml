@@ -1,5 +1,5 @@
 [workspace.package]
-version = "0.0.8"
+version = "0.1.0"
 authors = ["chevdor <chevdor@gmail.com>", "Wilfried Kopp <wilfried@parity.io>", "Yuri Volkov <0@mcornholio.ru>"]
 edition = "2021"
 homepage = "https://github.com/paritytech/prdoc"
