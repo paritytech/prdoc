@@ -63,13 +63,13 @@ impl CheckCmd {
 							},
 							Err(e) => {
 								log::error!("Loading the schema failed:");
-								log::error!("{e:?}");
+								log::error!("{}", e.to_string());
 								(number.into(), false)
 							},
 						}
 					},
 					Err(e) => {
-						log::error!("{e:?}");
+						log::error!("{}", e.to_string());
 						(number.into(), false)
 					},
 				}
