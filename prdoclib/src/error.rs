@@ -26,7 +26,7 @@ pub enum PRdocLibError {
 	#[error("ValidationErrors {0:?}")]
 	ValidationErrors(ValidationState),
 
-	#[error("PRDoc not found for number {0}")]
+	#[error("Could not find the PRdoc for Pull Request #{0}. Did you forget to create a PRDoc?")]
 	NumberNotFound(PRNumber),
 
 	#[error("PRDoc file already exists: {0}")]
