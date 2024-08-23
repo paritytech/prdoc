@@ -12,7 +12,7 @@ license.workspace = true
 readme = "README.md"
 
 [dependencies]
-prdoclib = { path = "../prdoclib", version = "0.1.0" }
+prdoclib = { path = "../prdoclib", version = "0.0.0-updated-from-ci" }
 
 log = "0.4"
 exitcode = "1.1"
