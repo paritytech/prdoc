@@ -9,6 +9,7 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    environment: releases
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -36,6 +37,7 @@ jobs:
   publish_crates:
     name: Publish crates to crates.io
     runs-on: ubuntu-latest
+    environment: releases
     container:
       image: docker.io/paritytech/ci-unified:bullseye-1.79.0-2024-06-10-v202408151233
     steps:
