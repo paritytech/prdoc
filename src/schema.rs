@@ -90,16 +90,16 @@ mod test_schema_validation {
 
 	#[test]
 	fn test_load_valid_1234() {
-		let schema = Schema::new("../tests/data/sample_schema.json".into());
-		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
+		let schema = Schema::new("./tests/data/sample_schema.json".into());
+		let file = PathBuf::from("./tests/data/some/pr_1234_some_test_minimal.prdoc");
 		assert!(schema.load(&file).is_ok());
 	}
 
 	#[test]
 	fn test_check_valid_1234() {
-		let schema = Schema::new("../tests/data/sample_schema.json".into());
+		let schema = Schema::new("./tests/data/sample_schema.json".into());
 
-		let file = PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc");
+		let file = PathBuf::from("./tests/data/some/pr_1234_some_test_minimal.prdoc");
 		assert!(schema.check_file(&file));
 	}
 }

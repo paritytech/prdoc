@@ -23,7 +23,7 @@ impl GenerateCmd {
 				Ok(dir) => dir.join(PRDOC_DEFAULT_DIR),
 				Err(e) => {
 					eprint!("Project root not found, falling back to the current folder: {e:?}");
-					PathBuf::from(".")
+					PathBuf::from("../..")
 				},
 			}
 		}

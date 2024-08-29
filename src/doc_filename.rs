@@ -15,9 +15,10 @@ use crate::{
 	title::Title,
 };
 
+/// Helps to build and check filenames for prdoc
+///
 /// A `prdoc` is made of its content: a [DocFile](/prdoclib::docfile::DocFile) but also requires a
-/// valid filename. This struct describe the filename pattern and provide helpers to build and check
-/// valid `prdoc` filenames.
+/// valid filename.
 #[derive(Debug, PartialEq, Serialize, Hash, Eq)]
 pub struct DocFileName {
 	/// The PR number
@@ -200,15 +201,15 @@ mod test_doc_file_name {
 	#[test]
 	fn test_find() {
 		assert_eq!(
-			PathBuf::from("../tests/data/some/pr_1234_some_test_minimal.prdoc"),
-			DocFileName::find(1234, None, &PathBuf::from("../tests/data/some")).unwrap()
+			PathBuf::from("./tests/data/some/pr_1234_some_test_minimal.prdoc"),
+			DocFileName::find(1234, None, &PathBuf::from("./tests/data/some")).unwrap()
 		);
 	}
 
 	#[test]
 	fn test_from_pathbuf() {
 		let dfn = DocFileName::try_from(&PathBuf::from(
-			"../tests/data/some/pr_1234_some_test_minimal.prdoc",
+			"./tests/data/some/pr_1234_some_test_minimal.prdoc",
 		))
 		.unwrap();
 		assert_eq!(1234, dfn.number);

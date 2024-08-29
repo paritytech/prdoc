@@ -1,4 +1,6 @@
-//! Implementation of the scan command. The scan command searches for files that could
+//! Implementation of the scan command.
+//!
+//! The scan command searches for files that could
 //! potentially be PRDOC files. It does not check the validity of the files and the scanning is
 //! solely done based on the filenames
 
