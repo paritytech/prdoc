@@ -1,4 +1,5 @@
-[workspace.package]
+[package]
+name = "parity-prdoc"
 version = "0.0.0-updated-from-ci"
 authors = ["chevdor <chevdor@gmail.com>", "Wilfried Kopp <wilfried@parity.io>", "Yuri Volkov <0@mcornholio.ru>"]
 edition = "2021"
@@ -7,12 +8,12 @@ keywords = ["cli", "documentation", "parity"]
 license = "MIT"
 repository = "https://github.com/paritytech/prdoc"
 
-[workspace]
-resolver = "2"
-members = [
-	"cli",
-	"prdoclib",
-]
+[lib]
+name = "prdoclib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "prdoc"
 
 [profile.production]
 inherits = "release"
@@ -20,3 +21,31 @@ lto = true
 panic = "abort"
 opt-level = "z"
 codegen-units = 1
+
+[dependencies]
+log = "0.4"
+regex = "1.10"
+exitcode = "1.1"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_yaml = { version = "0.9", optional = false }
+serde_json = { version = "1.0", optional = false }
+valico = { version = "4.0", default-features = false, features = [] }
+toml = "0.8.19"
+assert_cmd = "2.0"
+color-eyre = "0.6"
+env_logger = "0.11"
+clap = { version = "4", features = [
+    "derive",
+    "env",
+    "unicode",
+    "cargo",
+    "color",
+    "help",
+    "usage",
+    "error-context",
+    "suggestions",
+] }
+
+[dev-dependencies]
+assert_cmd = "2.0"

@@ -1,4 +1,5 @@
-//! Entry point of the cli. The cli itself does not contain much, it is mostly a shell around the [prdoclib].
+//! Entry point of the cli. The cli itself does not contain much, it is mostly a shell around the
+//! [prdoclib].
 #![warn(missing_docs)]
 
 mod opts;
@@ -16,12 +17,10 @@ use prdoclib::{
 	},
 	common::PRNumber,
 	config::Config,
-	prdoc_source::PRDocSource,
-	prdoc_source::PRDocSource::File,
+	prdoc_source::{PRDocSource, PRDocSource::File},
 	schema::Schema,
 };
-use std::cmp::Ordering;
-use std::{collections::HashSet, env, path::PathBuf};
+use std::{cmp::Ordering, collections::HashSet, env, path::PathBuf};
 
 /// Main entry point of the cli
 fn main() -> color_eyre::Result<()> {
@@ -35,11 +34,11 @@ fn main() -> color_eyre::Result<()> {
 		Ok(c) => {
 			log::debug!("Config found: {:#?}", c);
 			c
-		}
+		},
 		Err(_e) => {
 			log::warn!("No config could be found, using default");
 			Config::get_default_config()
-		}
+		},
 	};
 
 	let prdoc_dir: Vec<PathBuf> = match (&config.prdoc_folders, opts.prdoc_folders) {
@@ -56,14 +55,20 @@ fn main() -> color_eyre::Result<()> {
 			let template_path = prdoclib::utils::get_template_path(&config);
 
 			log::debug!("PRDoc folder: {dir:?}");
-			match GenerateCmd::run(cmd_opts.dry_run, cmd_opts.number, None, Some(dir), template_path) {
+			match GenerateCmd::run(
+				cmd_opts.dry_run,
+				cmd_opts.number,
+				None,
+				Some(dir),
+				template_path,
+			) {
 				Ok(_) => Ok(()),
 				Err(e) => {
 					log::error!("{e}");
 					std::process::exit(exitcode::IOERR);
-				}
+				},
 			}
-		}
+		},
 
 		Some(SubCommand::Check(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
@@ -84,8 +89,8 @@ fn main() -> color_eyre::Result<()> {
 
 			results.sort_by(|a, b| match (&a.0, &b.0) {
 				(File(path_a), File(path_b)) => path_a.cmp(path_b),
-				(PRDocSource::Number(num_a), PRDocSource::Number(num_b))
-				| (PRDocSource::Both(_, num_a), PRDocSource::Both(_, num_b)) => num_a.cmp(num_b),
+				(PRDocSource::Number(num_a), PRDocSource::Number(num_b)) |
+				(PRDocSource::Both(_, num_a), PRDocSource::Both(_, num_b)) => num_a.cmp(num_b),
 				_ => Ordering::Greater,
 			});
 
@@ -102,7 +107,8 @@ fn main() -> color_eyre::Result<()> {
 				let plural_s = if results.len() > 1 { "s" } else { "" };
 				println!("Checked {} file{plural_s}.", results.len());
 			} else {
-				let json = serde_json::to_string_pretty(&results).expect("We can serialize the result");
+				let json =
+					serde_json::to_string_pretty(&results).expect("We can serialize the result");
 				println!("{json}");
 			}
 
@@ -112,7 +118,7 @@ fn main() -> color_eyre::Result<()> {
 			} else {
 				std::process::exit(exitcode::DATAERR)
 			}
-		}
+		},
 
 		Some(SubCommand::Scan(cmd_opts)) => {
 			let schema_path = config.schema_path();
@@ -146,12 +152,16 @@ fn main() -> color_eyre::Result<()> {
 					println!(
 						"{number}\t{file}",
 						file = f.display(),
-						number = if let Some(number) = n { number.to_string() } else { "n/a".to_string() }
+						number = if let Some(number) = n {
+							number.to_string()
+						} else {
+							"n/a".to_string()
+						}
 					);
 				});
 			}
 			Ok(())
-		}
+		},
 
 		Some(SubCommand::Load(cmd_opts)) => {
 			log::debug!("cmd_opts: {cmd_opts:#?}");
@@ -185,9 +195,9 @@ fn main() -> color_eyre::Result<()> {
 			} else {
 				std::process::exit(exitcode::DATAERR)
 			}
-		}
+		},
 
-		None => {
+		None =>
 			if opts.version {
 				let name = crate_name!();
 				let version = crate_version!();
@@ -195,7 +205,6 @@ fn main() -> color_eyre::Result<()> {
 				Ok(())
 			} else {
 				unreachable!("We show help if there is no arg");
-			}
-		}
+			},
 	}
 }
