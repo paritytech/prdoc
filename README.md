@@ -28,7 +28,7 @@ define its own JSON Schema.
 
 ## Install
 
-    cargo install prdoc
+    cargo install parity-prdoc
 
 Alternatively, you may use a the container image if you prefer not installing anything on your system. See the
 [Containers](#_containers) section for more details on containers.
