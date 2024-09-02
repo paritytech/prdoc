@@ -49,6 +49,8 @@ jobs:
         run: cargo set-version "$(echo "${{ github.ref_name }}" | sed -e 's/^v//')"
 
       - name: Build and publish prdoclib
-        run: cargo publish -p parity-prdoc --token "${CRATESIO_TOKEN}"
+        # `set-version` will change Cargo.toml and Cargo.lock
+        # thus, we need --allow-dirty, to include uncommitted changes;
+        run: cargo publish --allow-dirty -p parity-prdoc --token "${CRATESIO_TOKEN}"
         env:
           CRATESIO_TOKEN: ${{ secrets.CRATESIO_TOKEN }}
