@@ -1,5 +1,6 @@
 [package]
 name = "parity-prdoc"
+description = "prdoc is a tool for structured pull request annotation, useful for rich changelog generation"
 version = "0.0.0-updated-from-ci"
 authors = ["chevdor <chevdor@gmail.com>", "Wilfried Kopp <wilfried@parity.io>", "Yuri Volkov <0@mcornholio.ru>"]
 edition = "2021"
