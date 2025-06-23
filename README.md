@@ -149,7 +149,7 @@ Or also:
 The documentation for PRs comes as a file with the extension `.prdoc`.
 This is essentially a `yaml` file and the extension helps using the right JSON schema to validate the file.
 
-In VScode, open your user settings and ensure you have the following section:
+In VSCode ensure to install the [YAML VS Code extension](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml), and then open your user settings and ensure you have the following section:
 
 You first need to tell VScode that .prdoc files are YAML files:
 
@@ -165,10 +165,13 @@ You then need to point to the right schemas:
         "/path/to/subxt/prdoc/schema_user.json": "*subxt*/**/*.prdoc"
       },
 
+If the `"yaml.schemas"` entry is "faded" you have not installed the YAML VS Code extension, see above.
+
 You need to restart/reload VSCode after those changes for the new settings to be picked up.
 
 Should you initially have created the file with another extension such as `.txt`, make sure to change the format to
 `YAML` in the VSCode status bar and the right schema should then be picked up.
+
 
 ## Usage
 
