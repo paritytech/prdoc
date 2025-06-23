@@ -24,7 +24,7 @@ pub enum PRdocLibError {
 	SerdeYamlError(serde_yaml::Error),
 
 	#[error("ValidationErrors {0:?}")]
-	ValidationErrors(ValidationState),
+	ValidationErrors(Box<ValidationState>),
 
 	#[error("Could not find the PRdoc for Pull Request #{0}. Did you forget to create a PRDoc?")]
 	NumberNotFound(PRNumber),

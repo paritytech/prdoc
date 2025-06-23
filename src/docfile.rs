@@ -79,7 +79,7 @@ impl DocFile {
 			.map(|dir_entry| dir_entry.path())
 			// Filter out all paths with extensions other than what we want
 			.filter_map(|path| {
-				if path.extension().map_or(false, |ext| ext == "prdoc") {
+				if path.extension().is_some_and(|ext| ext == "prdoc") {
 					Some(path)
 				} else {
 					None
