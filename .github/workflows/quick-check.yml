@@ -24,7 +24,7 @@ jobs:
         uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
         with:
           cache: false
-          toolchain: stable
+          toolchain: nightly
           components: cargo, clippy, rust-docs, rust-src, rustfmt, rustc, rust-std
 
       - name: Install Rust tooling
