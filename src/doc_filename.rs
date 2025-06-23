@@ -54,7 +54,7 @@ impl DocFileName {
 	/// deserialized.
 	pub fn is_valid<P: AsRef<Path>>(filename: P) -> bool {
 		let re = Self::get_regex();
-		let file_only = filename.as_ref().components().last();
+		let file_only = filename.as_ref().components().next_back();
 		if let Some(file) = file_only {
 			match file {
 				std::path::Component::Prefix(_) |
